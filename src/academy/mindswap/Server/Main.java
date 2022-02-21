@@ -1,4 +1,4 @@
-package academy.mindswap;
+package academy.mindswap.Server;
 
 public class Main {
 
@@ -6,6 +6,8 @@ public class Main {
 	// write your code here
         System.out.println("HELLO WORLD");
         System.out.println("Hello world2");
+
+
 
     }
 }
