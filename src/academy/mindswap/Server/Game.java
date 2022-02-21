@@ -26,6 +26,7 @@ public class Game {
     private int userLimit;
 
     public Game(int tableLimit) {
+
         this.listOfPlayers = Collections.synchronizedList(new ArrayList<>());
         this.userLimit = tableLimit;
     }
@@ -92,12 +93,6 @@ public class Game {
         @Override
         public void run() {
 
-
-
         }
     }
-
-
-
-
 }
