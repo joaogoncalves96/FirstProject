@@ -61,8 +61,7 @@ public class Player implements Runnable {
         broadcastMessage("SERVER: " + clientUsername + " has left the table");
         }*/
 
-        public void closeAll(Socket socket, BufferedReader bufferedReader, BufferedWriter bufferedWriter) {
-        removePlayer();
+        public void closeAll(Socket socket, BufferedReader bufferedReader, BufferedWriter bufferedWriter) {;
         try {
             if (bufferedReader != null) {
                 bufferedReader.close();
