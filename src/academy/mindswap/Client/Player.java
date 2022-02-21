@@ -54,15 +54,27 @@ public class Player implements Runnable {
                 } catch (IOException e) {
                    closeAll(socket, bufferedReader, bufferedWriter);
                 }
-            }*/
+            }
         }
         public void removePlayer() {
         playerArrayList.remove( this);
         broadcastMessage("SERVER: " + clientUsername + " has left the table");
-        }
+        }*/
 
         public void closeAll(Socket socket, BufferedReader bufferedReader, BufferedWriter bufferedWriter) {
         removePlayer();
-
+        try {
+            if (bufferedReader != null) {
+                bufferedReader.close();
+            }
+            if (bufferedWriter != null) {
+                bufferedWriter.close();
+            }
+            if (socket != null) {
+                socket.close();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
+}
