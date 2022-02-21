@@ -22,6 +22,10 @@ public class Deck {
         }
     }
 
+    public Deck(Set<Card> deck) {
+        this.deck = deck;
+    }
+
     public Set<Card> getDeck() {
         return deck;
     }

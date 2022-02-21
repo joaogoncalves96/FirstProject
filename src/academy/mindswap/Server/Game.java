@@ -1,4 +1,7 @@
 package academy.mindswap.Server;
+import academy.mindswap.Server.deck.Card;
+import academy.mindswap.Server.deck.Deck;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -24,6 +27,7 @@ public class Game {
     private ExecutorService service;
     private ServerSocket serverSocket;
     private int userLimit;
+    private Deck deck;
 
     public Game(int tableLimit) {
 
@@ -64,9 +68,6 @@ public class Game {
         private String message;
         private String username;
         private double credits;
-        private Card cards;
-        private Deck deck;
-
 
         private PlayerHandler(Socket socket) {
             this.socket = socket;
