@@ -1,16 +1,12 @@
 package academy.mindswap.Server;
 import academy.mindswap.Server.deck.Card;
 import academy.mindswap.Server.deck.Deck;
+import academy.mindswap.Server.deck.DeckFactory;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.IOException;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -33,6 +29,7 @@ public class Game {
 
         this.listOfPlayers = Collections.synchronizedList(new ArrayList<>());
         this.userLimit = tableLimit;
+        this.deck = DeckFactory.createFullDeck();
     }
 
     public void startServer() throws IOException {
@@ -60,7 +57,7 @@ public class Game {
         return listOfPlayers.contains(player);
     }
 
-    private static class PlayerHandler implements Runnable {
+    public class PlayerHandler implements Runnable {
 
         private Socket socket;
         private BufferedWriter out;
@@ -68,6 +65,7 @@ public class Game {
         private String message;
         private String username;
         private double credits;
+        private Set<Card> playerCards;
 
         private PlayerHandler(Socket socket) {
             this.socket = socket;
@@ -93,6 +91,22 @@ public class Game {
 
         @Override
         public void run() {
+
+            addPlayer(this);
+
+            try {
+
+                in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+
+
+
+            } catch (IOException e) {
+
+                e.printStackTrace();
+
+            }
+
 
         }
     }
