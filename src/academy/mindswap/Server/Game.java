@@ -63,6 +63,8 @@ public class Game {
         private String message;
         private String username;
         private double credits;
+        private Card cards;
+        private Deck deck;
 
 
         private PlayerHandler(Socket socket) {
@@ -72,6 +74,7 @@ public class Game {
         private String getUsername() {
             return username;
         }
+
 
         @Override
         public boolean equals(Object o) {
