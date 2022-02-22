@@ -23,21 +23,7 @@ public class Client {
     }
 
     public void sendMessage() {
-        try {
-            bufferedWriter.write(username);
-            bufferedWriter.newLine();
-            bufferedWriter.flush();
 
-            Scanner scanner = new Scanner(System.in);
-            while (socket.isConnected()) {
-                String messageToSend = scanner.nextLine();
-                bufferedWriter.write(username + ": " + messageToSend);
-                bufferedWriter.newLine();
-                bufferedWriter.flush();
-            }
-        } catch (IOException e) {
-            closeEverything(socket, bufferedReader, bufferedWriter);
-        }
     }
 
     public void listenForMessage() {
@@ -75,12 +61,10 @@ public class Client {
     }
 
     public static void main(String[] args) throws IOException {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Enter your username for the group chat: ");
-        String username = scanner.nextLine();
-        Socket socket = new Socket("localHost", 8080 );
-        Client client = new Client(socket, username);
-        client.listenForMessage();
-        client.sendMessage();
+
+        Player player1 = new Player();
+
+        player1.run();
+
     }
 }
