@@ -1,5 +1,9 @@
 package academy.mindswap.Server;
 import academy.mindswap.Server.deck.*;
+import academy.mindswap.Server.deck.Card;
+import academy.mindswap.Server.deck.Deck;
+import academy.mindswap.Server.deck.DeckFactory;
+import academy.mindswap.commands.Command;
 import academy.mindswap.utils.Messages;
 
 import java.io.*;
@@ -8,7 +12,6 @@ import java.net.Socket;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.stream.Collectors;
 
 /**
  * Poker Game v0.01
@@ -453,6 +456,22 @@ public class Game {
             setVerificationsToFalse();
 
         }
+
+        private void dealWithCommand(String message) throws IOException {
+            Command command = Command.getCommandFromDescription(message);
+
+            if (command == null) {
+                out.write(Messages.VALID_COMMAND);
+                out.newLine();
+                out.flush();
+                return;
+            }
+
+            command.getCommandHandler().execute(Game.this, this);
+
+
+        }
+
 
     }
 }

@@ -1,10 +1,8 @@
 package academy.mindswap.Client;
-import academy.mindswap.Server.Game;
 import academy.mindswap.utils.Messages;
 
 import java.io.*;
 import java.net.Socket;
-import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 
@@ -160,11 +158,13 @@ public class Player {
 
     private boolean checkForValidCommand(String command) {
 
-        return command.equalsIgnoreCase("call") ||
-                command.equalsIgnoreCase("bet") ||
-                command.equalsIgnoreCase("fold") ||
-                command.equalsIgnoreCase("all in");
+        return command.equalsIgnoreCase("/call") ||
+                command.equalsIgnoreCase("/bet") ||
+                command.equalsIgnoreCase("/fold") ||
+                command.equalsIgnoreCase("/allin");
     }
+
+
 
 
 }
