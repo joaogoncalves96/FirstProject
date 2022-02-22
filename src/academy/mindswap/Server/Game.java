@@ -135,18 +135,24 @@ public class Game {
                     while (message == null && credits == 0.0) {
                         message = in.readLine();
                         credits = Double.parseDouble(message);
+                        System.out.printf(Messages.PLAYER_CREDITS_ENTER, credits);
                         message = null;
                         break;
                     }
 
-
-
+                    System.out.println("Placing player in table...");
+                    int counter = 0;
                     while (currentPlayersConnected() <= 1) {
-                        System.out.println(Messages.WAITING_FOR_PLAYERS);
-                        Thread.sleep(1000);
+                        if(counter == 0){
+                            System.out.println(Messages.WAITING_FOR_PLAYERS);
+                            out.write(Messages.WAITING_FOR_PLAYERS);
+                            out.newLine();
+                            out.flush();
+                            counter++;
+                        }
                     }
 
-                    while(isGameUnderWay()) {
+                    while(!isGameUnderWay()) {
                         System.out.println(Messages.WAITING_FOR_ROUND);
                         Thread.sleep(1000);
                     }

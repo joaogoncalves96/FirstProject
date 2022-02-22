@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="5758b74b-1b07-478a-8926-8d348cfc6100" name="Changes" comment="added color codes">
+    <list default="true" id="5758b74b-1b07-478a-8926-8d348cfc6100" name="Changes" comment="refactor player">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/academy/mindswap/Client/Client.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/Client/Client.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/academy/mindswap/Client/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/Client/Player.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/academy/mindswap/Server/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/Server/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/academy/mindswap/Server/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/Server/Game.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/academy/mindswap/utils/Messages.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/utils/Messages.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -108,7 +108,14 @@
       <option name="project" value="LOCAL" />
       <updated>1645523670656</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="refactor player">
+      <created>1645524445644</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1645524445644</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -127,6 +134,7 @@
     <MESSAGE value="added messages class refined factory" />
     <MESSAGE value="added username and credits fetch" />
     <MESSAGE value="added color codes" />
-    <option name="LAST_COMMIT_MESSAGE" value="added color codes" />
+    <MESSAGE value="refactor player" />
+    <option name="LAST_COMMIT_MESSAGE" value="refactor player" />
   </component>
 </project>
