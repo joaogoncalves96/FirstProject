@@ -12,4 +12,5 @@ public class Messages {
     public static final String ENTER_CREDITS = "Please enter your CREDITS: ";
     public static final String VALID_CREDITS = "Please insert a valid amount: ";
     public static final String STARTING_ROUND= "Starting round, dealing cards...";
+    public static final String PLAYER_DISCONNECTED= "SPLAYER DISC.";
 }

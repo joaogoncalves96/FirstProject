@@ -1,5 +1,4 @@
 package academy.mindswap.Client;
-
 import academy.mindswap.utils.Messages;
 
 import java.io.*;
@@ -53,6 +52,7 @@ public class Player implements Runnable {
             String messageFromClient;
             while (socket.isConnected()) {
                 try {
+
                     this.bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
                     this.bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
@@ -64,15 +64,11 @@ public class Player implements Runnable {
                     bufferedWriter.newLine();
                     bufferedWriter.flush();
 
-
                     String status =  bufferedReader.readLine();
 
                     System.out.println(status);
 
                     status =  bufferedReader.readLine();
-
-
-
 
 
 
