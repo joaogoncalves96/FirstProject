@@ -151,11 +151,18 @@ public class Game {
                             counter++;
                         }
                     }
+                    counter = 0;
 
-                    while(!isGameUnderWay()) {
-                        System.out.println(Messages.WAITING_FOR_ROUND);
-                        Thread.sleep(1000);
+                    while(isGameUnderWay()) {
+                        if(counter == 0) {
+                            System.out.println(Messages.WAITING_FOR_ROUND);
+                            counter++;
+                        }
                     }
+
+                    out.write(Messages.STARTING_ROUND);
+                    out.newLine();
+                    out.flush();
 
                     dealTableCards();
                     givePlayerCards();
@@ -178,9 +185,6 @@ public class Game {
 
                 e.printStackTrace();
 
-            } catch (InterruptedException e) {
-
-                e.printStackTrace();
             }
 
 
