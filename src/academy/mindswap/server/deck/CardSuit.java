@@ -1,8 +1,6 @@
-package academy.mindswap.Server.deck;
+package academy.mindswap.server.deck;
 
 import academy.mindswap.utils.ColorCodes;
-
-import java.awt.*;
 
 public enum CardSuit {
     SPADES(ColorCodes.BLACK +  "♠" + ColorCodes.RESET, "Spades"),

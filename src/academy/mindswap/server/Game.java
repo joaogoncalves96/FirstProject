@@ -1,7 +1,9 @@
-package academy.mindswap.Server;
-import academy.mindswap.Server.deck.Card;
-import academy.mindswap.Server.deck.Deck;
-import academy.mindswap.Server.deck.DeckFactory;
+package academy.mindswap.server;
+import academy.mindswap.Client.Player;
+import academy.mindswap.commands.Command;
+import academy.mindswap.server.deck.Card;
+import academy.mindswap.server.deck.Deck;
+import academy.mindswap.server.deck.DeckFactory;
 import academy.mindswap.utils.Messages;
 
 import java.io.*;
@@ -251,6 +253,21 @@ public class Game {
             for(boolean b : verification) {
                 b = false;
             }
+        }
+
+        private void dealWithCommand(String message) throws IOException {
+            Command command = Command.getCommandFromDescription(message);
+
+            if (command == null) {
+                out.write(Messages.VALID_COMMAND);
+                out.newLine();
+                out.flush();
+                return;
+            }
+
+            command.getCommandHandler().execute(Game.this, this);
+
+
         }
     }
 }

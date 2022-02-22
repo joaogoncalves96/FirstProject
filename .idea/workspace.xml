@@ -1,12 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="5758b74b-1b07-478a-8926-8d348cfc6100" name="Changes" comment="updated 22/02&#10;13:00h">
+    <list default="true" id="5758b74b-1b07-478a-8926-8d348cfc6100" name="Changes" comment="updated 22/02&#10;change Enum cards&#10;16:00h">
+      <change afterPath="$PROJECT_DIR$/src/academy/mindswap/commands/AllinHandler.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/academy/mindswap/commands/BetHandler.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/academy/mindswap/commands/CallHandler.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/academy/mindswap/commands/Command.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/academy/mindswap/commands/CommandHandler.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/academy/mindswap/commands/FoldHandler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/academy/mindswap/Server/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/Server/Game.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/academy/mindswap/Server/deck/Card.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/Server/deck/Card.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/academy/mindswap/Server/deck/CardRank.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/Server/deck/CardRank.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/academy/mindswap/Server/deck/CardSuit.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/Server/deck/CardSuit.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/academy/mindswap/Client/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/Client/Player.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/academy/mindswap/Server/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/server/Game.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/academy/mindswap/Server/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/server/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/academy/mindswap/Server/deck/Card.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/server/deck/Card.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/academy/mindswap/Server/deck/CardRank.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/server/deck/CardRank.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/academy/mindswap/Server/deck/CardSuit.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/server/deck/CardSuit.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/academy/mindswap/Server/deck/Deck.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/server/deck/Deck.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/academy/mindswap/Server/deck/DeckFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/server/deck/DeckFactory.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -16,6 +26,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
+        <option value="Enum" />
+        <option value="Interface" />
         <option value="Class" />
       </list>
     </option>
@@ -54,7 +66,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../java/module_1/solutions/concurrency-chat" />
   </component>
   <component name="RecentsManager">
     <key name="CopyClassDialog.RECENTS_KEY">
@@ -84,7 +96,7 @@
       </method>
     </configuration>
     <configuration name="Server" type="Application" factoryName="Application">
-      <option name="MAIN_CLASS_NAME" value="academy.mindswap.Server.Main" />
+      <option name="MAIN_CLASS_NAME" value="academy.mindswap.server.Main" />
       <module name="FirstProject" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -197,7 +209,14 @@
       <option name="project" value="LOCAL" />
       <updated>1645539120740</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="updated 22/02&#10;change Enum cards&#10;16:00h">
+      <created>1645544907265</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1645544907266</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -223,6 +242,7 @@
     <MESSAGE value="added synchronized verificator" />
     <MESSAGE value="added connection handler for client, fixed deal cards to players" />
     <MESSAGE value="fixed table cards, fixed player thread, added player handler" />
-    <option name="LAST_COMMIT_MESSAGE" value="fixed table cards, fixed player thread, added player handler" />
+    <MESSAGE value="updated 22/02&#10;change Enum cards&#10;16:00h" />
+    <option name="LAST_COMMIT_MESSAGE" value="updated 22/02&#10;change Enum cards&#10;16:00h" />
   </component>
 </project>

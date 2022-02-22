@@ -1,4 +1,4 @@
-package academy.mindswap.Server.deck;
+package academy.mindswap.server.deck;
 
 public enum CardRank {
     ACE(14, "Ace"),
