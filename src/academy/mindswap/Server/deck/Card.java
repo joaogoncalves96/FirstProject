@@ -36,6 +36,6 @@ public class Card {
 
     @Override
     public String toString() {
-        return cardRank.getCardRankDescription() + " of " + cardSuit.getSuitDescription() + "(" + cardSuit.getSuit() + ")" + "\n";
+        return cardRank.getCardRankDescription() + " of " + cardSuit.getSuitDescription() + "(" +cardRank.getCardRankDigit() + cardSuit.getSuit() + ")" + "\n";
     }
 }
