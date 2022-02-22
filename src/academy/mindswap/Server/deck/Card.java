@@ -36,6 +36,6 @@ public class Card {
 
     @Override
     public String toString() {
-        return cardRank.toString() + "of" + cardSuit.toString() + "\n";
+        return cardRank.toString() + " of " + cardSuit.getSuit() + "\n";
     }
 }

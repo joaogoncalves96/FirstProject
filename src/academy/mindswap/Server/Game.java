@@ -10,7 +10,6 @@ import java.net.Socket;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.stream.Collectors;
 
 /**
  * Poker Game v0.01
@@ -27,6 +26,7 @@ public class Game {
     private final int userLimit;
     private Deck deck;
     private Set<Card> tableCards;
+    private final boolean[] verification;
 
     public Game(int tableLimit) {
 
@@ -34,6 +34,7 @@ public class Game {
         this.userLimit = tableLimit;
         this.deck = DeckFactory.createFullDeck();
         this.tableCards = Collections.synchronizedSet(new HashSet<>());
+        this.verification = new boolean[userLimit];
     }
 
     public void startServer() throws IOException {
@@ -146,6 +147,7 @@ public class Game {
 
                     System.out.println("Placing player in table...");
                     addPlayer(this);
+
                     int counter = 0;
                     while (currentPlayersConnected() <= 1) {
                         if(counter == 0){
@@ -159,12 +161,12 @@ public class Game {
 
                     counter = 0;
 
-                    while(isGameUnderWay()) {
-                        if(counter == 0) {
-                            System.out.println(Messages.WAITING_FOR_ROUND);
-                            counter++;
-                        }
-                    }
+//                    while(isGameUnderWay()) {
+//                        if(counter == 0) {
+//                            System.out.println(Messages.WAITING_FOR_ROUND);
+//                            counter++;
+//                        }
+//                    }
 
                     out.write(Messages.STARTING_ROUND);
                     out.newLine();
@@ -173,13 +175,23 @@ public class Game {
                     dealTableCards();
                     givePlayerCards();
 
-
-
                     out.write(cardsToString());
                     out.newLine();
                     out.flush();
 
                     String playerChoice = in.readLine();
+
+                    if(playerChoice != null) {
+                        synchronized (verification) {
+                            verification[listOfPlayers.indexOf(this)] = true;
+                        }
+                    }
+
+
+
+                    checkPlayerAction(playerChoice);
+
+
 
                 }
             } catch (IOException e) {
@@ -211,6 +223,24 @@ public class Game {
             this.playerCards.forEach(card -> cardString.append(card.toString()));
             return  cardString.toString();
 
+        }
+
+        private void checkPlayerAction(String action) {
+
+        }
+
+        private synchronized boolean checkIfPlayersMadeDecision() {
+            int trues = 0;
+            for(boolean b : verification) {
+                if(b) trues++;
+            }
+            return trues == currentPlayersConnected();
+        }
+
+        private synchronized void setVerificationsToFalse() {
+            for(boolean b : verification) {
+                b = false;
+            }
         }
     }
 }

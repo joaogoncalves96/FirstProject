@@ -49,75 +49,50 @@ public class Player implements Runnable {
 
 
 
-        @Override
-        public void run () {
-            String messageFromClient;
-            while (socket.isConnected()) {
-                try {
+    @Override
+    public void run () {
+        String messageFromClient;
+        while (socket.isConnected()) {
+            try {
 
-                    this.bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-                    this.bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                this.bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+                this.bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
-                    bufferedWriter.write(this.clientUsername);
+                bufferedWriter.write(this.clientUsername);
+                bufferedWriter.newLine();
+                bufferedWriter.flush();
+
+                bufferedWriter.write(String.valueOf(this.credits));
+                bufferedWriter.newLine();
+                bufferedWriter.flush();
+
+                String status =  bufferedReader.readLine();
+                System.out.println(status);
+
+                while(!socket.isClosed()) {
+
+                    String serverMessage =  bufferedReader.readLine();
+                    String cards =  bufferedReader.readLine();
+
+                    System.out.println(serverMessage);
+                    System.out.println(cards);
+                    this.bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+                    String call = bufferedReader.readLine();
+
+                    if(!checkForValidCommand(call)) {
+                        continue;
+                    }
+
+                    bufferedWriter.write(call);
                     bufferedWriter.newLine();
                     bufferedWriter.flush();
 
-                    bufferedWriter.write(String.valueOf(this.credits));
-                    bufferedWriter.newLine();
-                    bufferedWriter.flush();
-
-                    String status =  bufferedReader.readLine();
-                    System.out.println(status);
-
-                    while(!socket.isClosed()) {
-
-                        String cards =  bufferedReader.readLine();
-
-                        System.out.println(cards);
-                        this.bufferedReader = new BufferedReader(new InputStreamReader(System.in));
-                        String call = bufferedReader.readLine();
-
-                        if(!checkForValidCommand(call)) {
-                            continue;
-                        }
-
-                        bufferedWriter.write(call);
-                        bufferedWriter.newLine();
-                        bufferedWriter.flush();
-
-                    }
-
-
-
-
-
-
-                } catch (IOException e) {
-                    e.printStackTrace();
                 }
-
-
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
-
-        // ler mensagens, mandar mensagens,
-       /* public void broadcastMessage(String messageToSend) {
-            for (Player player : playerArrayList) {
-                try {
-                    if(!player.clientUsername.equals(clientUsername)) {
-                        player.bufferedWriter.write(messageToSend);
-                        player.bufferedWriter.newLine();
-                        player.bufferedWriter.flush();
-                    }
-                } catch (IOException e) {
-                   closeAll(socket, bufferedReader, bufferedWriter);
-                }
-            }
-        }
-        public void removePlayer() {
-        playerArrayList.remove( this);
-        broadcastMessage("SERVER: " + clientUsername + " has left the table");
-        }*/
+    }
 
     public void closeAll(Socket socket, BufferedReader bufferedReader, BufferedWriter bufferedWriter) {
 
@@ -137,6 +112,7 @@ public class Player implements Runnable {
     }
 
     private boolean checkForValidCommand(String command) {
+
         return command.equalsIgnoreCase("call") ||
                 command.equalsIgnoreCase("bet") ||
                 command.equalsIgnoreCase("fold") ||
