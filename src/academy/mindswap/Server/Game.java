@@ -70,14 +70,13 @@ public class Game {
         return this.deck.getDeckSize() < 52;
     }
 
-    private void dealTableCards() {
-        this.deck.getDeck()
-                .stream()
-                .limit(5)
-                .forEach(tableCards::add); // card -> tableCard.add(card);
+    private synchronized void dealTableCards() {
+        Card[] cardArray = deck.getDeck().toArray(new Card[deck.getDeckSize()]);
 
-        for(Card card : this.tableCards) {
-            this.deck.removeCard(card);
+        for (int i = 0; i < 5; i++) {
+            Card bufferCard = cardArray[(int) (Math.random() * deck.getDeckSize())];
+            deck.removeCard(bufferCard);
+            tableCards.add(bufferCard);
         }
     }
 
@@ -172,13 +171,20 @@ public class Game {
                     out.newLine();
                     out.flush();
 
-//                    dealTableCards();
+                    synchronized (tableCards){
+                        if(tableCards.isEmpty()) {
+                            dealTableCards();
+                        }
+                    }
+
                     givePlayerCards();
 
-                    out.write(cardsToString());
+                    System.out.println(tableCardsToString());
+
+                    out.write(playerCardsToString());
                     out.newLine();
                     out.flush();
-                    System.out.println("I'm here10");
+                    System.out.println("Waiting for player choices...");
                     String playerChoice = in.readLine();
 
                     if(playerChoice != null) {
@@ -223,12 +229,17 @@ public class Game {
 
         }
 
-        private String cardsToString() {
+        private String playerCardsToString() {
 
             StringBuilder cardString = new StringBuilder(Messages.PLAYER_CARDS);
             this.playerCards.forEach(card -> cardString.append(card.toString()));
             return  cardString.toString();
 
+        }
+        private String tableCardsToString() {
+            StringBuilder cardString = new StringBuilder(Messages.TABLE_CARDS);
+            tableCards.forEach(card -> cardString.append(card.toString()));
+            return  cardString.toString();
         }
 
         private void checkPlayerAction(String action) {

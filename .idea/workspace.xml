@@ -1,16 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="5758b74b-1b07-478a-8926-8d348cfc6100" name="Changes" comment="added synchronized verificator">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+    <list default="true" id="5758b74b-1b07-478a-8926-8d348cfc6100" name="Changes" comment="added connection handler for client, fixed deal cards to players">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/academy/mindswap/Client/LaunchPlayer2.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/Client/LaunchPlayer2.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/academy/mindswap/Client/LaunchPlayer3.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/Client/LaunchPlayer3.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/academy/mindswap/Client/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/Client/Player.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/academy/mindswap/Server/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/Server/Game.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/academy/mindswap/Server/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/Server/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/academy/mindswap/Server/deck/DeckFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/Server/deck/DeckFactory.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/academy/mindswap/Server/deck/Card.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/Server/deck/Card.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/academy/mindswap/utils/Messages.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/utils/Messages.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -187,7 +183,14 @@
       <option name="project" value="LOCAL" />
       <updated>1645531454601</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="added connection handler for client, fixed deal cards to players">
+      <created>1645537684994</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1645537684994</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -211,6 +214,7 @@
     <MESSAGE value="updated player client 2, added username and credits insertion" />
     <MESSAGE value="added valid command, player card printer" />
     <MESSAGE value="added synchronized verificator" />
-    <option name="LAST_COMMIT_MESSAGE" value="added synchronized verificator" />
+    <MESSAGE value="added connection handler for client, fixed deal cards to players" />
+    <option name="LAST_COMMIT_MESSAGE" value="added connection handler for client, fixed deal cards to players" />
   </component>
 </project>

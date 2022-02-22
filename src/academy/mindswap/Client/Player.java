@@ -5,6 +5,7 @@ import academy.mindswap.utils.Messages;
 import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Scanner;
 import java.util.regex.Pattern;
 
 public class Player {
@@ -29,12 +30,12 @@ public class Player {
     }
 
     public void connectToServer ()  throws IOException {
-        BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        Scanner in = new Scanner(socket.getInputStream());
         BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-        new Thread(new ConnectionHandler(this.socket)).start();
-        String line;
-        while (( line = in.readLine()) != null) {
-            System.out.println(line);
+        new Thread(new ConnectionHandler(this.socket, out)).start();
+
+        while (in.hasNextLine()) {
+            System.out.println(in.nextLine());
         }
         socket.close();
     }
@@ -45,17 +46,16 @@ public class Player {
         private BufferedWriter bufferedWriter;
         private Socket socket;
 
-        private ConnectionHandler(Socket socket) {
+        private ConnectionHandler(Socket socket, BufferedWriter out) {
             this.socket = socket;
+            this.bufferedWriter = out;
         }
 
         @Override
         public void run () {
-            String messageFromClient;
             synchronized (this) {
                 while (socket.isConnected()) {
                     try {
-
                         this.bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
                         this.bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
@@ -67,16 +67,9 @@ public class Player {
                         bufferedWriter.newLine();
                         bufferedWriter.flush();
 
-                        String status =  bufferedReader.readLine();
-                        System.out.println(status);
 
                         while(!socket.isClosed()) {
 
-                            String serverMessage =  bufferedReader.readLine();
-                            String cards =  bufferedReader.readLine();
-
-                            System.out.println(serverMessage);
-                            System.out.println(cards);
                             this.bufferedReader = new BufferedReader(new InputStreamReader(System.in));
                             String call = bufferedReader.readLine();
 
@@ -88,18 +81,14 @@ public class Player {
                             bufferedWriter.write(call);
                             bufferedWriter.newLine();
                             bufferedWriter.flush();
-
                         }
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }
             }
-
         }
-
     }
-
 
     private void askForUserNameAndCredits() throws IOException {
 
@@ -119,10 +108,6 @@ public class Player {
             this.credits = Double.parseDouble(strCredits);
         }
     }
-
-
-
-
 
     public void closeAll(Socket socket, BufferedReader bufferedReader, BufferedWriter bufferedWriter) {
 
