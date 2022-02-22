@@ -17,7 +17,6 @@ import java.util.stream.Collectors;
 
 public class Game {
 
-
     private List<PlayerHandler> listOfPlayers;
     private final int PORT = 8081;
     private ExecutorService service;
@@ -27,6 +26,7 @@ public class Game {
     private Set<Card> tableCards;
     private final boolean[] verification;
     private double pot;
+    private List<Integer> playerHands;
 
     public Game(int tableLimit) {
 
@@ -35,6 +35,7 @@ public class Game {
         this.deck = DeckFactory.createFullDeck();
         this.tableCards = Collections.synchronizedSet(new HashSet<>());
         this.verification = new boolean[userLimit];
+        this.playerHands = Collections.synchronizedList(new ArrayList<>());
     }
 
     public void startServer() throws IOException {
@@ -90,16 +91,32 @@ public class Game {
         private double credits;
         private ArrayList<Card> playerCards;
         private double bet;
+        private int index;
 
         private PlayerHandler(Socket socket) {
             this.playerCards = new ArrayList<>(2);
             this.socket = socket;
+            this.index = -1;
         }
 
         private String getUsername() {
             return username;
         }
 
+        protected boolean didIWin() {
+
+            int myPoints = playerHands.get(index);
+
+            for(Integer i : playerHands) {
+                if(i > myPoints) return false;
+            }
+
+            return true;
+        }
+
+        public int getIndex() {
+            return index;
+        }
 
         @Override
         public boolean equals(Object o) {
@@ -143,7 +160,15 @@ public class Game {
                     }
 
                     System.out.println("Placing player in table...");
-                    addPlayer(this);
+                    if(index == -1) {
+                        synchronized (playerHands) {
+                            addPlayer(this);
+                            playerHands.add(0);
+                            index = playerHands.size() - 1;
+                        }
+
+                    }
+
 
                     int counter = 0;
                     while (currentPlayersConnected() <= 1) {
@@ -185,16 +210,17 @@ public class Game {
                     String playerChoice = in.readLine();
 
                     if(playerChoice != null) {
-                        synchronized (verification) {
-                            System.out.println("I'm here");
-                            verification[listOfPlayers.indexOf(this)] = true;
-                        }
+
 
                         if(playerChoice.equalsIgnoreCase("bet")) {
                             System.out.println("Waiting for player bet...");
                             String betStr = in.readLine();
                             bet += Double.parseDouble(betStr);
                             pot += bet;
+                            synchronized (verification) {
+                                System.out.println("I'm here");
+                                verification[index] = true;
+                            }
                         }
                     }
 
@@ -217,15 +243,27 @@ public class Game {
 
                     int points = analyzePLayerHand();
 
+                    playerHands.set(index, points);
+
                     System.out.println(username + " has " + points);
+
+                    out.write("You got a " +  getStringHand(points) + "!");
+                    out.newLine();
+                    out.flush();
+
+                    if(didIWin()) {
+
+                    }
+
+                    wait();
 
                 }
             } catch (IOException e) {
                 e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
         }
-
-
 
         public synchronized void givePlayerCards() {
             for (int i = 0; i < 2; i++) {
@@ -243,14 +281,11 @@ public class Game {
             return  cardString.toString();
 
         }
+
         private String tableCardsToString() {
             StringBuilder cardString = new StringBuilder(Messages.TABLE_CARDS);
             tableCards.forEach(card -> cardString.append(card.toString()));
             return  cardString.toString();
-        }
-
-        private void checkPlayerAction(String action) {
-
         }
 
         private synchronized boolean checkIfPlayersMadeDecision() {
@@ -340,6 +375,7 @@ public class Game {
                     return Integer.compare(o1.getCardRank().getCardRankPoints(), o2.getCardRank().getCardRankPoints()) ;
                 }
             });
+
             int sequentialCounter = 0;
             for (int i = 0; i < playerCards.size() - 1; i++) {
                 int card1Value = playerCards.get(i).getCardRank().getCardRankPoints();
@@ -371,10 +407,33 @@ public class Game {
             if(cardSuitCount.values().stream().noneMatch(value -> value >= 5)) {
                 return 0;
             }
-
             return 400;
+        }
 
+        private String getStringHand(int points) {
 
+            if(points > 1000) {
+                return "Four of a kind";
+            }
+            if(points > 500) {
+                return "Full house";
+            }
+            if(points > 400) {
+                return "Flush";
+            }
+            if(points > 300) {
+                return "Straight";
+            }
+            if(points > 100) {
+                return "Triplet";
+            }
+            if(points > 40) {
+                return "Double pair";
+            }
+            if(points > 14) {
+                return "Pair";
+            }
+            return "High card";
         }
 
     }
