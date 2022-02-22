@@ -27,6 +27,18 @@ public class Player implements Runnable {
         }
     }
 
+    public void connectToServer ()  throws IOException {
+        BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+        new Thread(this).start();
+        String line;
+        while (( line = in.readLine()) != null) {
+            System.out.println(line);
+        }
+        socket.close();
+
+    }
+
 
     private void askForUserNameAndCredits() throws IOException {
 
@@ -39,7 +51,7 @@ public class Player implements Runnable {
 
         while(credits == 0.0) {
             String strCredits = bufferedReader.readLine();
-            if(regex.matcher(strCredits).lookingAt()) {
+            if(regex.matcher(strCredits).find()) {
                 System.out.println(Messages.VALID_CREDITS);
                 continue;
             }
