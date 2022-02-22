@@ -15,14 +15,14 @@ public class Messages {
     public static final String PLAYER_DISCONNECTED = "PLayer disconnected.";
     public static final String TABLE_CARDS = "Current cards on table: \n";
     public static final String VALID_COMMAND = "Please insert a valid command: \n";
-    public static final String WINNER = "Congrats you win! You've gained \n";
-    public static final String LOSER = "You lost better luck next time! You've lost \n";
+    public static final String WINNER = "Congrats you win! You've gained ";
+    public static final String LOSER = "You lost better luck next time! You've lost ";
     public static final String NOT_ENOUGH_CREDITS = "You don't have enough credits to make this bet..";
     public static final String INSERT_BET = "Please insert how much you want to bet this round: ";
     public static final String PLACED_BET = "Bet placed, waiting for all the players to bet...";
     public static final String CURRENT_CREDITS = "You know have %.2f credits. %n";
     public static final String WAITING_FOR_NEXT_ROUND = "Waiting for players to decide...";
-    public static final String PLAYER_CALL = "What do you want to do? \n BET ||  CALL || ALL-IN || FOLD \n";
+    public static final String PLAYER_CALL = "What do you want to do? \nBET ||  CALL || ALL-IN || FOLD \n";
     public static final String CONTINUE_PLAYING = "Do you want to play another round? \n Type EXIT to leave game, press enter to play another round. \n";
 
 

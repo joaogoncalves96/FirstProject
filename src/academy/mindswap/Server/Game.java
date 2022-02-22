@@ -212,6 +212,10 @@ public class Game {
                     out.newLine();
                     out.flush();
 
+                    out.write(Messages.PLAYER_CALL);
+                    out.newLine();
+                    out.flush();
+
                     System.out.println("Waiting for player choices...");
 
                     String playerChoice = in.readLine();
@@ -274,7 +278,9 @@ public class Game {
 
 
                     System.out.println("Round ended, starting new one...");
+
                     String playerDecision = in.readLine(); // Check if player wants to play again
+
                     if(playerDecision.equalsIgnoreCase("exit")) {
                         playerHands.remove(index);
                         removePlayer(this);
@@ -283,6 +289,7 @@ public class Game {
                     }
                     roundOverVerification[index] = true;
                     counter = 0;
+
                     while(!havePlayersDecidedToPlay()) {
                         if(counter == 0) {
                             out.write(Messages.WAITING_FOR_NEXT_ROUND);

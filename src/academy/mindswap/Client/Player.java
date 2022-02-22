@@ -49,7 +49,7 @@ public class Player {
             }
 
             if(serverMessage.startsWith("Congrats")) {
-                serverMessage = serverMessage.replaceAll("^[0-9]","").trim();
+                serverMessage = serverMessage.replaceAll("[^0-9]","").trim();
                 System.out.println(serverMessage + "<<<");
                 credits += Double.parseDouble(serverMessage);
                 System.out.printf(Messages.CURRENT_CREDITS, credits);
@@ -95,7 +95,6 @@ public class Player {
 
 
                         while(!socket.isClosed()) {
-
                             this.bufferedReader = new BufferedReader(new InputStreamReader(System.in));
                             String call = bufferedReader.readLine();
 
@@ -107,7 +106,7 @@ public class Player {
                             bufferedWriter.write(call);
                             bufferedWriter.newLine();
                             bufferedWriter.flush();
-                            System.out.println(Messages.PLAYER_CALL);
+
                             while(call.equalsIgnoreCase("bet")) {
 
                                 System.out.println(Messages.INSERT_BET);
@@ -135,6 +134,7 @@ public class Player {
 
                             while (!isRoundOver) {
                                 Thread.sleep(500);
+                                System.out.println("Waiting for round to end...");
                             }
 
                             System.out.println(Messages.CONTINUE_PLAYING);
