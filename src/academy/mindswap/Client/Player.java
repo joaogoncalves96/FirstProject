@@ -1,12 +1,14 @@
 package academy.mindswap.Client;
+import academy.mindswap.Server.Game;
 import academy.mindswap.utils.Messages;
 
 import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Scanner;
 import java.util.regex.Pattern;
 
-public class Player implements Runnable {
+public class Player {
 
     private Socket socket;
     private String hostName = "localHost";
@@ -28,17 +30,68 @@ public class Player implements Runnable {
     }
 
     public void connectToServer ()  throws IOException {
-        BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        Scanner in = new Scanner(socket.getInputStream());
         BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-        new Thread(this).start();
-        String line;
-        while (( line = in.readLine()) != null) {
-            System.out.println(line);
+        new Thread(new ConnectionHandler(this.socket, out)).start();
+
+        while (in.hasNextLine()) {
+            System.out.println(in.nextLine());
         }
         socket.close();
-
     }
 
+
+    class ConnectionHandler implements Runnable {
+
+        private BufferedReader bufferedReader;
+        private BufferedWriter bufferedWriter;
+        private Socket socket;
+
+        private ConnectionHandler(Socket socket, BufferedWriter out) {
+            this.socket = socket;
+            this.bufferedWriter = out;
+        }
+
+        @Override
+        public void run () {
+            synchronized (this) {
+                while (socket.isConnected()) {
+                    try {
+                        this.bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+                        this.bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+
+                        bufferedWriter.write(clientUsername);
+                        bufferedWriter.newLine();
+                        bufferedWriter.flush();
+
+                        bufferedWriter.write(String.valueOf(credits));
+                        bufferedWriter.newLine();
+                        bufferedWriter.flush();
+
+
+                        while(!socket.isClosed()) {
+
+                            this.bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+                            String call = bufferedReader.readLine();
+
+                            if(!checkForValidCommand(call)) {
+                                System.out.println(Messages.VALID_COMMAND);
+                                continue;
+                            }
+
+                            bufferedWriter.write(call);
+                            bufferedWriter.newLine();
+                            bufferedWriter.flush();
+
+
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+    }
 
     private void askForUserNameAndCredits() throws IOException {
 
@@ -59,59 +112,8 @@ public class Player implements Runnable {
         }
     }
 
-        @Override
-        public void run () {
-            String messageFromClient;
-            while (socket.isConnected()) {
-                try {
+    public void closeAll(Socket socket, BufferedReader bufferedReader, BufferedWriter bufferedWriter) {
 
-                    this.bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-                    this.bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-
-                    bufferedWriter.write(this.clientUsername);
-                    bufferedWriter.newLine();
-                    bufferedWriter.flush();
-
-                    bufferedWriter.write(String.valueOf(this.credits));
-                    bufferedWriter.newLine();
-                    bufferedWriter.flush();
-
-                    String status =  bufferedReader.readLine();
-
-                    System.out.println(status);
-
-                    status =  bufferedReader.readLine();
-
-
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-
-            }
-        }
-
-        // ler mensagens, mandar mensagens,
-       /* public void broadcastMessage(String messageToSend) {
-            for (Player player : playerArrayList) {
-                try {
-                    if(!player.clientUsername.equals(clientUsername)) {
-                        player.bufferedWriter.write(messageToSend);
-                        player.bufferedWriter.newLine();
-                        player.bufferedWriter.flush();
-                    }
-                } catch (IOException e) {
-                   closeAll(socket, bufferedReader, bufferedWriter);
-                }
-            }
-        }
-        public void removePlayer() {
-        playerArrayList.remove( this);
-        broadcastMessage("SERVER: " + clientUsername + " has left the table");
-        }*/
-
-        public void closeAll(Socket socket, BufferedReader bufferedReader, BufferedWriter bufferedWriter) {;
         try {
             if (bufferedReader != null) {
                 bufferedReader.close();
@@ -126,4 +128,14 @@ public class Player implements Runnable {
             e.printStackTrace();
         }
     }
+
+    private boolean checkForValidCommand(String command) {
+
+        return command.equalsIgnoreCase("call") ||
+                command.equalsIgnoreCase("bet") ||
+                command.equalsIgnoreCase("fold") ||
+                command.equalsIgnoreCase("all in");
+    }
+
+
 }

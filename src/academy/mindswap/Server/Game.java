@@ -10,7 +10,6 @@ import java.net.Socket;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.stream.Collectors;
 
 /**
  * Poker Game v0.01
@@ -27,6 +26,7 @@ public class Game {
     private final int userLimit;
     private Deck deck;
     private Set<Card> tableCards;
+    private final boolean[] verification;
 
     public Game(int tableLimit) {
 
@@ -34,6 +34,7 @@ public class Game {
         this.userLimit = tableLimit;
         this.deck = DeckFactory.createFullDeck();
         this.tableCards = Collections.synchronizedSet(new HashSet<>());
+        this.verification = new boolean[userLimit];
     }
 
     public void startServer() throws IOException {
@@ -69,14 +70,13 @@ public class Game {
         return this.deck.getDeckSize() < 52;
     }
 
-    private void dealTableCards() {
-        this.deck.getDeck()
-                .stream()
-                .limit(5)
-                .forEach(tableCards::add); // card -> tableCard.add(card);
+    private synchronized void dealTableCards() {
 
-        for(Card card : this.tableCards) {
-            this.deck.removeCard(card);
+        for (int i = 0; i < 5; i++) {
+            Card[] cardArray = deck.getDeck().toArray(new Card[deck.getDeckSize()]);
+            Card bufferCard = cardArray[(int) (Math.random() * deck.getDeckSize())];
+            deck.removeCard(bufferCard);
+            tableCards.add(bufferCard);
         }
     }
 
@@ -88,10 +88,10 @@ public class Game {
         private String message;
         private String username;
         private double credits;
-        private HashSet<Card> playerCards;
+        private ArrayList<Card> playerCards;
 
         private PlayerHandler(Socket socket) {
-            this.playerCards = new HashSet<>(2);
+            this.playerCards = new ArrayList<>(2);
             this.socket = socket;
         }
 
@@ -115,9 +115,6 @@ public class Game {
 
         @Override
         public void run() {
-
-
-
             try {
 
                 in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -146,6 +143,7 @@ public class Game {
 
                     System.out.println("Placing player in table...");
                     addPlayer(this);
+
                     int counter = 0;
                     while (currentPlayersConnected() <= 1) {
                         if(counter == 0){
@@ -169,53 +167,89 @@ public class Game {
                     out.write(Messages.STARTING_ROUND);
                     out.newLine();
                     out.flush();
-
-                    dealTableCards();
                     givePlayerCards();
 
-                    out.write(cardsToString());
+                    synchronized (tableCards){
+                        if(tableCards.isEmpty()) {
+                            dealTableCards();
+                        }
+                    }
+
+                    System.out.println(tableCardsToString());
+
+                    out.write(playerCardsToString());
                     out.newLine();
                     out.flush();
-
+                    System.out.println("Waiting for player choices...");
                     String playerChoice = in.readLine();
 
+                    if(playerChoice != null) {
+                        synchronized (verification) {
+                            System.out.println("I'm here");
+                            verification[listOfPlayers.indexOf(this)] = true;
+                        }
+                    }
+
+                    while(!checkIfPlayersMadeDecision()) {
+                        if(counter == 0) {
+                            String message = "Waiting for players to make decision";
+                            System.out.println(message);
+                            out.write(message);
+                            out.newLine();
+                            out.flush();
+                            counter++;
+                        }
+                    }
+
+                    System.out.println("Players made their decision.");
+                    checkPlayerAction(playerChoice);
+
                 }
-
-
-
-
-
             } catch (IOException e) {
-
                 e.printStackTrace();
             }
-
         }
 
 
 
-        public void givePlayerCards() {
-          this.playerCards.add(deck.getDeck()
-                  .stream()
-                  .findAny()
-                  .get());
-          this.playerCards.add(deck.getDeck()
-                  .stream()
-                  .findAny()
-                  .get());
-
-          for(Card card : playerCards) {
-              deck.removeCard(card);
-          }
-
+        public synchronized void givePlayerCards() {
+            for (int i = 0; i < 2; i++) {
+                Card[] cardArray = deck.getDeck().toArray(new Card[deck.getDeckSize()]);
+                Card bufferCard = cardArray[(int) (Math.random() * deck.getDeckSize())];
+                deck.removeCard(bufferCard);
+                playerCards.add(bufferCard);
+            }
         }
 
-        private String cardsToString() {
+        private String playerCardsToString() {
 
             StringBuilder cardString = new StringBuilder(Messages.PLAYER_CARDS);
             this.playerCards.forEach(card -> cardString.append(card.toString()));
             return  cardString.toString();
 
+        }
+        private String tableCardsToString() {
+            StringBuilder cardString = new StringBuilder(Messages.TABLE_CARDS);
+            tableCards.forEach(card -> cardString.append(card.toString()));
+            return  cardString.toString();
+        }
+
+        private void checkPlayerAction(String action) {
+
+        }
+
+        private synchronized boolean checkIfPlayersMadeDecision() {
+            int trues = 0;
+            for(boolean b : verification) {
+                if(b) trues++;
+            }
+            return trues == currentPlayersConnected();
+        }
+
+        private synchronized void setVerificationsToFalse() {
+            for(boolean b : verification) {
+                b = false;
+            }
         }
     }
 }

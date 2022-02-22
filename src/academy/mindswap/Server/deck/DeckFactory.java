@@ -1,5 +1,6 @@
 package academy.mindswap.Server.deck;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -10,7 +11,7 @@ public class DeckFactory {
        CardRank[] cardRank = CardRank.values();
        CardSuit[] cardSuit = CardSuit.values();
 
-       Set<Card> deck = new HashSet<>(52);
+       Set<Card> deck = Collections.synchronizedSet(new HashSet<>(52));
 
          for (CardRank rank : cardRank) {
          for (CardSuit suit : cardSuit) {

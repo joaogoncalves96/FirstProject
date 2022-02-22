@@ -29,5 +29,4 @@ public class Deck {
     public void removeCard(Card card) {
         this.deck.remove(card);
     }
-
 }
