@@ -2,6 +2,22 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="5758b74b-1b07-478a-8926-8d348cfc6100" name="Changes" comment="updated 22/02&#10;13:00h">
+      <change afterPath="$PROJECT_DIR$/out/production/FirstProject/academy/mindswap/Client/Client$1.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/FirstProject/academy/mindswap/Client/Client.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/FirstProject/academy/mindswap/Client/LaunchPlayer2.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/FirstProject/academy/mindswap/Client/LaunchPlayer3.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/FirstProject/academy/mindswap/Client/Player.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/FirstProject/academy/mindswap/Main.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/FirstProject/academy/mindswap/Server/Game$PlayerHandler.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/FirstProject/academy/mindswap/Server/Game.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/FirstProject/academy/mindswap/Server/Main.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/FirstProject/academy/mindswap/Server/deck/Card.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/FirstProject/academy/mindswap/Server/deck/CardRank.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/FirstProject/academy/mindswap/Server/deck/CardSuit.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/FirstProject/academy/mindswap/Server/deck/Deck.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/FirstProject/academy/mindswap/Server/deck/DeckFactory.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/FirstProject/academy/mindswap/utils/ColorCodes.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/FirstProject/academy/mindswap/utils/Messages.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
