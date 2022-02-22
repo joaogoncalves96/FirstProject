@@ -15,4 +15,6 @@ public class Messages {
     public static final String PLAYER_DISCONNECTED = "PLAYER DISC.";
     public static final String TABLE_CARDS = "Current cards on table: \n";
     public static final String VALID_COMMAND = "Please insert a valid command: \n";
+    public static final String WINNER = "Congrats you win! You've gained \n";
+    public static final String LOSER = "You lost better luck next time! You've lost \n";
 }

@@ -1,22 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="5758b74b-1b07-478a-8926-8d348cfc6100" name="Changes" comment="updated 22/02&#10;change Enum cards&#10;16:00h">
-      <change afterPath="$PROJECT_DIR$/src/academy/mindswap/commands/AllinHandler.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/academy/mindswap/commands/BetHandler.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/academy/mindswap/commands/CallHandler.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/academy/mindswap/commands/Command.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/academy/mindswap/commands/CommandHandler.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/academy/mindswap/commands/FoldHandler.java" afterDir="false" />
+    <list default="true" id="5758b74b-1b07-478a-8926-8d348cfc6100" name="Changes" comment="upgraded analyzer, added winner checker">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/academy/mindswap/Client/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/Client/Player.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/academy/mindswap/Server/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/server/Game.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/academy/mindswap/Server/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/server/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/academy/mindswap/Server/deck/Card.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/server/deck/Card.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/academy/mindswap/Server/deck/CardRank.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/server/deck/CardRank.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/academy/mindswap/Server/deck/CardSuit.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/server/deck/CardSuit.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/academy/mindswap/Server/deck/Deck.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/server/deck/Deck.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/academy/mindswap/Server/deck/DeckFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/server/deck/DeckFactory.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/academy/mindswap/Server/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/Server/Game.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/academy/mindswap/utils/Messages.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/utils/Messages.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -26,8 +14,6 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Enum" />
-        <option value="Interface" />
         <option value="Class" />
       </list>
     </option>
@@ -38,7 +24,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="main" />
+        <entry key="$PROJECT_DIR$" value="game-analyzer" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -66,7 +52,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../java/module_1/solutions/concurrency-chat" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
   </component>
   <component name="RecentsManager">
     <key name="CopyClassDialog.RECENTS_KEY">
@@ -96,7 +82,7 @@
       </method>
     </configuration>
     <configuration name="Server" type="Application" factoryName="Application">
-      <option name="MAIN_CLASS_NAME" value="academy.mindswap.server.Main" />
+      <option name="MAIN_CLASS_NAME" value="academy.mindswap.Server.Main" />
       <module name="FirstProject" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -209,14 +195,28 @@
       <option name="project" value="LOCAL" />
       <updated>1645539120740</updated>
     </task>
-    <task id="LOCAL-00013" summary="updated 22/02&#10;change Enum cards&#10;16:00h">
-      <created>1645544907265</created>
+    <task id="LOCAL-00013" summary="added bet command, added check for valid double string">
+      <created>1645542281149</created>
       <option name="number" value="00013" />
       <option name="presentableId" value="LOCAL-00013" />
       <option name="project" value="LOCAL" />
-      <updated>1645544907266</updated>
+      <updated>1645542281149</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="added hand analyzer">
+      <created>1645546020974</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1645546020974</updated>
+    </task>
+    <task id="LOCAL-00015" summary="upgraded analyzer, added winner checker">
+      <created>1645548065117</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1645548065117</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -242,7 +242,9 @@
     <MESSAGE value="added synchronized verificator" />
     <MESSAGE value="added connection handler for client, fixed deal cards to players" />
     <MESSAGE value="fixed table cards, fixed player thread, added player handler" />
-    <MESSAGE value="updated 22/02&#10;change Enum cards&#10;16:00h" />
-    <option name="LAST_COMMIT_MESSAGE" value="updated 22/02&#10;change Enum cards&#10;16:00h" />
+    <MESSAGE value="added bet command, added check for valid double string" />
+    <MESSAGE value="added hand analyzer" />
+    <MESSAGE value="upgraded analyzer, added winner checker" />
+    <option name="LAST_COMMIT_MESSAGE" value="upgraded analyzer, added winner checker" />
   </component>
 </project>

@@ -1,9 +1,5 @@
-package academy.mindswap.server;
-import academy.mindswap.Client.Player;
-import academy.mindswap.commands.Command;
-import academy.mindswap.server.deck.Card;
-import academy.mindswap.server.deck.Deck;
-import academy.mindswap.server.deck.DeckFactory;
+package academy.mindswap.Server;
+import academy.mindswap.Server.deck.*;
 import academy.mindswap.utils.Messages;
 
 import java.io.*;
@@ -12,6 +8,7 @@ import java.net.Socket;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.stream.Collectors;
 
 /**
  * Poker Game v0.01
@@ -20,7 +17,6 @@ import java.util.concurrent.Executors;
 
 public class Game {
 
-
     private List<PlayerHandler> listOfPlayers;
     private final int PORT = 8081;
     private ExecutorService service;
@@ -28,7 +24,9 @@ public class Game {
     private final int userLimit;
     private Deck deck;
     private Set<Card> tableCards;
-    private final boolean[] verification;
+    private boolean[] verification;
+    private double pot;
+    private List<Integer> playerHands;
 
     public Game(int tableLimit) {
 
@@ -37,6 +35,7 @@ public class Game {
         this.deck = DeckFactory.createFullDeck();
         this.tableCards = Collections.synchronizedSet(new HashSet<>());
         this.verification = new boolean[userLimit];
+        this.playerHands = Collections.synchronizedList(new ArrayList<>());
     }
 
     public void startServer() throws IOException {
@@ -91,16 +90,33 @@ public class Game {
         private String username;
         private double credits;
         private ArrayList<Card> playerCards;
+        private double bet;
+        private int index;
 
         private PlayerHandler(Socket socket) {
             this.playerCards = new ArrayList<>(2);
             this.socket = socket;
+            this.index = -1;
         }
 
         private String getUsername() {
             return username;
         }
 
+        protected boolean didIWin() {
+
+            int myPoints = playerHands.get(index);
+
+            for(Integer i : playerHands) {
+                if(i > myPoints) return false;
+            }
+
+            return true;
+        }
+
+        public int getIndex() {
+            return index;
+        }
 
         @Override
         public boolean equals(Object o) {
@@ -144,7 +160,15 @@ public class Game {
                     }
 
                     System.out.println("Placing player in table...");
-                    addPlayer(this);
+                    if(index == -1) {
+                        synchronized (playerHands) {
+                            addPlayer(this);
+                            playerHands.add(0);
+                            index = playerHands.size() - 1;
+                        }
+
+                    }
+
 
                     int counter = 0;
                     while (currentPlayersConnected() <= 1) {
@@ -159,17 +183,16 @@ public class Game {
 
                     counter = 0;
 
-                    while(isGameUnderWay()) {
-                        if(counter == 0) {
-                            System.out.println(Messages.WAITING_FOR_ROUND);
-                            counter++;
-                        }
-                    }
+//                    while(isGameUnderWay()) {
+//                        if(counter == 0) {
+//                            System.out.println(Messages.WAITING_FOR_ROUND);
+//                            counter++;
+//                        }
+//                    }
 
                     out.write(Messages.STARTING_ROUND);
                     out.newLine();
                     out.flush();
-                    //if (isGameUnderWay())
                     givePlayerCards();
 
                     synchronized (tableCards){
@@ -187,9 +210,17 @@ public class Game {
                     String playerChoice = in.readLine();
 
                     if(playerChoice != null) {
-                        synchronized (verification) {
-                            System.out.println("I'm here");
-                            verification[listOfPlayers.indexOf(this)] = true;
+
+
+                        if(playerChoice.equalsIgnoreCase("bet")) {
+                            System.out.println("Waiting for player bet...");
+                            String betStr = in.readLine();
+                            bet += Double.parseDouble(betStr);
+                            pot += bet;
+                            synchronized (verification) {
+                                System.out.println("I'm here");
+                                verification[index] = true;
+                            }
                         }
                     }
 
@@ -205,15 +236,40 @@ public class Game {
                     }
 
                     System.out.println("Players made their decision.");
-                    checkPlayerAction(playerChoice);
+
+                    out.write("Cards in table: \n" + tableCardsToString());
+                    out.newLine();
+                    out.flush();
+
+                    int points = analyzePLayerHand();
+
+                    playerHands.set(index, points);
+
+                    System.out.println(username + " has " + points);
+
+                    out.write("You got a " +  getStringHand(points) + "!");
+                    out.newLine();
+                    out.flush();
+
+                    if(didIWin()) {
+                        out.write(Messages.WINNER + pot + " credits.");
+                        out.flush();
+                        out.newLine();
+
+                    } else {
+                        out.write(Messages.LOSER + bet + "credits.");
+                        out.flush();
+                        out.newLine();
+                    }
+
+                    startNewRound();
+                    System.out.println("Round ended, starting new one...");
 
                 }
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
-
-
 
         public synchronized void givePlayerCards() {
             for (int i = 0; i < 2; i++) {
@@ -231,14 +287,11 @@ public class Game {
             return  cardString.toString();
 
         }
+
         private String tableCardsToString() {
             StringBuilder cardString = new StringBuilder(Messages.TABLE_CARDS);
             tableCards.forEach(card -> cardString.append(card.toString()));
             return  cardString.toString();
-        }
-
-        private void checkPlayerAction(String action) {
-
         }
 
         private synchronized boolean checkIfPlayersMadeDecision() {
@@ -250,24 +303,156 @@ public class Game {
         }
 
         private synchronized void setVerificationsToFalse() {
+
             for(boolean b : verification) {
                 b = false;
             }
         }
 
-        private void dealWithCommand(String message) throws IOException {
-            Command command = Command.getCommandFromDescription(message);
+        private int analyzePLayerHand() {
+            int points = Math.max(this.playerCards.get(0)
+                    .getCardRank()
+                    .getCardRankPoints(), this.playerCards.get(1)
+                    .getCardRank()
+                    .getCardRankPoints());
 
-            if (command == null) {
-                out.write(Messages.VALID_COMMAND);
-                out.newLine();
-                out.flush();
-                return;
+            this.playerCards.addAll(tableCards);
+
+            points += countCards(this.playerCards);
+
+            if(points < 400) {
+                points += checkForFlush(this.playerCards);
             }
 
-            command.getCommandHandler().execute(Game.this, this);
+            if(points < 200) {
+                points += checkForSequential(this.playerCards);
+            }
+            return points;
+        }
 
+        private int countCards(ArrayList<Card> playerCards) {
+            int points = 0;
+            HashMap<CardRank, Integer> cardsCount = new HashMap<>();
+
+            List<CardRank> cardRanks = playerCards.stream()
+                    .map(Card::getCardRank).toList();
+
+            for(CardRank cardRank : cardRanks) {
+                if(cardsCount.containsKey(cardRank)) {
+                    cardsCount.put(cardRank, cardsCount.get(cardRank) + 1);
+                } else {
+                    cardsCount.put(cardRank, 1);
+                }
+            }
+
+            int triples = 0;
+            int pairs = 0;
+
+            for(CardRank c : cardsCount.keySet()) {
+
+                if(cardsCount.get(c) == 4) {
+                    return c.getCardRankPoints() + 1000;
+                }
+
+                if(cardsCount.get(c) == 3) {
+                    points += c.getCardRankPoints();
+                    triples++;
+                    continue;
+                }
+
+                if(cardsCount.get(c) == 2) {
+                    points += c.getCardRankPoints();
+                    pairs++;
+                }
+            }
+
+            if(pairs > 0 && triples == 0) {
+                return points + (pairs * 10);
+            }
+
+            if(pairs == 1 && triples == 1) {
+                return points + 500;
+            }
+            return 0;
+        }
+
+        private int checkForSequential(ArrayList<Card> playerCards ) {
+            playerCards.sort(new Comparator<Card>() {
+                @Override
+                public int compare(Card o1, Card o2) {
+                    return Integer.compare(o1.getCardRank().getCardRankPoints(), o2.getCardRank().getCardRankPoints()) ;
+                }
+            });
+
+            int sequentialCounter = 0;
+            for (int i = 0; i < playerCards.size() - 1; i++) {
+                int card1Value = playerCards.get(i).getCardRank().getCardRankPoints();
+                int card2Value = playerCards.get(i + 1).getCardRank().getCardRankPoints();
+                if(card1Value == card2Value + 1) {
+                    sequentialCounter++;
+                } else {
+                    sequentialCounter = 0;
+                }
+            }
+            return sequentialCounter >= 5 ? 300 : 0;
+        }
+
+        private int checkForFlush(ArrayList<Card> playerCards) {
+            int points = 0;
+            HashMap<CardSuit, Integer> cardSuitCount = new HashMap<>();
+
+            List<CardSuit> cardSuits = playerCards.stream()
+                    .map(Card::getCardSuit).toList();
+
+            for(CardSuit cardSuit : cardSuits) {
+                if(cardSuitCount.containsKey(cardSuits)) {
+                    cardSuitCount.put(cardSuit, cardSuitCount.get(cardSuits) + 1);
+                } else {
+                    cardSuitCount.put(cardSuit, 1);
+                }
+            }
+
+            if(cardSuitCount.values().stream().noneMatch(value -> value >= 5)) {
+                return 0;
+            }
+            return 400;
+        }
+
+        private String getStringHand(int points) {
+
+            if(points > 1000) {
+                return "Four of a kind";
+            }
+            if(points > 500) {
+                return "Full house";
+            }
+            if(points > 400) {
+                return "Flush";
+            }
+            if(points > 300) {
+                return "Straight";
+            }
+            if(points > 100) {
+                return "Triplet";
+            }
+            if(points > 40) {
+                return "Double pair";
+            }
+            if(points > 14) {
+                return "Pair";
+            }
+            return "High card";
+        }
+
+        private void startNewRound() {
+
+            playerCards = new ArrayList<>(2);
+            deck = DeckFactory.createFullDeck();
+            bet = 0;
+            pot = 0;
+            setVerificationsToFalse();
 
         }
+
     }
 }
