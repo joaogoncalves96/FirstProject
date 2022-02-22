@@ -10,6 +10,7 @@ import java.net.Socket;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.stream.Collectors;
 
 /**
  * Poker Game v0.01
@@ -20,17 +21,19 @@ public class Game {
 
 
     private List<PlayerHandler> listOfPlayers;
-    private int PORT = 8081;
+    private final int PORT = 8081;
     private ExecutorService service;
     private ServerSocket serverSocket;
-    private int userLimit;
+    private final int userLimit;
     private Deck deck;
+    private Set<Card> tableCards;
 
     public Game(int tableLimit) {
 
         this.listOfPlayers = Collections.synchronizedList(new ArrayList<>());
         this.userLimit = tableLimit;
         this.deck = DeckFactory.createFullDeck();
+        this.tableCards = Collections.synchronizedSet(new HashSet<>());
     }
 
     public void startServer() throws IOException {
@@ -62,6 +65,17 @@ public class Game {
         return listOfPlayers.size();
     }
 
+    private boolean isGameUnderWay() {
+        return this.deck.getDeckSize() < 52;
+    }
+
+    private void dealTableCards() {
+        this.deck.getDeck()
+                .stream()
+                .limit(5)
+                .forEach(tableCards::add);
+    }
+
     public class PlayerHandler implements Runnable {
 
         private Socket socket;
@@ -70,9 +84,10 @@ public class Game {
         private String message;
         private String username;
         private double credits;
-        private Set<Card> playerCards;
+        private HashSet<Card> playerCards;
 
         private PlayerHandler(Socket socket) {
+            this.playerCards = new HashSet<>(2);
             this.socket = socket;
         }
 
@@ -125,9 +140,20 @@ public class Game {
                     }
 
                     while (currentPlayersConnected() <= 1) {
-                        System.out.println();
+                        System.out.println(Messages.WAITING_FOR_PLAYERS);
+                        Thread.sleep(1000);
                     }
 
+                    while(isGameUnderWay()) {
+                        System.out.println(Messages.WAITING_FOR_ROUND);
+                        Thread.sleep(1000);
+                    }
+
+                    givePlayerCards();
+
+                    out.write(cardsToString());
+                    out.newLine();
+                    out.flush();
 
 
 
@@ -141,8 +167,31 @@ public class Game {
 
                 e.printStackTrace();
 
+            } catch (InterruptedException e) {
+
+                e.printStackTrace();
             }
 
+
+        }
+
+
+
+        public void givePlayerCards() {
+          this.playerCards.add(deck.getDeck().stream().findAny().get());
+          this.playerCards.add(deck.getDeck().stream().findAny().get());
+          for(Card card : playerCards) {
+              deck.getDeck().remove(card);
+          }
+
+        }
+
+        private String cardsToString() {
+
+            StringBuilder cardString = new StringBuilder();
+            cardString.append(Messages.PLAYER_CARDS);
+            this.playerCards.forEach(card -> cardString.append(card.toString()));
+            return  cardString.toString();
 
         }
     }

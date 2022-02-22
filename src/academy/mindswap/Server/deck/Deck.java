@@ -31,4 +31,8 @@ public class Deck {
         return deck;
     }
 
+    public int getDeckSize() {
+        return this.deck.size();
+    }
+
 }
