@@ -42,6 +42,7 @@ public class Player {
 
 
     class ConnectionHandler implements Runnable {
+
         private BufferedReader bufferedReader;
         private BufferedWriter bufferedWriter;
         private Socket socket;
@@ -74,13 +75,15 @@ public class Player {
                             String call = bufferedReader.readLine();
 
                             if(!checkForValidCommand(call)) {
-                                System.out.println("I'm here");
+                                System.out.println(Messages.VALID_COMMAND);
                                 continue;
                             }
 
                             bufferedWriter.write(call);
                             bufferedWriter.newLine();
                             bufferedWriter.flush();
+
+
                         }
                     } catch (IOException e) {
                         e.printStackTrace();

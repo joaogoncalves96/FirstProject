@@ -17,6 +17,7 @@ public enum CardRank {
 
     private int cardRankPoints;
 
+
     CardRank(int cardRankPoints) {
         this.cardRankPoints = cardRankPoints;
     }

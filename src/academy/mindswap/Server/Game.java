@@ -24,7 +24,7 @@ public class Game {
     private ExecutorService service;
     private ServerSocket serverSocket;
     private final int userLimit;
-    private volatile Deck deck;
+    private Deck deck;
     private Set<Card> tableCards;
     private final boolean[] verification;
 
@@ -71,9 +71,9 @@ public class Game {
     }
 
     private synchronized void dealTableCards() {
-        Card[] cardArray = deck.getDeck().toArray(new Card[deck.getDeckSize()]);
 
         for (int i = 0; i < 5; i++) {
+            Card[] cardArray = deck.getDeck().toArray(new Card[deck.getDeckSize()]);
             Card bufferCard = cardArray[(int) (Math.random() * deck.getDeckSize())];
             deck.removeCard(bufferCard);
             tableCards.add(bufferCard);
@@ -115,9 +115,6 @@ public class Game {
 
         @Override
         public void run() {
-
-
-
             try {
 
                 in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -160,24 +157,23 @@ public class Game {
 
                     counter = 0;
 
-//                    while(isGameUnderWay()) {
-//                        if(counter == 0) {
-//                            System.out.println(Messages.WAITING_FOR_ROUND);
-//                            counter++;
-//                        }
-//                    }
+                    while(isGameUnderWay()) {
+                        if(counter == 0) {
+                            System.out.println(Messages.WAITING_FOR_ROUND);
+                            counter++;
+                        }
+                    }
 
                     out.write(Messages.STARTING_ROUND);
                     out.newLine();
                     out.flush();
+                    givePlayerCards();
 
                     synchronized (tableCards){
                         if(tableCards.isEmpty()) {
                             dealTableCards();
                         }
                     }
-
-                    givePlayerCards();
 
                     System.out.println(tableCardsToString());
 
@@ -195,20 +191,18 @@ public class Game {
                     }
 
                     while(!checkIfPlayersMadeDecision()) {
-
-                        String message = "Waiting for players to make decision";
-                        System.out.println(message);
-                        out.write(message);
-                        out.newLine();
-                        out.flush();
-
+                        if(counter == 0) {
+                            String message = "Waiting for players to make decision";
+                            System.out.println(message);
+                            out.write(message);
+                            out.newLine();
+                            out.flush();
+                            counter++;
+                        }
                     }
 
-
-
+                    System.out.println("Players made their decision.");
                     checkPlayerAction(playerChoice);
-
-
 
                 }
             } catch (IOException e) {
@@ -219,14 +213,12 @@ public class Game {
 
 
         public synchronized void givePlayerCards() {
-            Card[] cardArray = deck.getDeck().toArray(new Card[deck.getDeckSize()]);
-
             for (int i = 0; i < 2; i++) {
+                Card[] cardArray = deck.getDeck().toArray(new Card[deck.getDeckSize()]);
                 Card bufferCard = cardArray[(int) (Math.random() * deck.getDeckSize())];
                 deck.removeCard(bufferCard);
                 playerCards.add(bufferCard);
             }
-
         }
 
         private String playerCardsToString() {

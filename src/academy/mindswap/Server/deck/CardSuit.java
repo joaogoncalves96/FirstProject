@@ -1,9 +1,11 @@
 package academy.mindswap.Server.deck;
 
+import academy.mindswap.utils.ColorCodes;
+
 public enum CardSuit {
-    SPADES("♠"),
+    SPADES(ColorCodes.BLACK +  "♠" + ColorCodes.RESET),
     CLUBS("♣"),
-    HEARTS("♥"),
+    HEARTS(ColorCodes.RED + "♥" + ColorCodes.RESET),
     DIAMONDS("♦");
 
     private String suit;
