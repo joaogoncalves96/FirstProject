@@ -1,15 +1,16 @@
 package academy.mindswap.Server;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.IOException;
+import academy.mindswap.Server.deck.Card;
+import academy.mindswap.Server.deck.Deck;
+import academy.mindswap.Server.deck.DeckFactory;
+import academy.mindswap.utils.Messages;
+
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.stream.Collectors;
 
 /**
  * Poker Game v0.01
@@ -20,15 +21,19 @@ public class Game {
 
 
     private List<PlayerHandler> listOfPlayers;
-    private int PORT = 8081;
+    private final int PORT = 8081;
     private ExecutorService service;
     private ServerSocket serverSocket;
-    private int userLimit;
+    private final int userLimit;
+    private Deck deck;
+    private Set<Card> tableCards;
 
     public Game(int tableLimit) {
 
         this.listOfPlayers = Collections.synchronizedList(new ArrayList<>());
         this.userLimit = tableLimit;
+        this.deck = DeckFactory.createFullDeck();
+        this.tableCards = Collections.synchronizedSet(new HashSet<>());
     }
 
     public void startServer() throws IOException {
@@ -56,7 +61,22 @@ public class Game {
         return listOfPlayers.contains(player);
     }
 
-    private static class PlayerHandler implements Runnable {
+    private int currentPlayersConnected() {
+        return listOfPlayers.size();
+    }
+
+    private boolean isGameUnderWay() {
+        return this.deck.getDeckSize() < 52;
+    }
+
+    private void dealTableCards() {
+        this.deck.getDeck()
+                .stream()
+                .limit(5)
+                .forEach(tableCards::add); // card -> tableCard.add(card);
+    }
+
+    public class PlayerHandler implements Runnable {
 
         private Socket socket;
         private BufferedWriter out;
@@ -64,11 +84,10 @@ public class Game {
         private String message;
         private String username;
         private double credits;
-        private Card cards;
-        private Deck deck;
-
+        private HashSet<Card> playerCards;
 
         private PlayerHandler(Socket socket) {
+            this.playerCards = new HashSet<>(2);
             this.socket = socket;
         }
 
@@ -92,6 +111,93 @@ public class Game {
 
         @Override
         public void run() {
+
+            addPlayer(this);
+
+            try {
+
+                in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+
+                System.out.println(Messages.CONNECTING);
+
+                while(!socket.isClosed()) {
+
+                    // Get player username
+                    while (message == null && username == null) {
+                        message = in.readLine();
+                        System.out.printf("User: %s has connected.%n", message);
+                        username = message;
+                        message = null;
+                        break;
+                    }
+                    // Get player credits
+                    while (message == null && credits == 0.0) {
+                        message = in.readLine();
+                        credits = Double.parseDouble(message);
+                        message = null;
+                        break;
+                    }
+
+
+
+                    while (currentPlayersConnected() <= 1) {
+                        System.out.println(Messages.WAITING_FOR_PLAYERS);
+                        Thread.sleep(1000);
+                    }
+
+                    while(isGameUnderWay()) {
+                        System.out.println(Messages.WAITING_FOR_ROUND);
+                        Thread.sleep(1000);
+                    }
+
+                    dealTableCards();
+                    givePlayerCards();
+
+                    out.write(cardsToString());
+                    out.newLine();
+                    out.flush();
+
+                    String playerChoice = in.readLine();
+
+
+
+                }
+
+
+
+
+
+            } catch (IOException e) {
+
+                e.printStackTrace();
+
+            } catch (InterruptedException e) {
+
+                e.printStackTrace();
+            }
+
+
+        }
+
+
+
+        public void givePlayerCards() {
+          this.playerCards.add(deck.getDeck().stream().findAny().get());
+          this.playerCards.add(deck.getDeck().stream().findAny().get());
+
+          for(Card card : playerCards) {
+              deck.removeCard(card);
+          }
+
+        }
+
+        private String cardsToString() {
+
+            StringBuilder cardString = new StringBuilder();
+            cardString.append(Messages.PLAYER_CARDS);
+            this.playerCards.forEach(card -> cardString.append(card.toString()));
+            return  cardString.toString();
 
         }
     }

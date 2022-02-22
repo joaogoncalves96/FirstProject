@@ -1,15 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="b5aa4275-ff89-4803-be14-030eaf60d227" name="Changes" comment="random commit">
-      <change afterPath="$PROJECT_DIR$/src/academy/mindswap/Server/deck/Card.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/academy/mindswap/Server/deck/CardRank.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/academy/mindswap/Server/deck/CardSuit.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/academy/mindswap/Server/deck/Deck.java" afterDir="false" />
+    <list default="true" id="5758b74b-1b07-478a-8926-8d348cfc6100" name="Changes" comment="added username and credits fetch">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/academy/mindswap/Server/Card.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/academy/mindswap/Server/Deck.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/academy/mindswap/Server/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/Server/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/academy/mindswap/Server/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/Server/Game.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/academy/mindswap/Server/deck/Card.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/Server/deck/Card.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/academy/mindswap/Server/deck/Deck.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/Server/deck/Deck.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -19,7 +15,6 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Enum" />
         <option value="Class" />
       </list>
     </option>
@@ -49,35 +44,44 @@
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
   </component>
-  <component name="RunManager">
-    <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="academy.mindswap.Server.Main" />
-      <module name="FirstProject" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="academy.mindswap.Server.deck.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <recent_temporary>
-      <list>
-        <item itemvalue="Application.Main" />
-      </list>
-    </recent_temporary>
-  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="b5aa4275-ff89-4803-be14-030eaf60d227" name="Changes" comment="random commit" />
+      <changelist id="5758b74b-1b07-478a-8926-8d348cfc6100" name="Changes" comment="" />
       <created>1645453602083</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1645453602083</updated>
     </task>
+    <task id="LOCAL-00001" summary="added factory added new constructor to deck">
+      <created>1645486793962</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1645486793962</updated>
+    </task>
+    <task id="LOCAL-00002" summary="added messages class refined factory">
+      <created>1645487500682</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1645487500682</updated>
+    </task>
+    <task id="LOCAL-00003" summary="added username and credits fetch">
+      <created>1645488055331</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1645488055331</updated>
+    </task>
+    <task id="LOCAL-00004" summary="added username and credits fetch">
+      <created>1645490490430</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1645490490430</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -90,5 +94,11 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="added factory added new constructor to deck" />
+    <MESSAGE value="added messages class refined factory" />
+    <MESSAGE value="added username and credits fetch" />
+    <option name="LAST_COMMIT_MESSAGE" value="added username and credits fetch" />
   </component>
 </project>
