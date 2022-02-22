@@ -173,6 +173,8 @@ public class Game {
                     dealTableCards();
                     givePlayerCards();
 
+
+
                     out.write(cardsToString());
                     out.newLine();
                     out.flush();
@@ -180,16 +182,9 @@ public class Game {
                     String playerChoice = in.readLine();
 
                 }
-
-
-
-
-
             } catch (IOException e) {
-
                 e.printStackTrace();
             }
-
         }
 
 

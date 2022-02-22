@@ -47,6 +47,8 @@ public class Player implements Runnable {
         }
     }
 
+
+
         @Override
         public void run () {
             String messageFromClient;
@@ -65,10 +67,28 @@ public class Player implements Runnable {
                     bufferedWriter.flush();
 
                     String status =  bufferedReader.readLine();
-
                     System.out.println(status);
 
-                    status =  bufferedReader.readLine();
+                    while(!socket.isClosed()) {
+
+                        String cards =  bufferedReader.readLine();
+
+                        System.out.println(cards);
+                        this.bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+                        String call = bufferedReader.readLine();
+
+                        if(!checkForValidCommand(call)) {
+                            continue;
+                        }
+
+                        bufferedWriter.write(call);
+                        bufferedWriter.newLine();
+                        bufferedWriter.flush();
+
+                    }
+
+
+
 
 
 
@@ -99,7 +119,8 @@ public class Player implements Runnable {
         broadcastMessage("SERVER: " + clientUsername + " has left the table");
         }*/
 
-        public void closeAll(Socket socket, BufferedReader bufferedReader, BufferedWriter bufferedWriter) {;
+    public void closeAll(Socket socket, BufferedReader bufferedReader, BufferedWriter bufferedWriter) {
+
         try {
             if (bufferedReader != null) {
                 bufferedReader.close();
@@ -114,4 +135,13 @@ public class Player implements Runnable {
             e.printStackTrace();
         }
     }
+
+    private boolean checkForValidCommand(String command) {
+        return command.equalsIgnoreCase("call") ||
+                command.equalsIgnoreCase("bet") ||
+                command.equalsIgnoreCase("fold") ||
+                command.equalsIgnoreCase("all in");
+    }
+
+
 }
