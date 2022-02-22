@@ -20,6 +20,10 @@ public class Messages {
     public static final String NOT_ENOUGH_CREDITS = "You don't have enough credits to make this bet..";
     public static final String INSERT_BET = "Please insert how much you want to bet this round: ";
     public static final String PLACED_BET = "Bet placed, waiting for all the players to bet...";
+    public static final String CURRENT_CREDITS = "You know have %.2f credits. %n";
+    public static final String WAITING_FOR_NEXT_ROUND = "Waiting for players to decide...";
+    public static final String PLAYER_CALL = "What do you want to do? \n BET ||  CALL || ALL-IN || FOLD \n";
     public static final String CONTINUE_PLAYING = "Do you want to play another round? \n Type EXIT to leave game, press enter to play another round. \n";
+
 
 }

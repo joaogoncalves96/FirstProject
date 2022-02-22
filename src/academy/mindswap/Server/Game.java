@@ -8,7 +8,6 @@ import java.net.Socket;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.stream.Collectors;
 
 /**
  * Poker Game v0.01
@@ -24,7 +23,8 @@ public class Game {
     private final int userLimit;
     private Deck deck;
     private Set<Card> tableCards;
-    private boolean[] verification;
+    private boolean[] gameDecisionsVerification;
+    private boolean[] roundOverVerification;
     private double pot;
     private List<Integer> playerHands;
 
@@ -34,7 +34,8 @@ public class Game {
         this.userLimit = tableLimit;
         this.deck = DeckFactory.createFullDeck();
         this.tableCards = Collections.synchronizedSet(new HashSet<>());
-        this.verification = new boolean[userLimit];
+        this.gameDecisionsVerification = new boolean[userLimit];
+        this.roundOverVerification = new boolean[userLimit];
         this.playerHands = Collections.synchronizedList(new ArrayList<>());
     }
 
@@ -140,6 +141,8 @@ public class Game {
 
                 System.out.println(Messages.CONNECTING);
 
+                playerHands = new ArrayList<>();
+
                 while(!socket.isClosed()) {
 
                     // Get player username
@@ -223,9 +226,9 @@ public class Game {
 
                             pot += bet;
 
-                            synchronized (verification) {
+                            synchronized (gameDecisionsVerification) {
                                 System.out.println("I'm here");
-                                verification[index] = true;
+                                gameDecisionsVerification[index] = true;
                             }
                         }
                     }
@@ -258,7 +261,7 @@ public class Game {
                     out.flush();
 
                     if(didIWin()) {
-                        out.write(Messages.WINNER + pot + " credits.");
+                        out.write(Messages.WINNER + (pot - bet) + " credits.");
                         out.flush();
                         out.newLine();
 
@@ -268,7 +271,8 @@ public class Game {
                         out.newLine();
                     }
 
-                    startNewRound();
+
+
                     System.out.println("Round ended, starting new one...");
                     String playerDecision = in.readLine(); // Check if player wants to play again
                     if(playerDecision.equalsIgnoreCase("exit")) {
@@ -277,6 +281,18 @@ public class Game {
                         System.out.println();
                         break;
                     }
+                    roundOverVerification[index] = true;
+                    counter = 0;
+                    while(!havePlayersDecidedToPlay()) {
+                        if(counter == 0) {
+                            out.write(Messages.WAITING_FOR_NEXT_ROUND);
+                            out.newLine();
+                            out.flush();
+                            counter++;
+                        }
+                    }
+
+                    startNewRound();
 
                 }
             } catch (IOException e) {
@@ -317,17 +333,15 @@ public class Game {
 
         private synchronized boolean checkIfPlayersMadeDecision() {
             int trues = 0;
-            for(boolean b : verification) {
+            for(boolean b : gameDecisionsVerification) {
                 if(b) trues++;
             }
             return trues == currentPlayersConnected();
         }
 
         private synchronized void setVerificationsToFalse() {
-
-            for(boolean b : verification) {
-                b = false;
-            }
+            for(boolean b : gameDecisionsVerification) b = false;
+            for(boolean b : roundOverVerification) b = false;
         }
 
         private int analyzePLayerHand() {
@@ -473,6 +487,15 @@ public class Game {
             pot = 0;
             setVerificationsToFalse();
 
+        }
+
+        private boolean havePlayersDecidedToPlay() {
+            int trues = 0;
+            for(boolean b : roundOverVerification) {
+                if(b) trues++;
+            }
+
+            return trues == playerHands.size();
         }
 
     }

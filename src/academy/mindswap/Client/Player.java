@@ -17,6 +17,7 @@ public class Player {
     private double credits;
     private BufferedReader bufferedReader;
     private BufferedWriter bufferedWriter;
+    private boolean isRoundOver;
 
     public Player() {
         try {
@@ -35,7 +36,26 @@ public class Player {
         new Thread(new ConnectionHandler(this.socket, out)).start();
 
         while (in.hasNextLine()) {
-            System.out.println(in.nextLine());
+            String serverMessage = in.nextLine();
+            System.out.println(serverMessage);
+
+            if(serverMessage.startsWith("You lost")) {
+                serverMessage = serverMessage.replaceAll("[^0-9]","");
+                System.out.println(serverMessage + "<<<");
+                credits -= Double.parseDouble(serverMessage);
+                System.out.printf(Messages.CURRENT_CREDITS, credits);
+                isRoundOver = true;
+                continue;
+            }
+
+            if(serverMessage.startsWith("Congrats")) {
+                serverMessage = serverMessage.replaceAll("^[0-9]","").trim();
+                System.out.println(serverMessage + "<<<");
+                credits += Double.parseDouble(serverMessage);
+                System.out.printf(Messages.CURRENT_CREDITS, credits);
+                isRoundOver = true;
+            }
+
         }
         socket.close();
     }
@@ -87,7 +107,7 @@ public class Player {
                             bufferedWriter.write(call);
                             bufferedWriter.newLine();
                             bufferedWriter.flush();
-
+                            System.out.println(Messages.PLAYER_CALL);
                             while(call.equalsIgnoreCase("bet")) {
 
                                 System.out.println(Messages.INSERT_BET);
@@ -112,6 +132,11 @@ public class Player {
                             }
 
                             System.out.println(Messages.PLACED_BET);
+
+                            while (!isRoundOver) {
+                                Thread.sleep(500);
+                            }
+
                             System.out.println(Messages.CONTINUE_PLAYING);
                             String decision = bufferedReader.readLine();
 
@@ -123,8 +148,10 @@ public class Player {
                                 break;
                             }
 
+                            isRoundOver = false;
+
                         }
-                    } catch (IOException e) {
+                    } catch (IOException | InterruptedException e) {
                         e.printStackTrace();
                     }
                 }
