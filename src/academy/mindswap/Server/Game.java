@@ -74,6 +74,10 @@ public class Game {
                 .stream()
                 .limit(5)
                 .forEach(tableCards::add); // card -> tableCard.add(card);
+
+        for(Card card : this.tableCards) {
+            this.deck.removeCard(card);
+        }
     }
 
     public class PlayerHandler implements Runnable {
@@ -112,7 +116,7 @@ public class Game {
         @Override
         public void run() {
 
-            addPlayer(this);
+
 
             try {
 
@@ -141,6 +145,7 @@ public class Game {
                     }
 
                     System.out.println("Placing player in table...");
+                    addPlayer(this);
                     int counter = 0;
                     while (currentPlayersConnected() <= 1) {
                         if(counter == 0){
@@ -151,6 +156,7 @@ public class Game {
                             counter++;
                         }
                     }
+
                     counter = 0;
 
                     while(isGameUnderWay()) {
@@ -173,8 +179,6 @@ public class Game {
 
                     String playerChoice = in.readLine();
 
-
-
                 }
 
 
@@ -184,17 +188,21 @@ public class Game {
             } catch (IOException e) {
 
                 e.printStackTrace();
-
             }
-
 
         }
 
 
 
         public void givePlayerCards() {
-          this.playerCards.add(deck.getDeck().stream().findAny().get());
-          this.playerCards.add(deck.getDeck().stream().findAny().get());
+          this.playerCards.add(deck.getDeck()
+                  .stream()
+                  .findAny()
+                  .get());
+          this.playerCards.add(deck.getDeck()
+                  .stream()
+                  .findAny()
+                  .get());
 
           for(Card card : playerCards) {
               deck.removeCard(card);
@@ -204,8 +212,7 @@ public class Game {
 
         private String cardsToString() {
 
-            StringBuilder cardString = new StringBuilder();
-            cardString.append(Messages.PLAYER_CARDS);
+            StringBuilder cardString = new StringBuilder(Messages.PLAYER_CARDS);
             this.playerCards.forEach(card -> cardString.append(card.toString()));
             return  cardString.toString();
 

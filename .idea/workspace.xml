@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="5758b74b-1b07-478a-8926-8d348cfc6100" name="Changes" comment="updated player client">
-      <change afterPath="$PROJECT_DIR$/src/academy/mindswap/Client/LaunchPlayer2.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/academy/mindswap/Client/LaunchPlayer3.java" afterDir="false" />
+    <list default="true" id="5758b74b-1b07-478a-8926-8d348cfc6100" name="Changes" comment="updated player client 2, added username and credits insertion">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/academy/mindswap/Client/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/Client/Player.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/academy/mindswap/Server/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/Server/Game.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/academy/mindswap/utils/Messages.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/utils/Messages.java" afterDir="false" />
     </list>
@@ -151,7 +150,14 @@
       <option name="project" value="LOCAL" />
       <updated>1645526462116</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="updated player client 2, added username and credits insertion">
+      <created>1645526952252</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1645526952252</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -172,6 +178,7 @@
     <MESSAGE value="added color codes" />
     <MESSAGE value="refactor player" />
     <MESSAGE value="updated player client" />
-    <option name="LAST_COMMIT_MESSAGE" value="updated player client" />
+    <MESSAGE value="updated player client 2, added username and credits insertion" />
+    <option name="LAST_COMMIT_MESSAGE" value="updated player client 2, added username and credits insertion" />
   </component>
 </project>
