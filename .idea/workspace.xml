@@ -1,30 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-<<<<<<< HEAD
-    <list default="true" id="4285cec1-a7c4-46a8-ac3e-e76b1137a4a6" name="Changes" comment="&quot;server-client&quot;" />
-=======
-    <list default="true" id="5758b74b-1b07-478a-8926-8d348cfc6100" name="Changes" comment="added username and credits fetch">
+    <list default="true" id="5758b74b-1b07-478a-8926-8d348cfc6100" name="Changes" comment="updated player client 2, added username and credits insertion">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/academy/mindswap/Client/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/Client/Player.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/academy/mindswap/Server/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/Server/Game.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/academy/mindswap/Server/deck/Card.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/Server/deck/Card.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/academy/mindswap/Server/deck/Deck.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/Server/deck/Deck.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/academy/mindswap/utils/Messages.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/utils/Messages.java" afterDir="false" />
     </list>
->>>>>>> f49fb688faba9af7973a0b414039081a6e1d4c37
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-<<<<<<< HEAD
-  <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
-  </component>
-  <component name="ProjectLevelVcsManager">
-    <ConfirmationsSetting value="2" id="Add" />
-  </component>
-  <component name="TaskManager">
-=======
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
@@ -56,6 +43,54 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="academy.mindswap.Client" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Compound.Launch All players">
+    <configuration name="Launch Player 2 client" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="academy.mindswap.Client.LaunchPlayer2" />
+      <module name="FirstProject" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Launch Player 3" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="academy.mindswap.Client.LaunchPlayer3" />
+      <module name="FirstProject" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Player Client" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="academy.mindswap.Client.Client" />
+      <module name="FirstProject" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Server" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="academy.mindswap.Server.Main" />
+      <module name="FirstProject" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Launch All players" type="CompoundRunConfigurationType">
+      <toRun name="Launch Player 2 client" type="Application" />
+      <toRun name="Launch Player 3" type="Application" />
+      <toRun name="Player Client" type="Application" />
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Application.Player Client" />
+      <item itemvalue="Application.Launch Player 2 client" />
+      <item itemvalue="Application.Launch Player 3" />
+      <item itemvalue="Application.Server" />
+      <item itemvalue="Compound.Launch All players" />
+    </list>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -94,8 +129,35 @@
       <option name="project" value="LOCAL" />
       <updated>1645490490430</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
->>>>>>> f49fb688faba9af7973a0b414039081a6e1d4c37
+    <task id="LOCAL-00005" summary="added color codes">
+      <created>1645523670656</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1645523670656</updated>
+    </task>
+    <task id="LOCAL-00006" summary="refactor player">
+      <created>1645524445644</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1645524445644</updated>
+    </task>
+    <task id="LOCAL-00007" summary="updated player client">
+      <created>1645526462116</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1645526462116</updated>
+    </task>
+    <task id="LOCAL-00008" summary="updated player client 2, added username and credits insertion">
+      <created>1645526952252</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1645526952252</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -109,13 +171,14 @@
       </map>
     </option>
   </component>
-<<<<<<< HEAD
-=======
   <component name="VcsManagerConfiguration">
     <MESSAGE value="added factory added new constructor to deck" />
     <MESSAGE value="added messages class refined factory" />
     <MESSAGE value="added username and credits fetch" />
-    <option name="LAST_COMMIT_MESSAGE" value="added username and credits fetch" />
+    <MESSAGE value="added color codes" />
+    <MESSAGE value="refactor player" />
+    <MESSAGE value="updated player client" />
+    <MESSAGE value="updated player client 2, added username and credits insertion" />
+    <option name="LAST_COMMIT_MESSAGE" value="updated player client 2, added username and credits insertion" />
   </component>
->>>>>>> f49fb688faba9af7973a0b414039081a6e1d4c37
 </project>

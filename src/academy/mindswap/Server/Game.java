@@ -74,6 +74,10 @@ public class Game {
                 .stream()
                 .limit(5)
                 .forEach(tableCards::add); // card -> tableCard.add(card);
+
+        for(Card card : this.tableCards) {
+            this.deck.removeCard(card);
+        }
     }
 
     public class PlayerHandler implements Runnable {
@@ -112,7 +116,7 @@ public class Game {
         @Override
         public void run() {
 
-            addPlayer(this);
+
 
             try {
 
@@ -135,21 +139,36 @@ public class Game {
                     while (message == null && credits == 0.0) {
                         message = in.readLine();
                         credits = Double.parseDouble(message);
+                        System.out.printf(Messages.PLAYER_CREDITS_ENTER, credits);
                         message = null;
                         break;
                     }
 
-
-
+                    System.out.println("Placing player in table...");
+                    addPlayer(this);
+                    int counter = 0;
                     while (currentPlayersConnected() <= 1) {
-                        System.out.println(Messages.WAITING_FOR_PLAYERS);
-                        Thread.sleep(1000);
+                        if(counter == 0){
+                            System.out.println(Messages.WAITING_FOR_PLAYERS);
+                            out.write(Messages.WAITING_FOR_PLAYERS);
+                            out.newLine();
+                            out.flush();
+                            counter++;
+                        }
                     }
+
+                    counter = 0;
 
                     while(isGameUnderWay()) {
-                        System.out.println(Messages.WAITING_FOR_ROUND);
-                        Thread.sleep(1000);
+                        if(counter == 0) {
+                            System.out.println(Messages.WAITING_FOR_ROUND);
+                            counter++;
+                        }
                     }
+
+                    out.write(Messages.STARTING_ROUND);
+                    out.newLine();
+                    out.flush();
 
                     dealTableCards();
                     givePlayerCards();
@@ -160,8 +179,6 @@ public class Game {
 
                     String playerChoice = in.readLine();
 
-
-
                 }
 
 
@@ -171,20 +188,21 @@ public class Game {
             } catch (IOException e) {
 
                 e.printStackTrace();
-
-            } catch (InterruptedException e) {
-
-                e.printStackTrace();
             }
-
 
         }
 
 
 
         public void givePlayerCards() {
-          this.playerCards.add(deck.getDeck().stream().findAny().get());
-          this.playerCards.add(deck.getDeck().stream().findAny().get());
+          this.playerCards.add(deck.getDeck()
+                  .stream()
+                  .findAny()
+                  .get());
+          this.playerCards.add(deck.getDeck()
+                  .stream()
+                  .findAny()
+                  .get());
 
           for(Card card : playerCards) {
               deck.removeCard(card);
@@ -194,8 +212,7 @@ public class Game {
 
         private String cardsToString() {
 
-            StringBuilder cardString = new StringBuilder();
-            cardString.append(Messages.PLAYER_CARDS);
+            StringBuilder cardString = new StringBuilder(Messages.PLAYER_CARDS);
             this.playerCards.forEach(card -> cardString.append(card.toString()));
             return  cardString.toString();
 
