@@ -2,6 +2,7 @@ package academy.mindswap.Server;
 import academy.mindswap.Server.deck.Card;
 import academy.mindswap.Server.deck.Deck;
 import academy.mindswap.Server.deck.DeckFactory;
+import academy.mindswap.utils.Messages;
 
 import java.io.*;
 import java.net.ServerSocket;
@@ -57,6 +58,10 @@ public class Game {
         return listOfPlayers.contains(player);
     }
 
+    private int currentPlayersConnected() {
+        return listOfPlayers.size();
+    }
+
     public class PlayerHandler implements Runnable {
 
         private Socket socket;
@@ -98,6 +103,37 @@ public class Game {
 
                 in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                 out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+
+                System.out.println(Messages.CONNECTING);
+
+                while(!socket.isClosed()) {
+
+                    // Get player username
+                    while (message == null && username == null) {
+                        message = in.readLine();
+                        System.out.printf("User: %s has connected.%n", message);
+                        username = message;
+                        message = null;
+                        break;
+                    }
+                    // Get player credits
+                    while (message == null && credits == 0.0) {
+                        message = in.readLine();
+                        credits = Double.parseDouble(message);
+                        message = null;
+                        break;
+                    }
+
+                    while (currentPlayersConnected() <= 1) {
+                        System.out.println();
+                    }
+
+
+
+
+                }
+
+
 
 
 
