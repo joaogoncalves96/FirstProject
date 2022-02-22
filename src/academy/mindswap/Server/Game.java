@@ -24,7 +24,7 @@ public class Game {
     private final int userLimit;
     private Deck deck;
     private Set<Card> tableCards;
-    private final boolean[] verification;
+    private boolean[] verification;
     private double pot;
     private List<Integer> playerHands;
 
@@ -252,15 +252,21 @@ public class Game {
                     out.flush();
 
                     if(didIWin()) {
+                        out.write(Messages.WINNER + pot + " credits.");
+                        out.flush();
+                        out.newLine();
 
+                    } else {
+                        out.write(Messages.LOSER + bet + "credits.");
+                        out.flush();
+                        out.newLine();
                     }
 
-                    wait();
+                    startNewRound();
+                    System.out.println("Round ended, starting new one...");
 
                 }
             } catch (IOException e) {
-                e.printStackTrace();
-            } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
@@ -297,6 +303,7 @@ public class Game {
         }
 
         private synchronized void setVerificationsToFalse() {
+
             for(boolean b : verification) {
                 b = false;
             }
@@ -342,6 +349,7 @@ public class Game {
             int pairs = 0;
 
             for(CardRank c : cardsCount.keySet()) {
+
                 if(cardsCount.get(c) == 4) {
                     return c.getCardRankPoints() + 1000;
                 }
@@ -434,6 +442,16 @@ public class Game {
                 return "Pair";
             }
             return "High card";
+        }
+
+        private void startNewRound() {
+
+            playerCards = new ArrayList<>(2);
+            deck = DeckFactory.createFullDeck();
+            bet = 0;
+            pot = 0;
+            setVerificationsToFalse();
+
         }
 
     }
