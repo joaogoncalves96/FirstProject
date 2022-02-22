@@ -90,10 +90,16 @@ public class Player {
 
                             while(call.equalsIgnoreCase("bet")) {
 
+                                System.out.println(Messages.INSERT_BET);
                                 String strCredits = bufferedReader.readLine();
 
                                 if(checkIfStringIsValidDouble(strCredits)) {
                                     System.out.println(Messages.VALID_CREDITS);
+                                    continue;
+                                }
+
+                                if(Double.parseDouble(strCredits) > credits) {
+                                    System.out.println(Messages.NOT_ENOUGH_CREDITS);
                                     continue;
                                 }
 
@@ -105,12 +111,17 @@ public class Player {
 
                             }
 
-                            System.out.println("Bet placed, waiting for all the players to bet...");
+                            System.out.println(Messages.PLACED_BET);
+                            System.out.println(Messages.CONTINUE_PLAYING);
+                            String decision = bufferedReader.readLine();
 
-                            bufferedReader.readLine();
-
-
-
+                            if(decision.equalsIgnoreCase("exit")) {
+                                bufferedWriter.write(decision);
+                                bufferedWriter.newLine();
+                                bufferedWriter.flush();
+                                System.out.println(Messages.PLAYER_DISCONNECTED + clientUsername);
+                                break;
+                            }
 
                         }
                     } catch (IOException e) {

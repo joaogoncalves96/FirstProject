@@ -183,16 +183,18 @@ public class Game {
 
                     counter = 0;
 
-//                    while(isGameUnderWay()) {
-//                        if(counter == 0) {
-//                            System.out.println(Messages.WAITING_FOR_ROUND);
-//                            counter++;
-//                        }
-//                    }
+                    while(isGameUnderWay()) {
+                        if(counter == 0) {
+                            out.write(Messages.WAITING_FOR_ROUND);
+                            counter++;
+                        }
+                    }
 
                     out.write(Messages.STARTING_ROUND);
+                    Thread.sleep(1500);
                     out.newLine();
                     out.flush();
+
                     givePlayerCards();
 
                     synchronized (tableCards){
@@ -206,17 +208,21 @@ public class Game {
                     out.write(playerCardsToString());
                     out.newLine();
                     out.flush();
+
                     System.out.println("Waiting for player choices...");
+
                     String playerChoice = in.readLine();
 
                     if(playerChoice != null) {
-
-
                         if(playerChoice.equalsIgnoreCase("bet")) {
                             System.out.println("Waiting for player bet...");
+
                             String betStr = in.readLine();
+
                             bet += Double.parseDouble(betStr);
+
                             pot += bet;
+
                             synchronized (verification) {
                                 System.out.println("I'm here");
                                 verification[index] = true;
@@ -264,10 +270,25 @@ public class Game {
 
                     startNewRound();
                     System.out.println("Round ended, starting new one...");
+                    String playerDecision = in.readLine(); // Check if player wants to play again
+                    if(playerDecision.equalsIgnoreCase("exit")) {
+                        playerHands.remove(index);
+                        removePlayer(this);
+                        System.out.println();
+                        break;
+                    }
 
                 }
             } catch (IOException e) {
                 e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } finally {
+                try {
+                    socket.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
 
