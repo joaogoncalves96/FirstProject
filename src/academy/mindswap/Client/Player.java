@@ -40,6 +40,11 @@ public class Player {
         socket.close();
     }
 
+    public boolean checkIfStringIsValidDouble(String doubleString) {
+        Pattern regex = Pattern.compile("[^0-9]");
+        return regex.matcher(doubleString).find();
+    }
+
 
     class ConnectionHandler implements Runnable {
 
@@ -83,6 +88,32 @@ public class Player {
                             bufferedWriter.newLine();
                             bufferedWriter.flush();
 
+                            while(call.equalsIgnoreCase("bet")) {
+
+                                System.out.println("Please insert the amount you want to bet: ");
+                                String strCredits = bufferedReader.readLine();
+
+                                Pattern regex = Pattern.compile("[^0-9]");
+
+                                if(regex.matcher(strCredits).find()) {
+                                    System.out.println(Messages.VALID_CREDITS);
+                                    continue;
+                                }
+
+                                bufferedWriter.write(strCredits);
+                                bufferedWriter.newLine();
+                                bufferedWriter.flush();
+
+                                call = "null";
+
+                            }
+
+                            System.out.println("Bet placed, waiting for all the players to bet...");
+
+                            bufferedReader.readLine();
+
+
+
 
                         }
                     } catch (IOException e) {
@@ -95,16 +126,17 @@ public class Player {
 
     private void askForUserNameAndCredits() throws IOException {
 
-        Pattern regex = Pattern.compile("[^0-9]");
-
         this.bufferedReader = new BufferedReader(new InputStreamReader(System.in));
         System.out.println(Messages.ENTER_USERNAME);
         this.clientUsername = bufferedReader.readLine();
         System.out.println(Messages.ENTER_CREDITS);
 
         while(credits == 0.0) {
+
             String strCredits = bufferedReader.readLine();
-            if(regex.matcher(strCredits).find()) {
+
+            if(!checkIfStringIsValidDouble(strCredits)) {
+
                 System.out.println(Messages.VALID_CREDITS);
                 continue;
             }

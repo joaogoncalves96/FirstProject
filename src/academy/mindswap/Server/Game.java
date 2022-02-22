@@ -27,6 +27,7 @@ public class Game {
     private Deck deck;
     private Set<Card> tableCards;
     private final boolean[] verification;
+    private double pot;
 
     public Game(int tableLimit) {
 
@@ -89,6 +90,7 @@ public class Game {
         private String username;
         private double credits;
         private ArrayList<Card> playerCards;
+        private double bet;
 
         private PlayerHandler(Socket socket) {
             this.playerCards = new ArrayList<>(2);
@@ -157,12 +159,12 @@ public class Game {
 
                     counter = 0;
 
-                    while(isGameUnderWay()) {
-                        if(counter == 0) {
-                            System.out.println(Messages.WAITING_FOR_ROUND);
-                            counter++;
-                        }
-                    }
+//                    while(isGameUnderWay()) {
+//                        if(counter == 0) {
+//                            System.out.println(Messages.WAITING_FOR_ROUND);
+//                            counter++;
+//                        }
+//                    }
 
                     out.write(Messages.STARTING_ROUND);
                     out.newLine();
@@ -187,6 +189,13 @@ public class Game {
                         synchronized (verification) {
                             System.out.println("I'm here");
                             verification[listOfPlayers.indexOf(this)] = true;
+                        }
+
+                        if(playerChoice.equalsIgnoreCase("bet")) {
+                            System.out.println("Waiting for player bet...");
+                            String betStr = in.readLine();
+                            bet += Double.parseDouble(betStr);
+                            pot += bet;
                         }
                     }
 

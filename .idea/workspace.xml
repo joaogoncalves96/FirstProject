@@ -5,9 +5,6 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/academy/mindswap/Client/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/Client/Player.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/academy/mindswap/Server/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/Server/Game.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/academy/mindswap/Server/deck/Card.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/Server/deck/Card.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/academy/mindswap/Server/deck/CardRank.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/Server/deck/CardRank.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/academy/mindswap/Server/deck/CardSuit.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/Server/deck/CardSuit.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -27,7 +24,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="main" />
+        <entry key="$PROJECT_DIR$" value="game-analyzer" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
