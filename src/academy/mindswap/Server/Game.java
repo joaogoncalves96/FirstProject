@@ -24,7 +24,7 @@ public class Game {
     private ExecutorService service;
     private ServerSocket serverSocket;
     private final int userLimit;
-    private Deck deck;
+    private volatile Deck deck;
     private Set<Card> tableCards;
     private final boolean[] verification;
 
@@ -212,29 +212,15 @@ public class Game {
 
 
 
-        public void givePlayerCards() {
-//            for (int i = 0; i < 2; i++) {
-//                Card card = (Card) deck.getDeck().toArray()[(int) (Math.random() * deck.getDeckSize())];
-//                deck.removeCard(card);
-//            }
-//            Iterator<Card> cardIterator = deck.getDeck().iterator();
-            int counter = 0;
-            for(Card c : deck.getDeck()) {
-                System.out.println(counter);
-                if(counter == 2) break;
-                this.playerCards.add(c);
-                deck.removeCard(c);
-                counter++;
+        public synchronized void givePlayerCards() {
+            Card[] cardArray = deck.getDeck().toArray(new Card[deck.getDeckSize()]);
 
+            for (int i = 0; i < 2; i++) {
+                Card bufferCard = cardArray[(int) (Math.random() * deck.getDeckSize())];
+                deck.removeCard(bufferCard);
+                playerCards.add(bufferCard);
             }
 
-//            for (int i = 0; i < 2; i++) {
-//                Card currentCard = card.next();
-//                this.playerCards.add(currentCard);
-//                deck.removeCard(currentCard);
-//                System.out.println("Iteration: " + i);
-//                i++;
-//            }
         }
 
         private String cardsToString() {

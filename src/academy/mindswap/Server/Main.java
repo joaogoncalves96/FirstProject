@@ -1,7 +1,4 @@
 package academy.mindswap.Server;
-
-import academy.mindswap.Server.deck.Deck;
-
 import java.io.IOException;
 
 public class Main {

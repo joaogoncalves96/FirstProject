@@ -1,4 +1,5 @@
 package academy.mindswap.Client;
+import academy.mindswap.Server.Game;
 import academy.mindswap.utils.Messages;
 
 import java.io.*;
@@ -6,7 +7,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 
-public class Player implements Runnable {
+public class Player {
 
     private Socket socket;
     private String hostName = "localHost";
@@ -30,12 +31,72 @@ public class Player implements Runnable {
     public void connectToServer ()  throws IOException {
         BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-        new Thread(this).start();
+        new Thread(new ConnectionHandler(this.socket)).start();
         String line;
         while (( line = in.readLine()) != null) {
             System.out.println(line);
         }
         socket.close();
+    }
+
+
+    class ConnectionHandler implements Runnable {
+        private BufferedReader bufferedReader;
+        private BufferedWriter bufferedWriter;
+        private Socket socket;
+
+        private ConnectionHandler(Socket socket) {
+            this.socket = socket;
+        }
+
+        @Override
+        public void run () {
+            String messageFromClient;
+            synchronized (this) {
+                while (socket.isConnected()) {
+                    try {
+
+                        this.bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+                        this.bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+
+                        bufferedWriter.write(clientUsername);
+                        bufferedWriter.newLine();
+                        bufferedWriter.flush();
+
+                        bufferedWriter.write(String.valueOf(credits));
+                        bufferedWriter.newLine();
+                        bufferedWriter.flush();
+
+                        String status =  bufferedReader.readLine();
+                        System.out.println(status);
+
+                        while(!socket.isClosed()) {
+
+                            String serverMessage =  bufferedReader.readLine();
+                            String cards =  bufferedReader.readLine();
+
+                            System.out.println(serverMessage);
+                            System.out.println(cards);
+                            this.bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+                            String call = bufferedReader.readLine();
+
+                            if(!checkForValidCommand(call)) {
+                                System.out.println("I'm here");
+                                continue;
+                            }
+
+                            bufferedWriter.write(call);
+                            bufferedWriter.newLine();
+                            bufferedWriter.flush();
+
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+        }
 
     }
 
@@ -61,51 +122,7 @@ public class Player implements Runnable {
 
 
 
-    @Override
-    public void run () {
-        String messageFromClient;
-        while (socket.isConnected()) {
-            try {
 
-                this.bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-                this.bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-
-                bufferedWriter.write(this.clientUsername);
-                bufferedWriter.newLine();
-                bufferedWriter.flush();
-
-                bufferedWriter.write(String.valueOf(this.credits));
-                bufferedWriter.newLine();
-                bufferedWriter.flush();
-
-                String status =  bufferedReader.readLine();
-                System.out.println(status);
-
-                while(!socket.isClosed()) {
-
-                    String serverMessage =  bufferedReader.readLine();
-                    String cards =  bufferedReader.readLine();
-
-                    System.out.println(serverMessage);
-                    System.out.println(cards);
-                    this.bufferedReader = new BufferedReader(new InputStreamReader(System.in));
-                    String call = bufferedReader.readLine();
-
-                    if(!checkForValidCommand(call)) {
-                        System.out.println("I'm here");
-                        continue;
-                    }
-
-                    bufferedWriter.write(call);
-                    bufferedWriter.newLine();
-                    bufferedWriter.flush();
-
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
 
     public void closeAll(Socket socket, BufferedReader bufferedReader, BufferedWriter bufferedWriter) {
 
