@@ -1,6 +1,7 @@
 package academy.mindswap.Client;
 
 import java.io.*;
+import java.net.InetAddress;
 import java.net.Socket;
 import java.util.Scanner;
 
@@ -23,8 +24,9 @@ public class Client {
     }
 
     public void sendMessage() {
-
     }
+
+
 
     public void listenForMessage() {
         new Thread(new Runnable() {
@@ -64,7 +66,7 @@ public class Client {
 
         Player player1 = new Player();
 
-        player1.run();
+        player1.connectToServer();
 
     }
 }
