@@ -1,6 +1,4 @@
 package academy.mindswap.Client;
-import academy.mindswap.commands.Command;
-import academy.mindswap.server.Game;
 import academy.mindswap.utils.Messages;
 
 import java.io.*;

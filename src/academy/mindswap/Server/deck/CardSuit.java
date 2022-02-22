@@ -1,4 +1,4 @@
-package academy.mindswap.server.deck;
+package academy.mindswap.Server.deck;
 
 import academy.mindswap.utils.ColorCodes;
 

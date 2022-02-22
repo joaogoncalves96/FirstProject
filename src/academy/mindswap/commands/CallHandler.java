@@ -1,6 +1,6 @@
 package academy.mindswap.commands;
 
-import academy.mindswap.server.Game;
+import academy.mindswap.Server.Game;
 
 public class CallHandler implements CommandHandler{
     @Override

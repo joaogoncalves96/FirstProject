@@ -1,4 +1,4 @@
-package academy.mindswap.server.deck;
+package academy.mindswap.Server.deck;
 
 import java.util.Collections;
 import java.util.HashSet;

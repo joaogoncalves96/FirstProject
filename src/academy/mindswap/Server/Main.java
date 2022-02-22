@@ -1,4 +1,4 @@
-package academy.mindswap.server;
+package academy.mindswap.Server;
 import java.io.IOException;
 
 public class Main {
