@@ -20,8 +20,7 @@ public class Player implements Runnable {
             this.bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
             this.bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             this.clientUsername = bufferedReader.readLine();
-           // playerArrayList.add(this);
-            // broadcastMessage("SERVER: " + clientUsername + " has entered the table!");
+
         } catch (IOException e) {
             closeAll(socket, bufferedReader, bufferedWriter);
         }
@@ -34,7 +33,6 @@ public class Player implements Runnable {
             while (socket.isConnected()) {
                 try {
                     messageFromClient = bufferedReader.readLine();
-                    broadcastMessage(messageFromClient);
                 } catch (IOException e) {
                     closeAll(socket, bufferedReader, bufferedWriter);
                     break;
