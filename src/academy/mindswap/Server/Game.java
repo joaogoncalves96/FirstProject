@@ -89,10 +89,10 @@ public class Game {
         private String message;
         private String username;
         private double credits;
-        private HashSet<Card> playerCards;
+        private ArrayList<Card> playerCards;
 
         private PlayerHandler(Socket socket) {
-            this.playerCards = new HashSet<>(2);
+            this.playerCards = new ArrayList<>(2);
             this.socket = socket;
         }
 
@@ -172,19 +172,30 @@ public class Game {
                     out.newLine();
                     out.flush();
 
-                    dealTableCards();
+//                    dealTableCards();
                     givePlayerCards();
 
                     out.write(cardsToString());
                     out.newLine();
                     out.flush();
-
+                    System.out.println("I'm here10");
                     String playerChoice = in.readLine();
 
                     if(playerChoice != null) {
                         synchronized (verification) {
+                            System.out.println("I'm here");
                             verification[listOfPlayers.indexOf(this)] = true;
                         }
+                    }
+
+                    while(!checkIfPlayersMadeDecision()) {
+
+                        String message = "Waiting for players to make decision";
+                        System.out.println(message);
+                        out.write(message);
+                        out.newLine();
+                        out.flush();
+
                     }
 
 
@@ -202,19 +213,28 @@ public class Game {
 
 
         public void givePlayerCards() {
-          this.playerCards.add(deck.getDeck()
-                  .stream()
-                  .findAny()
-                  .get());
-          this.playerCards.add(deck.getDeck()
-                  .stream()
-                  .findAny()
-                  .get());
+//            for (int i = 0; i < 2; i++) {
+//                Card card = (Card) deck.getDeck().toArray()[(int) (Math.random() * deck.getDeckSize())];
+//                deck.removeCard(card);
+//            }
+//            Iterator<Card> cardIterator = deck.getDeck().iterator();
+            int counter = 0;
+            for(Card c : deck.getDeck()) {
+                System.out.println(counter);
+                if(counter == 2) break;
+                this.playerCards.add(c);
+                deck.removeCard(c);
+                counter++;
 
-          for(Card card : playerCards) {
-              deck.removeCard(card);
-          }
+            }
 
+//            for (int i = 0; i < 2; i++) {
+//                Card currentCard = card.next();
+//                this.playerCards.add(currentCard);
+//                deck.removeCard(currentCard);
+//                System.out.println("Iteration: " + i);
+//                i++;
+//            }
         }
 
         private String cardsToString() {

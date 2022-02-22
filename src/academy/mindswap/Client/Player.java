@@ -80,6 +80,7 @@ public class Player implements Runnable {
                     String call = bufferedReader.readLine();
 
                     if(!checkForValidCommand(call)) {
+                        System.out.println("I'm here");
                         continue;
                     }
 
