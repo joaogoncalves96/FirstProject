@@ -1,28 +1,34 @@
 package academy.mindswap.Server.deck;
 
 public enum CardRank {
-    ACE(14),
-    KING(13),
-    QUEEN(12),
-    JACK(11),
-    TEN(10),
-    NINE(9),
-    EIGHT(8),
-    SEVEN(7),
-    SIX(6),
-    FIVE(5),
-    FOUR(4),
-    THREE(3),
-    DEUCE(2);
+    ACE(14, "Ace"),
+    KING(13, "King"),
+    QUEEN(12, "Queen"),
+    JACK(11, "Jack"),
+    TEN(10, "Ten"),
+    NINE(9, "Nine"),
+    EIGHT(8, "Eight"),
+    SEVEN(7, "Seven"),
+    SIX(6, "Six"),
+    FIVE(5, "Five"),
+    FOUR(4, "Four"),
+    THREE(3, "Three"),
+    DEUCE(2, "Deuce");
 
     private int cardRankPoints;
+    private String cardRankDescription;
 
 
-    CardRank(int cardRankPoints) {
+    CardRank(int cardRankPoints, String cardRankDescription) {
         this.cardRankPoints = cardRankPoints;
+        this.cardRankDescription = cardRankDescription;
     }
 
     public int getCardRankPoints() {
         return cardRankPoints;
+    }
+
+    public String getCardRankDescription() {
+        return cardRankDescription;
     }
 }

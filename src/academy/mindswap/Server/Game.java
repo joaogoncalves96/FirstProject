@@ -167,6 +167,7 @@ public class Game {
                     out.write(Messages.STARTING_ROUND);
                     out.newLine();
                     out.flush();
+                    //if (isGameUnderWay())
                     givePlayerCards();
 
                     synchronized (tableCards){
