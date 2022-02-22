@@ -73,7 +73,7 @@ public class Game {
         this.deck.getDeck()
                 .stream()
                 .limit(5)
-                .forEach(tableCards::add);
+                .forEach(tableCards::add); // card -> tableCard.add(card);
     }
 
     public class PlayerHandler implements Runnable {
@@ -139,6 +139,8 @@ public class Game {
                         break;
                     }
 
+
+
                     while (currentPlayersConnected() <= 1) {
                         System.out.println(Messages.WAITING_FOR_PLAYERS);
                         Thread.sleep(1000);
@@ -149,11 +151,14 @@ public class Game {
                         Thread.sleep(1000);
                     }
 
+                    dealTableCards();
                     givePlayerCards();
 
                     out.write(cardsToString());
                     out.newLine();
                     out.flush();
+
+                    String playerChoice = in.readLine();
 
 
 
@@ -180,8 +185,9 @@ public class Game {
         public void givePlayerCards() {
           this.playerCards.add(deck.getDeck().stream().findAny().get());
           this.playerCards.add(deck.getDeck().stream().findAny().get());
+
           for(Card card : playerCards) {
-              deck.getDeck().remove(card);
+              deck.removeCard(card);
           }
 
         }
