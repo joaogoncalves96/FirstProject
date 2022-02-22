@@ -1,7 +1,5 @@
 package academy.mindswap.Server;
-import academy.mindswap.Server.deck.Card;
-import academy.mindswap.Server.deck.Deck;
-import academy.mindswap.Server.deck.DeckFactory;
+import academy.mindswap.Server.deck.*;
 import academy.mindswap.utils.Messages;
 
 import java.io.*;
@@ -10,6 +8,7 @@ import java.net.Socket;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.stream.Collectors;
 
 /**
  * Poker Game v0.01
@@ -211,7 +210,14 @@ public class Game {
                     }
 
                     System.out.println("Players made their decision.");
-                    checkPlayerAction(playerChoice);
+
+                    out.write("Cards in table: \n" + tableCardsToString());
+                    out.newLine();
+                    out.flush();
+
+                    int points = analyzePLayerHand();
+
+                    System.out.println(username + " has " + points);
 
                 }
             } catch (IOException e) {
@@ -260,5 +266,116 @@ public class Game {
                 b = false;
             }
         }
+
+        private int analyzePLayerHand() {
+            int points = Math.max(this.playerCards.get(0)
+                    .getCardRank()
+                    .getCardRankPoints(), this.playerCards.get(1)
+                    .getCardRank()
+                    .getCardRankPoints());
+
+            this.playerCards.addAll(tableCards);
+
+            points += countCards(this.playerCards);
+
+            if(points < 400) {
+                points += checkForFlush(this.playerCards);
+            }
+
+            if(points < 200) {
+                points += checkForSequential(this.playerCards);
+            }
+            return points;
+        }
+
+        private int countCards(ArrayList<Card> playerCards) {
+            int points = 0;
+            HashMap<CardRank, Integer> cardsCount = new HashMap<>();
+
+            List<CardRank> cardRanks = playerCards.stream()
+                    .map(Card::getCardRank).toList();
+
+            for(CardRank cardRank : cardRanks) {
+                if(cardsCount.containsKey(cardRank)) {
+                    cardsCount.put(cardRank, cardsCount.get(cardRank) + 1);
+                } else {
+                    cardsCount.put(cardRank, 1);
+                }
+            }
+
+            int triples = 0;
+            int pairs = 0;
+
+            for(CardRank c : cardsCount.keySet()) {
+                if(cardsCount.get(c) == 4) {
+                    return c.getCardRankPoints() + 1000;
+                }
+
+                if(cardsCount.get(c) == 3) {
+                    points += c.getCardRankPoints();
+                    triples++;
+                    continue;
+                }
+
+                if(cardsCount.get(c) == 2) {
+                    points += c.getCardRankPoints();
+                    pairs++;
+                }
+            }
+
+            if(pairs > 0 && triples == 0) {
+                return points + (pairs * 10);
+            }
+
+            if(pairs == 1 && triples == 1) {
+                return points + 500;
+            }
+            return 0;
+        }
+
+        private int checkForSequential(ArrayList<Card> playerCards ) {
+            playerCards.sort(new Comparator<Card>() {
+                @Override
+                public int compare(Card o1, Card o2) {
+                    return Integer.compare(o1.getCardRank().getCardRankPoints(), o2.getCardRank().getCardRankPoints()) ;
+                }
+            });
+            int sequentialCounter = 0;
+            for (int i = 0; i < playerCards.size() - 1; i++) {
+                int card1Value = playerCards.get(i).getCardRank().getCardRankPoints();
+                int card2Value = playerCards.get(i + 1).getCardRank().getCardRankPoints();
+                if(card1Value == card2Value + 1) {
+                    sequentialCounter++;
+                } else {
+                    sequentialCounter = 0;
+                }
+            }
+            return sequentialCounter >= 5 ? 300 : 0;
+        }
+
+        private int checkForFlush(ArrayList<Card> playerCards) {
+            int points = 0;
+            HashMap<CardSuit, Integer> cardSuitCount = new HashMap<>();
+
+            List<CardSuit> cardSuits = playerCards.stream()
+                    .map(Card::getCardSuit).toList();
+
+            for(CardSuit cardSuit : cardSuits) {
+                if(cardSuitCount.containsKey(cardSuits)) {
+                    cardSuitCount.put(cardSuit, cardSuitCount.get(cardSuits) + 1);
+                } else {
+                    cardSuitCount.put(cardSuit, 1);
+                }
+            }
+
+            if(cardSuitCount.values().stream().noneMatch(value -> value >= 5)) {
+                return 0;
+            }
+
+            return 400;
+
+
+        }
+
     }
 }

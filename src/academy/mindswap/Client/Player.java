@@ -90,12 +90,9 @@ public class Player {
 
                             while(call.equalsIgnoreCase("bet")) {
 
-                                System.out.println("Please insert the amount you want to bet: ");
                                 String strCredits = bufferedReader.readLine();
 
-                                Pattern regex = Pattern.compile("[^0-9]");
-
-                                if(regex.matcher(strCredits).find()) {
+                                if(checkIfStringIsValidDouble(strCredits)) {
                                     System.out.println(Messages.VALID_CREDITS);
                                     continue;
                                 }
@@ -135,7 +132,7 @@ public class Player {
 
             String strCredits = bufferedReader.readLine();
 
-            if(!checkIfStringIsValidDouble(strCredits)) {
+            if(checkIfStringIsValidDouble(strCredits)) {
 
                 System.out.println(Messages.VALID_CREDITS);
                 continue;

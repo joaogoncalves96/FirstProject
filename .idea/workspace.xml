@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="5758b74b-1b07-478a-8926-8d348cfc6100" name="Changes" comment="fixed table cards, fixed player thread, added player handler">
+    <list default="true" id="5758b74b-1b07-478a-8926-8d348cfc6100" name="Changes" comment="added bet command, added check for valid double string">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/academy/mindswap/Client/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/Client/Player.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/academy/mindswap/Server/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/Server/Game.java" afterDir="false" />
@@ -195,7 +195,14 @@
       <option name="project" value="LOCAL" />
       <updated>1645539120740</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="added bet command, added check for valid double string">
+      <created>1645542281149</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1645542281149</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -221,7 +228,8 @@
     <MESSAGE value="added synchronized verificator" />
     <MESSAGE value="added connection handler for client, fixed deal cards to players" />
     <MESSAGE value="fixed table cards, fixed player thread, added player handler" />
-    <option name="LAST_COMMIT_MESSAGE" value="fixed table cards, fixed player thread, added player handler" />
+    <MESSAGE value="added bet command, added check for valid double string" />
+    <option name="LAST_COMMIT_MESSAGE" value="added bet command, added check for valid double string" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
