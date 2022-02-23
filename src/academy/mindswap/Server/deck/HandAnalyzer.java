@@ -46,8 +46,62 @@ public class HandAnalyzer {
                     .get()
                     .getCardRankPoints();
 
-            points += 1000 + cardValue;
+            points += 1500 + cardValue;
             return points;
+        }
+
+        if(hasFlush(suitCount)) {
+            ArrayList<Card> hand = getFlushHand(suitCount, fullHand);
+
+            points += 1000 + highestCard;
+            return points;
+
+        }
+
+        if(hasStraight(fullHand)) {
+
+
+        }
+
+        if(hasTriple(rankCount)) {
+            ArrayList<Card> hand = getTripleHand(rankCount, fullHand);
+            int cardValue = rankCount
+                    .keySet()
+                    .stream()
+                    .filter(value -> rankCount.get(value) == 3)
+                    .findFirst()
+                    .get()
+                    .getCardRankPoints();
+
+            points += 500 + cardValue;
+            return points;
+        }
+
+        if(hasDoublePair(rankCount)) {
+            ArrayList<Card> hand = getPairsHand(rankCount, fullHand);
+            int cardValue = rankCount
+                    .keySet()
+                    .stream()
+                    .filter(value -> rankCount.get(value) == 2)
+                    .map(CardRank::getCardRankPoints)
+                    .reduce(0, Math::max);
+
+            points += 300 + cardValue;
+            return points;
+        }
+
+        if(hasPair(rankCount)) {
+            ArrayList<Card> hand = getPairsHand(rankCount, fullHand);
+            int cardValue = rankCount
+                    .keySet()
+                    .stream()
+                    .filter(value -> rankCount.get(value) == 2)
+                    .findFirst()
+                    .get()
+                    .getCardRankPoints();
+
+            points += 150 + cardValue;
+
         }
 
 
@@ -59,6 +113,42 @@ public class HandAnalyzer {
 
     private static boolean hasFourOfKind(HashMap<CardRank, Integer> rankCount) {
         return rankCount.containsValue(4);
+    }
+
+    private static ArrayList<Card> getStraightHand(ArrayList<Card> hand) {
+        ArrayList<Card> finalHand = new ArrayList<>();
+
+
+
+
+    }
+
+    private static ArrayList<Card> getFlushHand(HashMap<CardSuit, Integer> suitCount, ArrayList<Card> hand) {
+
+        CardSuit suit = suitCount.keySet().stream()
+                    .filter(cardSuit -> suitCount.get(cardSuit) < 5)
+                    .findFirst()
+                    .get();
+
+        ArrayList<Card> finalHand = new ArrayList<>();
+
+        hand.stream()
+                .filter(card -> card.getCardSuit().equals(suit))
+                .forEach(finalHand::add);
+
+        return finalHand;
+    }
+
+    private static ArrayList<Card> getPairsHand(HashMap<CardRank, Integer> rankCount, ArrayList<Card> hand) {
+        ArrayList<Card> finalHand = new ArrayList<>();
+        hand.stream().filter(card -> rankCount.get(card) == 2).forEach(finalHand::add);
+        return finalHand;
+    }
+
+    private static ArrayList<Card> getTripleHand(HashMap<CardRank, Integer> rankCount, ArrayList<Card> hand) {
+        ArrayList<Card> finalHand = new ArrayList<>(3);
+        hand.stream().filter(card -> rankCount.get(card) == 3).forEach(finalHand::add);
+        return finalHand;
     }
 
     private static ArrayList<Card> get4ofAKindHand(HashMap<CardRank, Integer> rankCount) {
@@ -112,29 +202,27 @@ public class HandAnalyzer {
         return finalHand;
     }
 
-
-
     private static boolean hasFullHouse(HashMap<CardRank, Integer> rankCount) {
         return rankCount.containsValue(3) && rankCount.containsValue(2);
     }
 
-    private boolean hasTriple(HashMap<CardRank, Integer> rankCount) {
+    private static boolean hasTriple(HashMap<CardRank, Integer> rankCount) {
         return rankCount.containsValue(3) && !rankCount.containsValue(2);
     }
 
-    private boolean hasDoublePair(HashMap<CardRank, Integer> rankCount) {
+    private static boolean hasDoublePair(HashMap<CardRank, Integer> rankCount) {
         return rankCount.values().stream().filter(v -> v == 2).count() >= 2;
     }
 
-    private boolean hasPair(HashMap<CardRank, Integer> rankCount) {
+    private static boolean hasPair(HashMap<CardRank, Integer> rankCount) {
         return rankCount.values().stream().filter(v -> v == 2).count() == 1;
     }
 
-    private boolean hasFlush(HashMap<CardSuit, Integer> suitCount) {
+    private static boolean hasFlush(HashMap<CardSuit, Integer> suitCount) {
         return suitCount.values().stream().anyMatch(v -> v >= 5);
     }
 
-    private boolean hasStraight(ArrayList<Card> hand) {
+    private static boolean hasStraight(ArrayList<Card> hand) {
 
         hand.sort(new Comparator<Card>() {
             @Override

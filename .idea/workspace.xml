@@ -60,7 +60,7 @@
       <recent name="academy.mindswap.Client" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.Server">
+  <component name="RunManager" selected="Compound.Launch All players">
     <configuration name="Launch Player 2 client" type="Application" factoryName="Application">
       <option name="MAIN_CLASS_NAME" value="academy.mindswap.Client.LaunchPlayer2" />
       <module name="FirstProject" />

@@ -21,7 +21,6 @@ public class Game {
     private List<PlayerHandler> listOfPlayers;
     private final int PORT = 8081;
     private ExecutorService service;
-    private ServerSocket serverSocket;
     private final int userLimit;
     private Deck deck;
     private Set<Card> tableCards;
@@ -40,11 +39,12 @@ public class Game {
         this.gameDecisionsVerification = new boolean[userLimit];
         this.roundOverVerification = new boolean[userLimit];
         this.playerHands = Collections.synchronizedList(new ArrayList<>());
+
     }
 
     public void startServer() throws IOException {
 
-        this.serverSocket = new ServerSocket(PORT);
+        ServerSocket serverSocket = new ServerSocket(PORT);
 
         System.out.println("Server initiated. Waiting for users to connect.");
 
@@ -110,13 +110,11 @@ public class Game {
         private boolean hasPlayerFolded;
         private ArrayList<Card> bestHand;
 
-
         private PlayerHandler(Socket socket) {
             this.playerCards = new ArrayList<>(2);
             this.socket = socket;
             this.index = -1;
         }
-
 
         public String getUsername() {
             return username;
@@ -254,6 +252,8 @@ public class Game {
                         }
                     }
 
+
+
                     while(!checkIfPlayersMadeDecision()) {
                         if(counter == 0) {
                             System.out.println(Messages.WAITING_FOR_NEXT_ROUND);
@@ -269,6 +269,9 @@ public class Game {
                     int points = analyzePLayerHand();
                     if(!hasPlayerFolded) {
                         playerHands.set(index, points);
+                        synchronized (Game.this){
+                            pot += bet;
+                        }
                     }
 
                     System.out.println(username + " has " + points);
@@ -280,7 +283,7 @@ public class Game {
                         sendMessage(Messages.WINNER + (pot - bet) + " credits.");
                     } else {
                         System.out.println(username + " lost :(");
-                        sendMessage(Messages.LOSER + bet + "credits.");
+                        sendMessage(Messages.LOSER + bet + " credits.");
                     }
 
 
@@ -442,11 +445,6 @@ public class Game {
             return trues == currentPlayersConnected();
         }
 
-        private synchronized void setVerificationsToFalse() {
-            for(boolean b : gameDecisionsVerification) b = false;
-            for(boolean b : roundOverVerification) b = false;
-        }
-
         private int analyzePLayerHand() {
             int points = Math.max(this.playerCards.get(0)
                     .getCardRank()
@@ -590,7 +588,8 @@ public class Game {
             bet = 0;
             pot = 0;
             tableCards = Collections.synchronizedSet(new HashSet<>());
-            setVerificationsToFalse();
+            gameDecisionsVerification = new boolean[userLimit];
+            roundOverVerification = new boolean[userLimit];
             playerHandCount = 0;
             hasPlayerFolded = false;
 

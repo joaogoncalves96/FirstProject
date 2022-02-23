@@ -40,7 +40,9 @@ public class Player {
 
             if(serverMessage.startsWith("You lost")) {
 
-                serverMessage = serverMessage.replaceAll("[^0-9]","");
+                serverMessage = serverMessage.replace(Messages.LOSER,"")
+                        .replace(" credits.","");
+
                 credits -= Double.parseDouble(serverMessage);
                 System.out.printf(Messages.CURRENT_CREDITS, credits);
                 isRoundOver = true;
@@ -51,7 +53,9 @@ public class Player {
 
             if(serverMessage.startsWith("Congrats")) {
 
-                serverMessage = serverMessage.replaceAll("[^0-9]","").trim();
+                serverMessage = serverMessage.replace(Messages.WINNER,"")
+                        .replace(" credits.","");
+
                 credits += Double.parseDouble(serverMessage);
                 System.out.printf(Messages.CURRENT_CREDITS, credits);
                 isRoundOver = true;
