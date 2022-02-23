@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 public class Player {
 
     private Socket socket;
-    private String hostName = "localHost";
+    private String hostName = "localhost";
     private int portNumber = 8081;
     private String clientUsername;
     private double credits;

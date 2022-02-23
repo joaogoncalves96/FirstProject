@@ -12,7 +12,7 @@ public class BetHandler implements CommandHandler {
             playerHandler.askForBet();
             game.broadCastMessage(playerHandler.getUsername() +
                     Messages.BET +
-                    playerHandler.getCredits() +
+                    playerHandler.getBet() +
                     Messages.CREDITS);
 
         } catch (IOException e) {

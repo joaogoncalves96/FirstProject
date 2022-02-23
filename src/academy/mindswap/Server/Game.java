@@ -108,6 +108,7 @@ public class Game {
         private double bet;
         private int index;
         private boolean hasPlayerFolded;
+        private ArrayList<Card> bestHand;
 
 
         private PlayerHandler(Socket socket) {
@@ -182,7 +183,9 @@ public class Game {
                         message = null;
                         break;
                     }
+
                     int counter = 0;
+
                     System.out.println("Placing player in table...");
 
 
@@ -228,9 +231,9 @@ public class Game {
                         }
                     }
 
-                    System.out.println(tableCardsToString());
+                    System.out.println(printCards(tableCards));
 
-                    sendMessage(playerCardsToString());
+                    sendMessage(printCards(playerCards));
 
                     Thread.sleep(800);
 
@@ -260,7 +263,7 @@ public class Game {
 
                     System.out.println("Players made their decision.");
 
-                    sendMessage("Cards in table: \n" + tableCardsToString());
+                    sendMessage("Cards in table: \n" + printCards(tableCards));
 
                     int points = analyzePLayerHand();
                     if(!hasPlayerFolded) {
@@ -314,8 +317,9 @@ public class Game {
             } finally {
                 try {
                     socket.close();
+                    removePlayer(this);
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    System.out.println(Messages.PLAYER_DISCONNECTED);
                 }
             }
         }
@@ -339,64 +343,94 @@ public class Game {
             }
         }
 
-        private String playerCardsToString() {
+        private String printCards(Collection<Card> cardList) {
 
-            StringBuilder cardString = new StringBuilder(Messages.PLAYER_CARDS);
-            this.playerCards.forEach(card -> cardString.append(card.toString()));
-            return  cardString.toString();
+            StringBuilder cardString = new StringBuilder();
 
-        }
-
-        private String tableCardsToString() {
-            StringBuilder cardString = new StringBuilder(Messages.TABLE_CARDS);
-
-            String whiteBG = ColorCodes.WHITE_BACKGROUND;
-            String black = ColorCodes.BLACK_BRIGHT;
-            String red = ColorCodes.RED_BRIGHT;
+            String whiteBG = ColorCodes.WHITE_BACKGROUND_BRIGHT;
+            String black = ColorCodes.BLACK_BOLD;
+            String red = ColorCodes.RED_BOLD_BRIGHT;
             String reset = ColorCodes.RESET;
 
-            for(Card card : tableCards) {
 
+
+            for(Card card : cardList) {
+                int isTen = card.getCardRank().equals(CardRank.TEN) ? 1 : 0;
+                String color;
                 cardString.append(whiteBG);
+
+                if(card.getCardSuit().equals(CardSuit.SPADES) || card.getCardSuit().equals(CardSuit.CLUBS)) {
+                    color = black;
+                } else {
+                    color = red;
+                }
+
+                cardString.append(color);
                 cardString.append(card.getCardRank().getCardRankDigit());
                 cardString.append(whiteBG);
-                cardString.append(" ".repeat(3));
+                cardString.append(" ".repeat(3 - isTen));
                 cardString.append(whiteBG);
+                cardString.append(color);
                 cardString.append(card.getCardSuit().getSuit());
                 cardString.append(reset);
                 cardString.append(" ".repeat(3));
+
             }
 
             cardString.append("\n");
 
-            for(Card card : tableCards) {
+            for(Card card : cardList) {
 
+                String color;
+                cardString.append(whiteBG);
+
+                if(card.getCardSuit().equals(CardSuit.SPADES) || card.getCardSuit().equals(CardSuit.CLUBS)) {
+                    color = black;
+                } else {
+                    color = red;
+                }
+
+                cardString.append(whiteBG);
                 cardString.append("  ");
+                cardString.append(whiteBG);
+                cardString.append(color);
                 cardString.append(card.getCardSuit().getSuit());
+                cardString.append(whiteBG);
                 cardString.append("  ");
-
+                cardString.append(reset);
                 cardString.append(" ".repeat(3));
 
             }
 
             cardString.append("\n");
 
-            for(Card card : tableCards) {
+            for(Card card : cardList) {
+                String color;
+                int isTen = card.getCardRank().equals(CardRank.TEN) ? 1 : 0;
+                cardString.append(whiteBG);
 
+                if(card.getCardSuit().equals(CardSuit.SPADES) || card.getCardSuit().equals(CardSuit.CLUBS)) {
+                    color = black;
+                } else {
+                    color = red;
+                }
+                cardString.append(whiteBG);
+                cardString.append(color);
                 cardString.append(card.getCardSuit().getSuit());
-                cardString.append(" ".repeat(3));
+                cardString.append(whiteBG);
+                cardString.append(" ".repeat(3 - isTen));
+                cardString.append(whiteBG);
+                cardString.append(color);
                 cardString.append(card.getCardRank().getCardRankDigit());
+                cardString.append(reset);
                 cardString.append(" ".repeat(3));
 
             }
 
             cardString.append("\n");
-
 
             return cardString.toString();
-
         }
-
 
         private synchronized boolean checkIfPlayersMadeDecision() {
             int trues = 0;
@@ -412,11 +446,12 @@ public class Game {
         }
 
         private int analyzePLayerHand() {
-            int points = Math.max(this.playerCards.get(0)
-                    .getCardRank()
-                    .getCardRankPoints(), this.playerCards.get(1)
-                    .getCardRank()
-                    .getCardRankPoints());
+//            int points = Math.max(this.playerCards.get(0)
+//                    .getCardRank()
+//                    .getCardRankPoints(), this.playerCards.get(1)
+//                    .getCardRank()
+//                    .getCardRankPoints());
+            int points = 0;
 
             this.playerCards.addAll(tableCards);
 
@@ -478,7 +513,7 @@ public class Game {
             return 0;
         }
 
-        private int checkForSequential(ArrayList<Card> playerCards ) {
+        private int checkForSequential(ArrayList<Card> playerCards) {
             playerCards.sort(new Comparator<Card>() {
                 @Override
                 public int compare(Card o1, Card o2) {
@@ -605,5 +640,8 @@ public class Game {
             bet = Double.parseDouble(in.nextLine());
         }
 
+        public double getBet() {
+            return bet;
+        }
     }
 }
