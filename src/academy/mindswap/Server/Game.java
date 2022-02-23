@@ -86,7 +86,7 @@ public class Game {
 
         private Socket socket;
         private BufferedWriter out;
-        private BufferedReader in;
+        private Scanner in;
         private String message;
         private String username;
         private double credits;
@@ -136,7 +136,7 @@ public class Game {
         public void run() {
             try {
 
-                in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                in = new Scanner(socket.getInputStream());
                 out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
 
                 System.out.println(Messages.CONNECTING);
@@ -147,7 +147,7 @@ public class Game {
 
                     // Get player username
                     while (message == null && username == null) {
-                        message = in.readLine();
+                        message = in.nextLine();
                         System.out.printf("User: %s has connected.%n", message);
                         username = message;
                         message = null;
@@ -155,7 +155,7 @@ public class Game {
                     }
                     // Get player credits
                     while (message == null && credits == 0.0) {
-                        message = in.readLine();
+                        message = in.nextLine();
                         credits = Double.parseDouble(message);
                         System.out.printf(Messages.PLAYER_CREDITS_ENTER, credits);
                         message = null;
@@ -201,7 +201,6 @@ public class Game {
                     out.flush();
                     Thread.sleep(1000);
 
-
                     givePlayerCards();
 
                     synchronized (tableCards){
@@ -224,13 +223,13 @@ public class Game {
 
                     System.out.println("Waiting for player choices...");
 
-                    String playerChoice = in.readLine();
+                    String playerChoice = in.nextLine();
 
                     if(playerChoice != null) {
                         if(playerChoice.equalsIgnoreCase("bet")) {
                             System.out.println("Waiting for player bet...");
 
-                            String betStr = in.readLine();
+                            String betStr = in.nextLine();
 
                             bet += Double.parseDouble(betStr);
 
@@ -283,8 +282,14 @@ public class Game {
                         out.newLine();
                         out.flush();
                     }
+                    System.out.println(Messages.CHECK_PLAYER);
+                    String playerDecision = null;
+                    if(in.hasNextLine()) {
+                        playerDecision = in.nextLine();
+                    }
 
-                    String playerDecision = in.readLine(); // Check if player wants to play again
+
+                    System.out.println("Player decided: " + playerDecision);
 
                     if(playerDecision.equalsIgnoreCase("exit")) {
                         playerHands.remove(index);
@@ -292,6 +297,7 @@ public class Game {
                         System.out.println();
                         break;
                     }
+
                     roundOverVerification[index] = true;
                     counter = 0;
 

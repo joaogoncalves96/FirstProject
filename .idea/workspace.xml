@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="5758b74b-1b07-478a-8926-8d348cfc6100" name="Changes" comment="last commit before break, needs final player decision to be fixed">
+    <list default="true" id="5758b74b-1b07-478a-8926-8d348cfc6100" name="Changes" comment="created more booleans">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/academy/mindswap/Client/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/Client/Player.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/academy/mindswap/Server/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/Server/Game.java" afterDir="false" />
@@ -245,7 +245,14 @@
       <option name="project" value="LOCAL" />
       <updated>1645556366708</updated>
     </task>
-    <option name="localTasksCounter" value="20" />
+    <task id="LOCAL-00020" summary="created more booleans">
+      <created>1645576564459</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1645576564459</updated>
+    </task>
+    <option name="localTasksCounter" value="21" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -305,6 +312,7 @@
     <MESSAGE value="added better bet verifications and if player wants to keep playing" />
     <MESSAGE value="repaired decisions, upgraded verifications, added credits update" />
     <MESSAGE value="last commit before break, needs final player decision to be fixed" />
-    <option name="LAST_COMMIT_MESSAGE" value="last commit before break, needs final player decision to be fixed" />
+    <MESSAGE value="created more booleans" />
+    <option name="LAST_COMMIT_MESSAGE" value="created more booleans" />
   </component>
 </project>

@@ -42,19 +42,23 @@ public class Player {
 
             if(serverMessage.startsWith("You lost")) {
                 serverMessage = serverMessage.replaceAll("[^0-9]","");
-                System.out.println(serverMessage + "<<<");
                 credits -= Double.parseDouble(serverMessage);
                 System.out.printf(Messages.CURRENT_CREDITS, credits);
                 isRoundOver = true;
+                hasRoundStarted = false;
                 continue;
             }
 
             if(serverMessage.startsWith("Congrats")) {
                 serverMessage = serverMessage.replaceAll("[^0-9]","").trim();
-                System.out.println(serverMessage + "<<<");
                 credits += Double.parseDouble(serverMessage);
                 System.out.printf(Messages.CURRENT_CREDITS, credits);
                 isRoundOver = true;
+                hasRoundStarted = false;
+            }
+
+            if(serverMessage.startsWith("Starting round")) {
+                hasRoundStarted = true;
             }
 
         }
@@ -96,6 +100,13 @@ public class Player {
 
 
                         while(!socket.isClosed()) {
+                            int counter = 0;
+                            while (!hasRoundStarted) {
+                                if(counter == 0) {
+                                    System.out.println(Messages.WAITING_FOR_ROUND);
+                                    counter++;
+                                }
+                            }
 
 
                             this.bufferedReader = new BufferedReader(new InputStreamReader(System.in));
@@ -151,6 +162,10 @@ public class Player {
                                 System.out.println(Messages.PLAYER_DISCONNECTED + clientUsername);
                                 break;
                             }
+
+                            bufferedWriter.write(decision);
+                            bufferedWriter.newLine();
+                            bufferedWriter.flush();
 
                             isRoundOver = false;
 
