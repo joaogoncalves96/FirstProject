@@ -23,7 +23,7 @@ public class Messages {
     public static final String PLACED_BET = "Bet placed, waiting for all the players to bet...";
     public static final String CURRENT_CREDITS = "You know have %.2f credits. %n";
     public static final String WAITING_FOR_NEXT_ROUND = "Waiting for players to decide...";
-    public static final String PLAYER_CALL = "What do you want to do? \nBET ||  CALL || ALL-IN || FOLD \n";
+    public static final String PLAYER_CALL = "What do you want to do? \nBET || CALL || ALL-IN || FOLD \n";
     public static final String CHECK_PLAYER = "Reading players decisions...";
     public static final String FOLDED = " has folded.\n";
     public static final String BET = " has bet ";

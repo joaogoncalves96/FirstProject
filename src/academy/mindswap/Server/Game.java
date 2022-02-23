@@ -1,6 +1,7 @@
 package academy.mindswap.Server;
 import academy.mindswap.Server.deck.*;
 import academy.mindswap.commands.Command;
+import academy.mindswap.utils.ColorCodes;
 import academy.mindswap.utils.Messages;
 
 import java.io.*;
@@ -82,7 +83,6 @@ public class Game {
                 e.printStackTrace();
             }
         }
-
     }
 
     private synchronized void dealTableCards() {
@@ -212,7 +212,7 @@ public class Game {
                     counter = 0;
 
                     sendMessage(Messages.STARTING_ROUND);
-                    Thread.sleep(1000);
+                    Thread.sleep(800);
 
                     givePlayerCards();
 
@@ -232,7 +232,7 @@ public class Game {
 
                     sendMessage(playerCardsToString());
 
-                    Thread.sleep(1000);
+                    Thread.sleep(800);
 
                     sendMessage(Messages.PLAYER_CALL);
 
@@ -241,7 +241,7 @@ public class Game {
                     String playerChoice = in.nextLine();
 
                     if(playerChoice != null) {
-                        
+
                         dealWithCommand(playerChoice);
 
                         synchronized (gameDecisionsVerification) {
@@ -263,8 +263,9 @@ public class Game {
                     sendMessage("Cards in table: \n" + tableCardsToString());
 
                     int points = analyzePLayerHand();
-
-                    playerHands.set(index, points);
+                    if(!hasPlayerFolded) {
+                        playerHands.set(index, points);
+                    }
 
                     System.out.println(username + " has " + points);
 
@@ -348,9 +349,54 @@ public class Game {
 
         private String tableCardsToString() {
             StringBuilder cardString = new StringBuilder(Messages.TABLE_CARDS);
-            tableCards.forEach(card -> cardString.append(card.toString()));
-            return  cardString.toString();
+
+            String whiteBG = ColorCodes.WHITE_BACKGROUND;
+            String black = ColorCodes.BLACK_BRIGHT;
+            String red = ColorCodes.RED_BRIGHT;
+            String reset = ColorCodes.RESET;
+
+            for(Card card : tableCards) {
+
+                cardString.append(whiteBG);
+                cardString.append(card.getCardRank().getCardRankDigit());
+                cardString.append(whiteBG);
+                cardString.append(" ".repeat(3));
+                cardString.append(whiteBG);
+                cardString.append(card.getCardSuit().getSuit());
+                cardString.append(reset);
+                cardString.append(" ".repeat(3));
+            }
+
+            cardString.append("\n");
+
+            for(Card card : tableCards) {
+
+                cardString.append("  ");
+                cardString.append(card.getCardSuit().getSuit());
+                cardString.append("  ");
+
+                cardString.append(" ".repeat(3));
+
+            }
+
+            cardString.append("\n");
+
+            for(Card card : tableCards) {
+
+                cardString.append(card.getCardSuit().getSuit());
+                cardString.append(" ".repeat(3));
+                cardString.append(card.getCardRank().getCardRankDigit());
+                cardString.append(" ".repeat(3));
+
+            }
+
+            cardString.append("\n");
+
+
+            return cardString.toString();
+
         }
+
 
         private synchronized boolean checkIfPlayersMadeDecision() {
             int trues = 0;

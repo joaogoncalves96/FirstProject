@@ -1,0 +1,30 @@
+        StringBuilder cardStringBuilder = new StringBuilder();
+
+        cardStringBuilder.append(ColorCodes.WHITE_BACKGROUND_BRIGHT);
+        if(cardSuit.getSuitDescription().equals("Spades") || cardSuit.getSuitDescription().equals("Clubs")) {
+            cardStringBuilder.append(ColorCodes.BLACK + ColorCodes.WHITE_BACKGROUND_BRIGHT)
+                    .append(cardRank.getCardRankDigit());
+        } else {
+            cardStringBuilder.append(ColorCodes.RED_BRIGHT + ColorCodes.WHITE_BACKGROUND_BRIGHT)
+                    .append(cardRank.getCardRankDigit());
+        }
+        cardStringBuilder.append(ColorCodes.WHITE_BACKGROUND_BRIGHT);
+        cardStringBuilder.append(" ".repeat(4));
+        cardStringBuilder.append(cardSuit.getSuit());
+        cardStringBuilder.append("\n");
+        cardStringBuilder.append(" ".repeat(2)).append(cardSuit.getSuit()).append(" ".repeat(2));
+        cardStringBuilder.append("\n");
+        cardStringBuilder.append(cardSuit.getSuit());
+        cardStringBuilder.append(ColorCodes.WHITE_BACKGROUND_BRIGHT);
+        cardStringBuilder.append(" ".repeat(3));
+
+        if(cardSuit.getSuitDescription().equals("Spades") || cardSuit.getSuitDescription().equals("Clubs")) {
+            cardStringBuilder.append(ColorCodes.BLACK)
+                    .append(cardRank.getCardRankDigit());
+        } else {
+            cardStringBuilder.append(ColorCodes.RED_BRIGHT)
+                    .append(cardRank.getCardRankDigit());
+        }
+
+//        return cardRank.getCardRankDescription() + " of " + cardSuit.getSuitDescription() + "(" +cardRank.getCardRankDigit() + cardSuit.getSuit() + ")" + "\n";
+        return cardStringBuilder.toString() + ColorCodes.RESET + "\n";
