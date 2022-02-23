@@ -215,6 +215,7 @@ public class Game {
                     counter = 0;
 
                     sendMessage(Messages.STARTING_ROUND);
+
                     Thread.sleep(800);
 
                     givePlayerCards();
@@ -355,6 +356,7 @@ public class Game {
 
 
             for(Card card : cardList) {
+
                 int isTen = card.getCardRank().equals(CardRank.TEN) ? 1 : 0;
                 String color;
                 cardString.append(whiteBG);
@@ -446,12 +448,12 @@ public class Game {
         }
 
         private int analyzePLayerHand() {
-//            int points = Math.max(this.playerCards.get(0)
-//                    .getCardRank()
-//                    .getCardRankPoints(), this.playerCards.get(1)
-//                    .getCardRank()
-//                    .getCardRankPoints());
-            int points = 0;
+            int points = Math.max(this.playerCards.get(0)
+                    .getCardRank()
+                    .getCardRankPoints(), this.playerCards.get(1)
+                    .getCardRank()
+                    .getCardRankPoints());
+//            int points = 0;
 
             this.playerCards.addAll(tableCards);
 

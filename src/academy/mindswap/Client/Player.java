@@ -17,7 +17,6 @@ public class Player {
     private BufferedWriter bufferedWriter;
     private volatile boolean isRoundOver;
     private volatile boolean hasRoundStarted;
-//    private volatile boolean hasEveryPlayerDecided;
 
     public Player() {
         try {
@@ -106,6 +105,7 @@ public class Player {
 
 
                         while(!socket.isClosed()) {
+
                             int counter = 0;
                             while (!hasRoundStarted) {
                                 if(counter == 0) {
