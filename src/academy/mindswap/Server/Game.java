@@ -1,9 +1,5 @@
 package academy.mindswap.Server;
 import academy.mindswap.Server.deck.*;
-import academy.mindswap.Server.deck.Card;
-import academy.mindswap.Server.deck.Deck;
-import academy.mindswap.Server.deck.DeckFactory;
-import academy.mindswap.commands.Command;
 import academy.mindswap.utils.Messages;
 
 import java.io.*;
@@ -27,7 +23,8 @@ public class Game {
     private final int userLimit;
     private Deck deck;
     private Set<Card> tableCards;
-    private boolean[] verification;
+    private boolean[] gameDecisionsVerification;
+    private boolean[] roundOverVerification;
     private double pot;
     private List<Integer> playerHands;
 
@@ -37,7 +34,8 @@ public class Game {
         this.userLimit = tableLimit;
         this.deck = DeckFactory.createFullDeck();
         this.tableCards = Collections.synchronizedSet(new HashSet<>());
-        this.verification = new boolean[userLimit];
+        this.gameDecisionsVerification = new boolean[userLimit];
+        this.roundOverVerification = new boolean[userLimit];
         this.playerHands = Collections.synchronizedList(new ArrayList<>());
     }
 
@@ -88,7 +86,7 @@ public class Game {
 
         private Socket socket;
         private BufferedWriter out;
-        private BufferedReader in;
+        private Scanner in;
         private String message;
         private String username;
         private double credits;
@@ -138,16 +136,18 @@ public class Game {
         public void run() {
             try {
 
-                in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                in = new Scanner(socket.getInputStream());
                 out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
 
                 System.out.println(Messages.CONNECTING);
+
+                playerHands = new ArrayList<>();
 
                 while(!socket.isClosed()) {
 
                     // Get player username
                     while (message == null && username == null) {
-                        message = in.readLine();
+                        message = in.nextLine();
                         System.out.printf("User: %s has connected.%n", message);
                         username = message;
                         message = null;
@@ -155,14 +155,24 @@ public class Game {
                     }
                     // Get player credits
                     while (message == null && credits == 0.0) {
-                        message = in.readLine();
+                        message = in.nextLine();
                         credits = Double.parseDouble(message);
                         System.out.printf(Messages.PLAYER_CREDITS_ENTER, credits);
                         message = null;
                         break;
                     }
-
+                    int counter = 0;
                     System.out.println("Placing player in table...");
+
+
+                    while(isGameUnderWay()) {
+                        if(counter == 0) {
+                            sendMessage(Messages.WAITING_FOR_ROUND);
+                            counter++;
+                        }
+                    }
+
+
                     if(index == -1) {
                         synchronized (playerHands) {
                             addPlayer(this);
@@ -172,30 +182,18 @@ public class Game {
 
                     }
 
-
-                    int counter = 0;
                     while (currentPlayersConnected() <= 1) {
                         if(counter == 0){
                             System.out.println(Messages.WAITING_FOR_PLAYERS);
-                            out.write(Messages.WAITING_FOR_PLAYERS);
-                            out.newLine();
-                            out.flush();
+                            sendMessage(Messages.WAITING_FOR_PLAYERS);
                             counter++;
                         }
                     }
 
                     counter = 0;
 
-//                    while(isGameUnderWay()) {
-//                        if(counter == 0) {
-//                            System.out.println(Messages.WAITING_FOR_ROUND);
-//                            counter++;
-//                        }
-//                    }
-
-                    out.write(Messages.STARTING_ROUND);
-                    out.newLine();
-                    out.flush();
+                    sendMessage(Messages.STARTING_ROUND);
+                    Thread.sleep(1000);
                     givePlayerCards();
 
                     synchronized (tableCards){
@@ -206,23 +204,29 @@ public class Game {
 
                     System.out.println(tableCardsToString());
 
-                    out.write(playerCardsToString());
-                    out.newLine();
-                    out.flush();
+                    sendMessage(playerCardsToString());
+
+                    Thread.sleep(1000);
+
+                    sendMessage(Messages.PLAYER_CALL);
+
                     System.out.println("Waiting for player choices...");
-                    String playerChoice = in.readLine();
+
+                    String playerChoice = in.nextLine();
 
                     if(playerChoice != null) {
-
-
                         if(playerChoice.equalsIgnoreCase("bet")) {
                             System.out.println("Waiting for player bet...");
-                            String betStr = in.readLine();
+
+                            String betStr = in.nextLine();
+
                             bet += Double.parseDouble(betStr);
+
                             pot += bet;
-                            synchronized (verification) {
+
+                            synchronized (gameDecisionsVerification) {
                                 System.out.println("I'm here");
-                                verification[index] = true;
+                                gameDecisionsVerification[index] = true;
                             }
                         }
                     }
@@ -255,22 +259,60 @@ public class Game {
                     out.flush();
 
                     if(didIWin()) {
-                        out.write(Messages.WINNER + pot + " credits.");
-                        out.flush();
+                        System.out.println(username + " won!");
+                        out.write(Messages.WINNER + (pot - bet) + " credits.");
                         out.newLine();
+                        out.flush();
+
 
                     } else {
+                        System.out.println(username + " lost :(");
                         out.write(Messages.LOSER + bet + "credits.");
-                        out.flush();
                         out.newLine();
+                        out.flush();
+                    }
+
+                    System.out.println(Messages.CHECK_PLAYER);
+                    String playerDecision = null;
+                    if(in.hasNextLine()) {
+                        playerDecision = in.nextLine();
+                    }
+
+
+                    System.out.println("Player decided: " + playerDecision);
+
+                    if(playerDecision.equalsIgnoreCase("exit")) {
+                        playerHands.remove(index);
+                        removePlayer(this);
+                        System.out.println();
+                        break;
+                    }
+
+                    roundOverVerification[index] = true;
+                    counter = 0;
+
+                    while(!havePlayersDecidedToPlay()) {
+                        if(counter == 0) {
+                            out.write(Messages.WAITING_FOR_NEXT_ROUND);
+                            out.newLine();
+                            out.flush();
+                            counter++;
+                        }
                     }
 
                     startNewRound();
-                    System.out.println("Round ended, starting new one...");
 
                 }
             } catch (IOException e) {
                 e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } finally {
+                try {
+                    socket.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
 
@@ -299,17 +341,15 @@ public class Game {
 
         private synchronized boolean checkIfPlayersMadeDecision() {
             int trues = 0;
-            for(boolean b : verification) {
+            for(boolean b : gameDecisionsVerification) {
                 if(b) trues++;
             }
             return trues == currentPlayersConnected();
         }
 
         private synchronized void setVerificationsToFalse() {
-
-            for(boolean b : verification) {
-                b = false;
-            }
+            for(boolean b : gameDecisionsVerification) b = false;
+            for(boolean b : roundOverVerification) b = false;
         }
 
         private int analyzePLayerHand() {
@@ -457,21 +497,22 @@ public class Game {
 
         }
 
-        private void dealWithCommand(String message) throws IOException {
-            Command command = Command.getCommandFromDescription(message);
-
-            if (command == null) {
-                out.write(Messages.VALID_COMMAND);
-                out.newLine();
-                out.flush();
-                return;
+        private boolean havePlayersDecidedToPlay() {
+            int trues = 0;
+            for(boolean b : roundOverVerification) {
+                if(b) trues++;
             }
 
-            command.getCommandHandler().execute(Game.this, this);
-
-
+            return trues == playerHands.size();
         }
 
+        private void sendMessage(String message) throws IOException {
+
+            out.write(message);
+            out.newLine();
+            out.flush();
+
+        }
 
     }
 }

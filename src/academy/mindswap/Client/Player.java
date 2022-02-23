@@ -15,6 +15,8 @@ public class Player {
     private double credits;
     private BufferedReader bufferedReader;
     private BufferedWriter bufferedWriter;
+    private volatile boolean isRoundOver;
+    private volatile boolean hasRoundStarted;
 
     public Player() {
         try {
@@ -33,7 +35,32 @@ public class Player {
         new Thread(new ConnectionHandler(this.socket, out)).start();
 
         while (in.hasNextLine()) {
-            System.out.println(in.nextLine());
+            String serverMessage = in.nextLine();
+            System.out.println(serverMessage);
+
+            if(serverMessage.startsWith("You lost")) {
+                serverMessage = serverMessage.replaceAll("[^0-9]","");
+                credits -= Double.parseDouble(serverMessage);
+                System.out.printf(Messages.CURRENT_CREDITS, credits);
+                isRoundOver = true;
+                hasRoundStarted = false;
+                continue;
+            }
+
+            if(serverMessage.startsWith("Congrats")) {
+                serverMessage = serverMessage.replaceAll("[^0-9]","").trim();
+                credits += Double.parseDouble(serverMessage);
+                System.out.printf(Messages.CURRENT_CREDITS, credits);
+                isRoundOver = true;
+                hasRoundStarted = false;
+                continue;
+            }
+
+            if(serverMessage.startsWith("Starting round")) {
+                hasRoundStarted = true;
+
+            }
+
         }
         socket.close();
     }
@@ -73,6 +100,14 @@ public class Player {
 
 
                         while(!socket.isClosed()) {
+                            int counter = 0;
+                            while (!hasRoundStarted) {
+                                if(counter == 0) {
+                                    System.out.println(Messages.WAITING_FOR_ROUND);
+                                    counter++;
+                                }
+                            }
+
 
                             this.bufferedReader = new BufferedReader(new InputStreamReader(System.in));
                             String call = bufferedReader.readLine();
@@ -88,10 +123,16 @@ public class Player {
 
                             while(call.equalsIgnoreCase("bet")) {
 
+                                System.out.println(Messages.INSERT_BET);
                                 String strCredits = bufferedReader.readLine();
 
                                 if(checkIfStringIsValidDouble(strCredits)) {
                                     System.out.println(Messages.VALID_CREDITS);
+                                    continue;
+                                }
+
+                                if(Double.parseDouble(strCredits) > credits) {
+                                    System.out.println(Messages.NOT_ENOUGH_CREDITS);
                                     continue;
                                 }
 
@@ -103,15 +144,33 @@ public class Player {
 
                             }
 
-                            System.out.println("Bet placed, waiting for all the players to bet...");
-
-                            bufferedReader.readLine();
+                            System.out.println(Messages.PLACED_BET);
 
 
+                            while(!isRoundOver) {
+                                System.out.print(".");
+                                Thread.sleep(1000);
+                            }
 
+                            System.out.println(Messages.CONTINUE_PLAYING);
+                            String decision = bufferedReader.readLine();
+
+                            if(decision.equalsIgnoreCase("exit")) {
+                                bufferedWriter.write(decision);
+                                bufferedWriter.newLine();
+                                bufferedWriter.flush();
+                                System.out.println(Messages.PLAYER_DISCONNECTED + clientUsername);
+                                break;
+                            }
+
+                            bufferedWriter.write(decision);
+                            bufferedWriter.newLine();
+                            bufferedWriter.flush();
+
+                            isRoundOver = false;
 
                         }
-                    } catch (IOException e) {
+                    } catch (IOException | InterruptedException e) {
                         e.printStackTrace();
                     }
                 }
