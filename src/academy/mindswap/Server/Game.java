@@ -161,8 +161,18 @@ public class Game {
                         message = null;
                         break;
                     }
-
+                    int counter = 0;
                     System.out.println("Placing player in table...");
+                    while(isGameUnderWay()) {
+                        if(counter == 0) {
+                            out.write(Messages.WAITING_FOR_ROUND);
+                            out.newLine();
+                            out.flush();
+                            counter++;
+                        }
+                    }
+
+
                     if(index == -1) {
                         synchronized (playerHands) {
                             addPlayer(this);
@@ -172,8 +182,6 @@ public class Game {
 
                     }
 
-
-                    int counter = 0;
                     while (currentPlayersConnected() <= 1) {
                         if(counter == 0){
                             System.out.println(Messages.WAITING_FOR_PLAYERS);
@@ -186,15 +194,7 @@ public class Game {
 
                     counter = 0;
 
-                    while(isGameUnderWay()) {
-                        if(counter == 0) {
-                            out.write(Messages.WAITING_FOR_ROUND);
-                            out.newLine();
-                            out.flush();
 
-                            counter++;
-                        }
-                    }
 
                     out.write(Messages.STARTING_ROUND);
                     out.newLine();
@@ -514,6 +514,14 @@ public class Game {
             }
 
             return trues == playerHands.size();
+        }
+
+        private void sendMessage(String message) throws IOException {
+
+            out.write(message);
+            out.newLine();
+            out.flush();
+
         }
 
     }
