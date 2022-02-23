@@ -17,7 +17,8 @@ public class Player {
     private double credits;
     private BufferedReader bufferedReader;
     private BufferedWriter bufferedWriter;
-    private boolean isRoundOver;
+    private volatile boolean isRoundOver;
+    private volatile boolean hasRoundStarted;
 
     public Player() {
         try {
@@ -95,6 +96,8 @@ public class Player {
 
 
                         while(!socket.isClosed()) {
+
+
                             this.bufferedReader = new BufferedReader(new InputStreamReader(System.in));
                             String call = bufferedReader.readLine();
 
@@ -132,9 +135,10 @@ public class Player {
 
                             System.out.println(Messages.PLACED_BET);
 
-                            while (!isRoundOver) {
-                                Thread.sleep(500);
-                                System.out.println("Waiting for round to end...");
+
+                            while(!isRoundOver) {
+                                System.out.print(".");
+                                Thread.sleep(1000);
                             }
 
                             System.out.println(Messages.CONTINUE_PLAYING);

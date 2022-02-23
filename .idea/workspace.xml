@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="5758b74b-1b07-478a-8926-8d348cfc6100" name="Changes" comment="repaired decisions, upgraded verifications, added credits update">
+    <list default="true" id="5758b74b-1b07-478a-8926-8d348cfc6100" name="Changes" comment="last commit before break, needs final player decision to be fixed">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/academy/mindswap/Client/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/Client/Player.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/academy/mindswap/Server/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/Server/Game.java" afterDir="false" />
@@ -238,7 +238,14 @@
       <option name="project" value="LOCAL" />
       <updated>1645555360244</updated>
     </task>
-    <option name="localTasksCounter" value="19" />
+    <task id="LOCAL-00019" summary="last commit before break, needs final player decision to be fixed">
+      <created>1645556366708</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1645556366708</updated>
+    </task>
+    <option name="localTasksCounter" value="20" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -297,6 +304,7 @@
     <MESSAGE value="added new round mechanic" />
     <MESSAGE value="added better bet verifications and if player wants to keep playing" />
     <MESSAGE value="repaired decisions, upgraded verifications, added credits update" />
-    <option name="LAST_COMMIT_MESSAGE" value="repaired decisions, upgraded verifications, added credits update" />
+    <MESSAGE value="last commit before break, needs final player decision to be fixed" />
+    <option name="LAST_COMMIT_MESSAGE" value="last commit before break, needs final player decision to be fixed" />
   </component>
 </project>

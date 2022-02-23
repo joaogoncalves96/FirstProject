@@ -189,14 +189,18 @@ public class Game {
                     while(isGameUnderWay()) {
                         if(counter == 0) {
                             out.write(Messages.WAITING_FOR_ROUND);
+                            out.newLine();
+                            out.flush();
+
                             counter++;
                         }
                     }
 
                     out.write(Messages.STARTING_ROUND);
-                    Thread.sleep(1500);
                     out.newLine();
                     out.flush();
+                    Thread.sleep(1000);
+
 
                     givePlayerCards();
 
@@ -211,6 +215,8 @@ public class Game {
                     out.write(playerCardsToString());
                     out.newLine();
                     out.flush();
+
+                    Thread.sleep(1000);
 
                     out.write(Messages.PLAYER_CALL);
                     out.newLine();
@@ -265,19 +271,18 @@ public class Game {
                     out.flush();
 
                     if(didIWin()) {
+                        System.out.println(username + " won!");
                         out.write(Messages.WINNER + (pot - bet) + " credits.");
-                        out.flush();
                         out.newLine();
+                        out.flush();
+
 
                     } else {
+                        System.out.println(username + " lost :(");
                         out.write(Messages.LOSER + bet + "credits.");
-                        out.flush();
                         out.newLine();
+                        out.flush();
                     }
-
-
-
-                    System.out.println("Round ended, starting new one...");
 
                     String playerDecision = in.readLine(); // Check if player wants to play again
 
