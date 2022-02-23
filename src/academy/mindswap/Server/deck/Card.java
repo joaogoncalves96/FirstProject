@@ -1,5 +1,7 @@
 package academy.mindswap.Server.deck;
 
+import academy.mindswap.utils.ColorCodes;
+
 import java.util.Objects;
 
 public class Card {
@@ -36,6 +38,7 @@ public class Card {
 
     @Override
     public String toString() {
+
         return cardRank.getCardRankDescription() + " of " + cardSuit.getSuitDescription() + "(" +cardRank.getCardRankDigit() + cardSuit.getSuit() + ")" + "\n";
     }
 }

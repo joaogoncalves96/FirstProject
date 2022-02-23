@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 public class Player {
 
     private Socket socket;
-    private String hostName = "localHost";
+    private String hostName = "localhost";
     private int portNumber = 8081;
     private String clientUsername;
     private double credits;
@@ -39,21 +39,25 @@ public class Player {
             System.out.println(serverMessage);
 
             if(serverMessage.startsWith("You lost")) {
+
                 serverMessage = serverMessage.replaceAll("[^0-9]","");
                 credits -= Double.parseDouble(serverMessage);
                 System.out.printf(Messages.CURRENT_CREDITS, credits);
                 isRoundOver = true;
                 hasRoundStarted = false;
                 continue;
+
             }
 
             if(serverMessage.startsWith("Congrats")) {
+
                 serverMessage = serverMessage.replaceAll("[^0-9]","").trim();
                 credits += Double.parseDouble(serverMessage);
                 System.out.printf(Messages.CURRENT_CREDITS, credits);
                 isRoundOver = true;
                 hasRoundStarted = false;
                 continue;
+
             }
 
             if(serverMessage.startsWith("Starting round")) {
@@ -76,6 +80,7 @@ public class Player {
         private BufferedReader bufferedReader;
         private BufferedWriter bufferedWriter;
         private Socket socket;
+
 
         private ConnectionHandler(Socket socket, BufferedWriter out) {
             this.socket = socket;
@@ -100,6 +105,7 @@ public class Player {
 
 
                         while(!socket.isClosed()) {
+
                             int counter = 0;
                             while (!hasRoundStarted) {
                                 if(counter == 0) {
@@ -120,37 +126,20 @@ public class Player {
                             bufferedWriter.write(call);
                             bufferedWriter.newLine();
                             bufferedWriter.flush();
-
-                            while(call.equalsIgnoreCase("bet")) {
-
-                                System.out.println(Messages.INSERT_BET);
-                                String strCredits = bufferedReader.readLine();
-
-                                if(checkIfStringIsValidDouble(strCredits)) {
-                                    System.out.println(Messages.VALID_CREDITS);
-                                    continue;
-                                }
-
-                                if(Double.parseDouble(strCredits) > credits) {
-                                    System.out.println(Messages.NOT_ENOUGH_CREDITS);
-                                    continue;
-                                }
-
-                                bufferedWriter.write(strCredits);
-                                bufferedWriter.newLine();
-                                bufferedWriter.flush();
-
-                                call = "null";
-
-                            }
-
-                            System.out.println(Messages.PLACED_BET);
-
-
+                            counter = 0;
                             while(!isRoundOver) {
-                                System.out.print(".");
-                                Thread.sleep(1000);
+
+                                if(call.contains("/bet") && counter == 0) {
+                                    String bet = bufferedReader.readLine();
+                                    bufferedWriter.write(bet);
+                                    bufferedWriter.newLine();
+                                    bufferedWriter.flush();
+                                    counter++;
+                                }
+
                             }
+
+
 
                             System.out.println(Messages.CONTINUE_PLAYING);
                             String decision = bufferedReader.readLine();
@@ -170,9 +159,14 @@ public class Player {
                             isRoundOver = false;
 
                         }
-                    } catch (IOException | InterruptedException e) {
+                    } catch (IOException e) {
                         e.printStackTrace();
                     }
+                }
+                try {
+                    socket.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
             }
         }
@@ -190,7 +184,6 @@ public class Player {
             String strCredits = bufferedReader.readLine();
 
             if(checkIfStringIsValidDouble(strCredits)) {
-
                 System.out.println(Messages.VALID_CREDITS);
                 continue;
             }
@@ -222,8 +215,4 @@ public class Player {
                 command.equalsIgnoreCase("/fold") ||
                 command.equalsIgnoreCase("/allin");
     }
-
-
-
-
 }

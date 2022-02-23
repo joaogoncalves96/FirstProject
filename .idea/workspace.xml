@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="5758b74b-1b07-478a-8926-8d348cfc6100" name="Changes" comment="player can join now mid round and keep playing">
+    <list default="true" id="5758b74b-1b07-478a-8926-8d348cfc6100" name="Changes" comment="updating hand analyzer">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/academy/mindswap/Client/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/Client/Player.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/academy/mindswap/Server/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/Server/Game.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/academy/mindswap/Server/deck/HandAnalyzer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/Server/deck/HandAnalyzer.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -59,7 +60,7 @@
       <recent name="academy.mindswap.Client" />
     </key>
   </component>
-  <component name="RunManager" selected="Compound.Launch All players">
+  <component name="RunManager" selected="Application.Server">
     <configuration name="Launch Player 2 client" type="Application" factoryName="Application">
       <option name="MAIN_CLASS_NAME" value="academy.mindswap.Client.LaunchPlayer2" />
       <module name="FirstProject" />
@@ -265,7 +266,28 @@
       <option name="project" value="LOCAL" />
       <updated>1645608309944</updated>
     </task>
-    <option name="localTasksCounter" value="23" />
+    <task id="LOCAL-00023" summary="added commands : added broadcast message">
+      <created>1645620289154</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1645620289154</updated>
+    </task>
+    <task id="LOCAL-00024" summary="upgrading table card printer">
+      <created>1645623713145</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1645623713145</updated>
+    </task>
+    <task id="LOCAL-00025" summary="made global printer, updating hand analyzer">
+      <created>1645627945895</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1645627945895</updated>
+    </task>
+    <option name="localTasksCounter" value="26" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -307,8 +329,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="added factory added new constructor to deck" />
-    <MESSAGE value="added messages class refined factory" />
     <MESSAGE value="added username and credits fetch" />
     <MESSAGE value="added color codes" />
     <MESSAGE value="refactor player" />
@@ -328,6 +348,12 @@
     <MESSAGE value="created more booleans" />
     <MESSAGE value="added scanner to playerhandler, fixed decision to keep playing" />
     <MESSAGE value="player can join now mid round and keep playing" />
-    <option name="LAST_COMMIT_MESSAGE" value="player can join now mid round and keep playing" />
+    <MESSAGE value="fixed some issues" />
+    <MESSAGE value="added commands : added broadcast message" />
+    <MESSAGE value="upgrading table card printer" />
+    <MESSAGE value="upgrading table card printer 2" />
+    <MESSAGE value="made global printer, updating hand analyzer" />
+    <MESSAGE value="updating hand analyzer" />
+    <option name="LAST_COMMIT_MESSAGE" value="updating hand analyzer" />
   </component>
 </project>
