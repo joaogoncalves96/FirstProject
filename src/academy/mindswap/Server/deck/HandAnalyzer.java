@@ -6,15 +6,10 @@ public class HandAnalyzer {
 
 
     public static int AnalyzeHand(ArrayList<Card> playerHand, Collection<Card> tableCards) {
+
         int points = 0;
 
         int highestCard = Math.max(playerHand.get(0)
-                            .getCardRank()
-                            .getCardRankPoints(), playerHand.get(1)
-                            .getCardRank()
-                            .getCardRankPoints());
-
-        int lowestCard = Math.min(playerHand.get(0)
                             .getCardRank()
                             .getCardRankPoints(), playerHand.get(1)
                             .getCardRank()
@@ -59,8 +54,9 @@ public class HandAnalyzer {
         }
 
         if(hasStraight(fullHand)) {
-
-
+            ArrayList<Card> hand = getStraightHand(fullHand);
+            points += 750 + highestCard;
+            return points;
         }
 
         if(hasTriple(rankCount)) {
@@ -103,12 +99,7 @@ public class HandAnalyzer {
             points += 150 + cardValue;
 
         }
-
-
-
-
-
-        return 0;
+        return highestCard;
     }
 
     private static boolean hasFourOfKind(HashMap<CardRank, Integer> rankCount) {
@@ -116,11 +107,28 @@ public class HandAnalyzer {
     }
 
     private static ArrayList<Card> getStraightHand(ArrayList<Card> hand) {
+
         ArrayList<Card> finalHand = new ArrayList<>();
+        hand.sort(new Comparator<Card>() {
+            @Override
+            public int compare(Card o1, Card o2) {
+                return Integer.compare(o1.getCardRank().getCardRankPoints(),o2.getCardRank().getCardRankPoints());
+            }
 
+        });
 
+        for (int i = 0; i < hand.size() - 1; i++) {
 
-
+            int cardValue1 = hand.get(i).getCardRank().getCardRankPoints();
+            int cardValue2 = hand.get(i + 1).getCardRank().getCardRankPoints();
+            if(finalHand.size() >= 5 && cardValue1 != cardValue2 + 1) break;
+            if(cardValue1 == cardValue2 + 1) {
+                finalHand.add(hand.get(i));
+                continue;
+            }
+            finalHand = new ArrayList<>(5);
+        }
+        return finalHand;
     }
 
     private static ArrayList<Card> getFlushHand(HashMap<CardSuit, Integer> suitCount, ArrayList<Card> hand) {
