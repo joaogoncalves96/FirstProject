@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="5758b74b-1b07-478a-8926-8d348cfc6100" name="Changes" comment="player can join now mid round and keep playing">
+    <list default="true" id="5758b74b-1b07-478a-8926-8d348cfc6100" name="Changes" comment="fixed some issues">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/academy/mindswap/Client/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/Client/Player.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/academy/mindswap/Server/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/Server/Game.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/academy/mindswap/commands/AllinHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/commands/AllinHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/academy/mindswap/commands/BetHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/commands/BetHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/academy/mindswap/commands/FoldHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/commands/FoldHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/academy/mindswap/utils/Messages.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/utils/Messages.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -328,6 +332,7 @@
     <MESSAGE value="created more booleans" />
     <MESSAGE value="added scanner to playerhandler, fixed decision to keep playing" />
     <MESSAGE value="player can join now mid round and keep playing" />
-    <option name="LAST_COMMIT_MESSAGE" value="player can join now mid round and keep playing" />
+    <MESSAGE value="fixed some issues" />
+    <option name="LAST_COMMIT_MESSAGE" value="fixed some issues" />
   </component>
 </project>

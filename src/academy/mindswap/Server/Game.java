@@ -1,5 +1,6 @@
 package academy.mindswap.Server;
 import academy.mindswap.Server.deck.*;
+import academy.mindswap.commands.Command;
 import academy.mindswap.utils.Messages;
 
 import java.io.*;
@@ -27,6 +28,7 @@ public class Game {
     private boolean[] roundOverVerification;
     private double pot;
     private List<Integer> playerHands;
+    private int playerHandCount;
 
     public Game(int tableLimit) {
 
@@ -72,6 +74,17 @@ public class Game {
         return this.deck.getDeckSize() < 52;
     }
 
+    public void broadCastMessage(String message) {
+        for(PlayerHandler player : listOfPlayers) {
+            try {
+                player.sendMessage(message);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+
     private synchronized void dealTableCards() {
 
         for (int i = 0; i < 5; i++) {
@@ -80,6 +93,7 @@ public class Game {
             deck.removeCard(bufferCard);
             tableCards.add(bufferCard);
         }
+
     }
 
     public class PlayerHandler implements Runnable {
@@ -93,6 +107,8 @@ public class Game {
         private ArrayList<Card> playerCards;
         private double bet;
         private int index;
+        private boolean hasPlayerFolded;
+
 
         private PlayerHandler(Socket socket) {
             this.playerCards = new ArrayList<>(2);
@@ -100,11 +116,16 @@ public class Game {
             this.index = -1;
         }
 
-        private String getUsername() {
+
+        public String getUsername() {
             return username;
         }
 
         protected boolean didIWin() {
+
+            if(this.hasPlayerFolded) {
+                return false;
+            }
 
             int myPoints = playerHands.get(index);
 
@@ -172,14 +193,12 @@ public class Game {
                         }
                     }
 
-
                     if(index == -1) {
                         synchronized (playerHands) {
                             addPlayer(this);
                             playerHands.add(0);
                             index = playerHands.size() - 1;
                         }
-
                     }
 
                     while (currentPlayersConnected() <= 1) {
@@ -194,11 +213,18 @@ public class Game {
 
                     sendMessage(Messages.STARTING_ROUND);
                     Thread.sleep(1000);
+
                     givePlayerCards();
 
-                    synchronized (tableCards){
-                        if(tableCards.isEmpty()) {
-                            dealTableCards();
+                    playerHandCount += 2;
+
+                    System.out.println("Time: " + System.currentTimeMillis());
+
+                    if(playersHaveCards()) {
+                        synchronized (tableCards){
+                            if(tableCards.isEmpty()) {
+                                dealTableCards();
+                            }
                         }
                     }
 
@@ -215,38 +241,26 @@ public class Game {
                     String playerChoice = in.nextLine();
 
                     if(playerChoice != null) {
-                        if(playerChoice.equalsIgnoreCase("bet")) {
-                            System.out.println("Waiting for player bet...");
+                        
+                        dealWithCommand(playerChoice);
 
-                            String betStr = in.nextLine();
-
-                            bet += Double.parseDouble(betStr);
-
-                            pot += bet;
-
-                            synchronized (gameDecisionsVerification) {
-                                System.out.println("I'm here");
-                                gameDecisionsVerification[index] = true;
-                            }
+                        synchronized (gameDecisionsVerification) {
+                            System.out.println("Player decided.");
+                            gameDecisionsVerification[index] = true;
                         }
                     }
 
                     while(!checkIfPlayersMadeDecision()) {
                         if(counter == 0) {
-                            String message = "Waiting for players to make decision";
-                            System.out.println(message);
-                            out.write(message);
-                            out.newLine();
-                            out.flush();
+                            System.out.println(Messages.WAITING_FOR_NEXT_ROUND);
+                            sendMessage(Messages.WAITING_FOR_NEXT_ROUND);
                             counter++;
                         }
                     }
 
                     System.out.println("Players made their decision.");
 
-                    out.write("Cards in table: \n" + tableCardsToString());
-                    out.newLine();
-                    out.flush();
+                    sendMessage("Cards in table: \n" + tableCardsToString());
 
                     int points = analyzePLayerHand();
 
@@ -254,23 +268,16 @@ public class Game {
 
                     System.out.println(username + " has " + points);
 
-                    out.write("You got a " +  getStringHand(points) + "!");
-                    out.newLine();
-                    out.flush();
+                    sendMessage("You got a " +  getStringHand(points) + "!");
 
                     if(didIWin()) {
                         System.out.println(username + " won!");
-                        out.write(Messages.WINNER + (pot - bet) + " credits.");
-                        out.newLine();
-                        out.flush();
-
-
+                        sendMessage(Messages.WINNER + (pot - bet) + " credits.");
                     } else {
                         System.out.println(username + " lost :(");
-                        out.write(Messages.LOSER + bet + "credits.");
-                        out.newLine();
-                        out.flush();
+                        sendMessage(Messages.LOSER + bet + "credits.");
                     }
+
 
                     System.out.println(Messages.CHECK_PLAYER);
                     String playerDecision = null;
@@ -293,15 +300,11 @@ public class Game {
 
                     while(!havePlayersDecidedToPlay()) {
                         if(counter == 0) {
-                            out.write(Messages.WAITING_FOR_NEXT_ROUND);
-                            out.newLine();
-                            out.flush();
+                            sendMessage(Messages.WAITING_FOR_NEXT_ROUND);
                             counter++;
                         }
                     }
-
                     startNewRound();
-
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -317,11 +320,21 @@ public class Game {
         }
 
         public synchronized void givePlayerCards() {
+
+            CardRank[] cardRank = CardRank.values();
+            CardSuit[] suitSuit = CardSuit.values();
+
             for (int i = 0; i < 2; i++) {
-                Card[] cardArray = deck.getDeck().toArray(new Card[deck.getDeckSize()]);
-                Card bufferCard = cardArray[(int) (Math.random() * deck.getDeckSize())];
-                deck.removeCard(bufferCard);
-                playerCards.add(bufferCard);
+                Card bufferCard = new Card(
+                        cardRank[(int) (Math.random() * cardRank.length)],
+                        suitSuit[(int) (Math.random() * suitSuit.length)]);
+
+                if(deck.getDeck().contains(bufferCard)) {
+                    deck.removeCard(bufferCard);
+                    playerCards.add(bufferCard);
+                    continue;
+                }
+                i--;
             }
         }
 
@@ -448,8 +461,8 @@ public class Game {
                     .map(Card::getCardSuit).toList();
 
             for(CardSuit cardSuit : cardSuits) {
-                if(cardSuitCount.containsKey(cardSuits)) {
-                    cardSuitCount.put(cardSuit, cardSuitCount.get(cardSuits) + 1);
+                if(cardSuitCount.containsKey(cardSuit)) {
+                    cardSuitCount.put(cardSuit, cardSuitCount.get(cardSuit) + 1);
                 } else {
                     cardSuitCount.put(cardSuit, 1);
                 }
@@ -478,7 +491,7 @@ public class Game {
             if(points > 100) {
                 return "Triplet";
             }
-            if(points > 40) {
+            if(points > 27) {
                 return "Double pair";
             }
             if(points > 14) {
@@ -493,7 +506,10 @@ public class Game {
             deck = DeckFactory.createFullDeck();
             bet = 0;
             pot = 0;
+            tableCards = Collections.synchronizedSet(new HashSet<>());
             setVerificationsToFalse();
+            playerHandCount = 0;
+            hasPlayerFolded = false;
 
         }
 
@@ -512,6 +528,35 @@ public class Game {
             out.newLine();
             out.flush();
 
+        }
+
+        private boolean playersHaveCards() {
+            return (playerHandCount / 2) == listOfPlayers.size();
+        }
+
+        private void dealWithCommand(String action) {
+
+            Command command = Command.getCommandFromDescription(action);
+
+            command.getCommandHandler().execute(Game.this, this);
+
+        }
+
+        public void fold() {
+            this.hasPlayerFolded = true;
+        }
+
+        public void setBet(double bet) {
+            this.bet = bet;
+        }
+
+        public double getCredits() {
+            return credits;
+        }
+
+        public void askForBet() throws IOException {
+            sendMessage(Messages.INSERT_BET);
+            bet = Double.parseDouble(in.nextLine());
         }
 
     }
