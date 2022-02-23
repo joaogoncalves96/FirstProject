@@ -163,11 +163,11 @@ public class Game {
                     }
                     int counter = 0;
                     System.out.println("Placing player in table...");
+
+
                     while(isGameUnderWay()) {
                         if(counter == 0) {
-                            out.write(Messages.WAITING_FOR_ROUND);
-                            out.newLine();
-                            out.flush();
+                            sendMessage(Messages.WAITING_FOR_ROUND);
                             counter++;
                         }
                     }
@@ -185,22 +185,15 @@ public class Game {
                     while (currentPlayersConnected() <= 1) {
                         if(counter == 0){
                             System.out.println(Messages.WAITING_FOR_PLAYERS);
-                            out.write(Messages.WAITING_FOR_PLAYERS);
-                            out.newLine();
-                            out.flush();
+                            sendMessage(Messages.WAITING_FOR_PLAYERS);
                             counter++;
                         }
                     }
 
                     counter = 0;
 
-
-
-                    out.write(Messages.STARTING_ROUND);
-                    out.newLine();
-                    out.flush();
+                    sendMessage(Messages.STARTING_ROUND);
                     Thread.sleep(1000);
-
                     givePlayerCards();
 
                     synchronized (tableCards){
@@ -211,15 +204,11 @@ public class Game {
 
                     System.out.println(tableCardsToString());
 
-                    out.write(playerCardsToString());
-                    out.newLine();
-                    out.flush();
+                    sendMessage(playerCardsToString());
 
                     Thread.sleep(1000);
 
-                    out.write(Messages.PLAYER_CALL);
-                    out.newLine();
-                    out.flush();
+                    sendMessage(Messages.PLAYER_CALL);
 
                     System.out.println("Waiting for player choices...");
 
@@ -282,6 +271,7 @@ public class Game {
                         out.newLine();
                         out.flush();
                     }
+
                     System.out.println(Messages.CHECK_PLAYER);
                     String playerDecision = null;
                     if(in.hasNextLine()) {

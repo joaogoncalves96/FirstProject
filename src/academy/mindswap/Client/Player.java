@@ -55,10 +55,12 @@ public class Player {
                 System.out.printf(Messages.CURRENT_CREDITS, credits);
                 isRoundOver = true;
                 hasRoundStarted = false;
+                continue;
             }
 
             if(serverMessage.startsWith("Starting round")) {
                 hasRoundStarted = true;
+
             }
 
         }

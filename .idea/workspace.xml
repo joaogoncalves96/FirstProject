@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="5758b74b-1b07-478a-8926-8d348cfc6100" name="Changes" comment="added scanner to playerhandler, fixed decision to keep playing">
+    <list default="true" id="5758b74b-1b07-478a-8926-8d348cfc6100" name="Changes" comment="player can join now mid round and keep playing">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/academy/mindswap/Client/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/Client/Player.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/academy/mindswap/Server/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/Server/Game.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -58,7 +59,7 @@
       <recent name="academy.mindswap.Client" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.Server">
+  <component name="RunManager" selected="Compound.Launch All players">
     <configuration name="Launch Player 2 client" type="Application" factoryName="Application">
       <option name="MAIN_CLASS_NAME" value="academy.mindswap.Client.LaunchPlayer2" />
       <module name="FirstProject" />
@@ -257,7 +258,14 @@
       <option name="project" value="LOCAL" />
       <updated>1645578772822</updated>
     </task>
-    <option name="localTasksCounter" value="22" />
+    <task id="LOCAL-00022" summary="player can join now mid round and keep playing">
+      <created>1645608309944</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1645608309944</updated>
+    </task>
+    <option name="localTasksCounter" value="23" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -319,6 +327,7 @@
     <MESSAGE value="last commit before break, needs final player decision to be fixed" />
     <MESSAGE value="created more booleans" />
     <MESSAGE value="added scanner to playerhandler, fixed decision to keep playing" />
-    <option name="LAST_COMMIT_MESSAGE" value="added scanner to playerhandler, fixed decision to keep playing" />
+    <MESSAGE value="player can join now mid round and keep playing" />
+    <option name="LAST_COMMIT_MESSAGE" value="player can join now mid round and keep playing" />
   </component>
 </project>
