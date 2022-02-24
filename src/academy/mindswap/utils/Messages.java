@@ -35,4 +35,5 @@ public class Messages {
     public static final String USERNAME_ALREADY_EXISTS = "Welome %s. You have %.2f credits. %n";
     public static final String NEXT = "Next turn!";
 
+
 }
