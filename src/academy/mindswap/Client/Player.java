@@ -1,4 +1,5 @@
 package academy.mindswap.Client;
+import academy.mindswap.Server.deck.CardSuit;
 import academy.mindswap.utils.Messages;
 
 import java.io.*;
@@ -9,12 +10,11 @@ import java.util.regex.Pattern;
 public class Player {
 
     private Socket socket;
-    private String hostName = "localhost";
-    private int portNumber = 8081;
+    private final String hostName = "localhost";
+    private final int portNumber = 8081;
     private String clientUsername;
     private double credits;
     private BufferedReader bufferedReader;
-    private BufferedWriter bufferedWriter;
     private volatile boolean isRoundOver;
     private volatile boolean hasRoundStarted;
 
@@ -25,22 +25,31 @@ public class Player {
 
         } catch (IOException e) {
             System.out.println("Couldn't connect.");
-            closeAll(socket, bufferedReader, bufferedWriter);
+            closeAll();
         }
     }
 
     public void connectToServer ()  throws IOException {
+
+        readDatabase();
         Scanner in = new Scanner(socket.getInputStream());
         BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
         new Thread(new ConnectionHandler(this.socket, out)).start();
 
         while (in.hasNextLine()) {
             String serverMessage = in.nextLine();
+
+            if(serverMessage.contains("\b")) {
+                System.out.print(serverMessage);
+                continue;
+            }
             System.out.println(serverMessage);
 
             if(serverMessage.startsWith("You lost")) {
 
-                serverMessage = serverMessage.replaceAll("[^0-9]","");
+                serverMessage = serverMessage.replace(Messages.LOSER,"")
+                        .replace(" credits.","");
+
                 credits -= Double.parseDouble(serverMessage);
                 System.out.printf(Messages.CURRENT_CREDITS, credits);
                 isRoundOver = true;
@@ -51,18 +60,18 @@ public class Player {
 
             if(serverMessage.startsWith("Congrats")) {
 
-                serverMessage = serverMessage.replaceAll("[^0-9]","").trim();
+                serverMessage = serverMessage.replace(Messages.WINNER,"")
+                        .replace(" credits.","");
+
                 credits += Double.parseDouble(serverMessage);
                 System.out.printf(Messages.CURRENT_CREDITS, credits);
                 isRoundOver = true;
                 hasRoundStarted = false;
                 continue;
-
             }
 
             if(serverMessage.startsWith("Starting round")) {
                 hasRoundStarted = true;
-
             }
 
         }
@@ -72,6 +81,20 @@ public class Player {
     public boolean checkIfStringIsValidDouble(String doubleString) {
         Pattern regex = Pattern.compile("[^0-9]");
         return regex.matcher(doubleString).find();
+    }
+
+    private void readDatabase() {
+        File data = new File("C:/MindSwap/PokerGame/FirstProject/resources/users");
+
+        try {
+            FileInputStream dataInput = new FileInputStream(data);
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
 
@@ -92,6 +115,9 @@ public class Player {
             synchronized (this) {
                 while (socket.isConnected()) {
                     try {
+                        if(socket.isClosed()) {
+                            break;
+                        }
                         this.bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
                         this.bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
@@ -126,6 +152,7 @@ public class Player {
                             bufferedWriter.write(call);
                             bufferedWriter.newLine();
                             bufferedWriter.flush();
+
                             counter = 0;
                             while(!isRoundOver) {
 
@@ -135,6 +162,7 @@ public class Player {
                                     bufferedWriter.newLine();
                                     bufferedWriter.flush();
                                     counter++;
+
                                 }
 
                             }
@@ -148,6 +176,7 @@ public class Player {
                                 bufferedWriter.write(decision);
                                 bufferedWriter.newLine();
                                 bufferedWriter.flush();
+                                closeAll();
                                 System.out.println(Messages.PLAYER_DISCONNECTED + clientUsername);
                                 break;
                             }
@@ -191,14 +220,11 @@ public class Player {
         }
     }
 
-    public void closeAll(Socket socket, BufferedReader bufferedReader, BufferedWriter bufferedWriter) {
+    public void closeAll() {
 
         try {
             if (bufferedReader != null) {
                 bufferedReader.close();
-            }
-            if (bufferedWriter != null) {
-                bufferedWriter.close();
             }
             if (socket != null) {
                 socket.close();

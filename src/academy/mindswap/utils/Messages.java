@@ -28,6 +28,7 @@ public class Messages {
     public static final String FOLDED = " has folded.\n";
     public static final String BET = " has bet ";
     public static final String ALL_IN = " went all in with ";
+    public static final String WAITING_TO_SEE_HAND = "Waiting for players too see their hands..";
     public static final String CREDITS = " credits!";
     public static final String CONTINUE_PLAYING = "Do you want to play another round? \nType EXIT to leave game, press enter to play another round. \n";
 

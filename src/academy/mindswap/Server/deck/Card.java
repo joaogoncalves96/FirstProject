@@ -4,6 +4,11 @@ import academy.mindswap.utils.ColorCodes;
 
 import java.util.Objects;
 
+/**Card
+ *
+ *
+ */
+
 public class Card {
 
     private CardRank cardRank;
@@ -21,6 +26,10 @@ public class Card {
 
     public CardRank getCardRank() {
         return cardRank;
+    }
+
+    public static int whichCardIsHigher(Card card1 , Card card2) {
+        return card1.getCardRank().getCardRankPoints() >= card2.getCardRank().getCardRankPoints() ? 1 : -1;
     }
 
     @Override
