@@ -67,6 +67,8 @@ public class Client {
         Player player1 = new Player();
 
         player1.connectToServer();
+        player1.readDatabase();
+        //Socket socket = new Socket("0.tcp.ngrok.io", 11154);
 
     }
 }
