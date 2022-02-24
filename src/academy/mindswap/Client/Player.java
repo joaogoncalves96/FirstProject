@@ -17,6 +17,8 @@ public class Player {
     private BufferedReader bufferedReader;
     private volatile boolean isRoundOver;
     private volatile boolean hasRoundStarted;
+    private int turnsLeft;
+    private int previousTurn;
 
     public Player() {
         try {
@@ -31,7 +33,7 @@ public class Player {
 
     public void connectToServer ()  throws IOException {
 
-        readDatabase();
+//        readDatabase();
         Scanner in = new Scanner(socket.getInputStream());
         BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
         new Thread(new ConnectionHandler(this.socket, out)).start();
@@ -43,7 +45,13 @@ public class Player {
                 System.out.print(serverMessage);
                 continue;
             }
+
+            if(serverMessage.equals(Messages.NEXT)) {
+                turnsLeft--;
+            }
+
             System.out.println(serverMessage);
+
 
             if(serverMessage.startsWith("You lost")) {
 
@@ -97,13 +105,10 @@ public class Player {
 
     }
 
-
     class ConnectionHandler implements Runnable {
 
-        private BufferedReader bufferedReader;
         private BufferedWriter bufferedWriter;
-        private Socket socket;
-
+        private final Socket socket;
 
         private ConnectionHandler(Socket socket, BufferedWriter out) {
             this.socket = socket;
@@ -119,7 +124,6 @@ public class Player {
                             break;
                         }
                         this.bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-                        this.bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
                         bufferedWriter.write(clientUsername);
                         bufferedWriter.newLine();
@@ -128,6 +132,9 @@ public class Player {
                         bufferedWriter.write(String.valueOf(credits));
                         bufferedWriter.newLine();
                         bufferedWriter.flush();
+
+                        turnsLeft = 2;
+                        previousTurn = 2;
 
 
                         while(!socket.isClosed()) {
@@ -141,33 +148,33 @@ public class Player {
                             }
 
 
-                            this.bufferedReader = new BufferedReader(new InputStreamReader(System.in));
-                            String call = bufferedReader.readLine();
+                            bufferedReader = new BufferedReader(new InputStreamReader(System.in));
 
-                            if(!checkForValidCommand(call)) {
-                                System.out.println(Messages.VALID_COMMAND);
-                                continue;
-                            }
+                            while(turnsLeft != -2) {
+                                String call = bufferedReader.readLine();
 
-                            bufferedWriter.write(call);
-                            bufferedWriter.newLine();
-                            bufferedWriter.flush();
+                                if(!checkForValidCommand(call)) {
+                                    if(turnsLeft == -2) break;
+                                    System.out.println(Messages.VALID_COMMAND);
+                                    continue;
+                                }
 
-                            counter = 0;
-                            while(!isRoundOver) {
+                                if(turnsLeft == -2) break;
+                                bufferedWriter.write(call);
+                                bufferedWriter.newLine();
+                                bufferedWriter.flush();
 
-                                if(call.contains("/bet") && counter == 0) {
+                                if(call.contains("/bet")) {
                                     String bet = bufferedReader.readLine();
                                     bufferedWriter.write(bet);
                                     bufferedWriter.newLine();
                                     bufferedWriter.flush();
-                                    counter++;
-
                                 }
 
+                                while (turnsLeft == previousTurn) {
+                                }
+                                previousTurn = turnsLeft;
                             }
-
-
 
                             System.out.println(Messages.CONTINUE_PLAYING);
                             String decision = bufferedReader.readLine();
@@ -186,6 +193,7 @@ public class Player {
                             bufferedWriter.flush();
 
                             isRoundOver = false;
+                            turnsLeft = 2;
 
                         }
                     } catch (IOException e) {
