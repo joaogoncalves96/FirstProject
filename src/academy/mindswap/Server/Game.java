@@ -355,6 +355,8 @@ public class Game {
                 e.printStackTrace();
             } finally {
                 try {
+                    playerHands.remove(index);
+                    removePlayer(this);
                     socket.close();
 
                 } catch (IOException e) {

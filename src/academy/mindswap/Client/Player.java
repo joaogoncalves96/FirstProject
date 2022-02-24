@@ -30,6 +30,8 @@ public class Player {
     }
 
     public void connectToServer ()  throws IOException {
+
+        readDatabase();
         Scanner in = new Scanner(socket.getInputStream());
         BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
         new Thread(new ConnectionHandler(this.socket, out)).start();
@@ -79,6 +81,20 @@ public class Player {
     public boolean checkIfStringIsValidDouble(String doubleString) {
         Pattern regex = Pattern.compile("[^0-9]");
         return regex.matcher(doubleString).find();
+    }
+
+    private void readDatabase() {
+        File data = new File("C:/MindSwap/PokerGame/FirstProject/resources/users");
+
+        try {
+            FileInputStream dataInput = new FileInputStream(data);
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
 

@@ -4,6 +4,11 @@ import academy.mindswap.utils.ColorCodes;
 
 import java.util.Objects;
 
+/**Card
+ *
+ *
+ */
+
 public class Card {
 
     private CardRank cardRank;
