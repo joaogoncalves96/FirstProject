@@ -51,7 +51,7 @@ public class Game {
 
         ServerSocket serverSocket = new ServerSocket(PORT);
 
-        System.out.println("Server initiated. Waiting for users to connect.");
+        System.out.println("Server initiated. Waiting for users.txt to connect.");
 
         service = Executors.newCachedThreadPool();
 
