@@ -23,6 +23,10 @@ public class Card {
         return cardRank;
     }
 
+    public static int whichCardIsHigher(Card card1 , Card card2) {
+        return card1.getCardRank().getCardRankPoints() >= card2.getCardRank().getCardRankPoints() ? 1 : -1;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

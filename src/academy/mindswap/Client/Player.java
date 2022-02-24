@@ -61,12 +61,10 @@ public class Player {
                 isRoundOver = true;
                 hasRoundStarted = false;
                 continue;
-
             }
 
             if(serverMessage.startsWith("Starting round")) {
                 hasRoundStarted = true;
-
             }
 
         }

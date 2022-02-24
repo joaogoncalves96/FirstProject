@@ -1,11 +1,17 @@
 package academy.mindswap.Server.deck;
-
+import academy.mindswap.utils.ColorCodes;
 import java.util.*;
+
+/**
+ *
+ *
+ *
+ */
 
 public class HandAnalyzer {
 
 
-    public static int AnalyzeHand(ArrayList<Card> playerHand, Collection<Card> tableCards) {
+    public static int analyzeHand(ArrayList<Card> playerHand, Collection<Card> tableCards) {
 
         int points = 0;
 
@@ -97,9 +103,52 @@ public class HandAnalyzer {
                     .getCardRankPoints();
 
             points += 150 + cardValue;
+            return points;
 
         }
         return highestCard;
+    }
+
+    public static ArrayList<Card> makeFinalHand(int points, ArrayList<Card> playerHand, Set<Card> tableCards) {
+
+        ArrayList<Card> fullHand = new ArrayList<>(7);
+
+        fullHand.addAll(playerHand);
+        fullHand.addAll(tableCards);
+
+        HashMap<CardRank, Integer> rankCount = rankCounter(fullHand);
+        HashMap<CardSuit, Integer> suitCount = suitCounter(fullHand);
+
+        if(points > 2000) {
+            return get4ofAKindHand(rankCount);
+        }
+        if(points > 1500) {
+            return getFullHouseHand(rankCount, fullHand);
+        }
+        if(points > 1000) {
+            return getFlushHand(suitCount, fullHand);
+        }
+        if(points > 750) {
+            return getStraightHand(fullHand);
+        }
+        if(points > 500) {
+            return getTripleHand(rankCount, fullHand);
+        }
+        if(points > 150) {
+            return getPairsHand(rankCount, fullHand);
+        }
+
+        int result = Card.whichCardIsHigher(playerHand.get(0), playerHand.get(1));
+
+        if(result == 1) {
+            fullHand = new ArrayList<>(1);
+            fullHand.add(playerHand.get(0));
+            return fullHand;
+        }
+        fullHand = new ArrayList<>(1);
+        fullHand.add(playerHand.get(1));
+
+        return fullHand;
     }
 
     private static boolean hasFourOfKind(HashMap<CardRank, Integer> rankCount) {
@@ -122,7 +171,7 @@ public class HandAnalyzer {
             int cardValue1 = hand.get(i).getCardRank().getCardRankPoints();
             int cardValue2 = hand.get(i + 1).getCardRank().getCardRankPoints();
             if(finalHand.size() >= 5 && cardValue1 != cardValue2 + 1) break;
-            if(cardValue1 == cardValue2 + 1) {
+            if(cardValue1 == cardValue2 - 1) {
                 finalHand.add(hand.get(i));
                 continue;
             }
@@ -134,7 +183,7 @@ public class HandAnalyzer {
     private static ArrayList<Card> getFlushHand(HashMap<CardSuit, Integer> suitCount, ArrayList<Card> hand) {
 
         CardSuit suit = suitCount.keySet().stream()
-                    .filter(cardSuit -> suitCount.get(cardSuit) < 5)
+                    .filter(cardSuit -> suitCount.get(cardSuit) >= 5)
                     .findFirst()
                     .get();
 
@@ -149,13 +198,15 @@ public class HandAnalyzer {
 
     private static ArrayList<Card> getPairsHand(HashMap<CardRank, Integer> rankCount, ArrayList<Card> hand) {
         ArrayList<Card> finalHand = new ArrayList<>();
-        hand.stream().filter(card -> rankCount.get(card) == 2).forEach(finalHand::add);
+
+        hand.stream().filter(card -> rankCount.get(card.getCardRank()) == 2).forEach(finalHand::add);
+
         return finalHand;
     }
 
     private static ArrayList<Card> getTripleHand(HashMap<CardRank, Integer> rankCount, ArrayList<Card> hand) {
         ArrayList<Card> finalHand = new ArrayList<>(3);
-        hand.stream().filter(card -> rankCount.get(card) == 3).forEach(finalHand::add);
+        hand.stream().filter(card -> rankCount.get(card.getCardRank()) == 3).forEach(finalHand::add);
         return finalHand;
     }
 
@@ -239,11 +290,14 @@ public class HandAnalyzer {
             }
         });
 
+
         int sequentialCounter = 0;
         for (int i = 0; i < hand.size() - 1; i++) {
             int card1Value = hand.get(i).getCardRank().getCardRankPoints();
+
             int card2Value = hand.get(i + 1).getCardRank().getCardRankPoints();
-            if(card1Value == card2Value + 1) {
+
+            if(card1Value == card2Value - 1) {
                 sequentialCounter++;
             } else {
                 sequentialCounter = 0;
@@ -285,4 +339,94 @@ public class HandAnalyzer {
         }
         return cardSuitCount;
     }
+
+    public static String printCards(Collection<Card> cardList) {
+        StringBuilder cardString = new StringBuilder();
+
+        String whiteBG = ColorCodes.WHITE_BACKGROUND_BRIGHT;
+        String black = ColorCodes.BLACK_BOLD;
+        String red = ColorCodes.RED_BOLD_BRIGHT;
+        String reset = ColorCodes.RESET;
+
+
+
+        for(Card card : cardList) {
+
+            int isTen = card.getCardRank().equals(CardRank.TEN) ? 1 : 0;
+            String color;
+            cardString.append(whiteBG);
+
+            if(card.getCardSuit().equals(CardSuit.SPADES) || card.getCardSuit().equals(CardSuit.CLUBS)) {
+                color = black;
+            } else {
+                color = red;
+            }
+
+            cardString.append(color);
+            cardString.append(card.getCardRank().getCardRankDigit());
+            cardString.append(whiteBG);
+            cardString.append(" ".repeat(3 - isTen));
+            cardString.append(whiteBG);
+            cardString.append(color);
+            cardString.append(card.getCardSuit().getSuit());
+            cardString.append(reset);
+            cardString.append(" ".repeat(3));
+
+        }
+
+        cardString.append("\n");
+
+        for(Card card : cardList) {
+
+            String color;
+            cardString.append(whiteBG);
+
+            if(card.getCardSuit().equals(CardSuit.SPADES) || card.getCardSuit().equals(CardSuit.CLUBS)) {
+                color = black;
+            } else {
+                color = red;
+            }
+
+            cardString.append(whiteBG);
+            cardString.append("  ");
+            cardString.append(whiteBG);
+            cardString.append(color);
+            cardString.append(card.getCardSuit().getSuit());
+            cardString.append(whiteBG);
+            cardString.append("  ");
+            cardString.append(reset);
+            cardString.append(" ".repeat(3));
+
+        }
+
+        cardString.append("\n");
+
+        for(Card card : cardList) {
+            String color;
+            int isTen = card.getCardRank().equals(CardRank.TEN) ? 1 : 0;
+            cardString.append(whiteBG);
+
+            if(card.getCardSuit().equals(CardSuit.SPADES) || card.getCardSuit().equals(CardSuit.CLUBS)) {
+                color = black;
+            } else {
+                color = red;
+            }
+            cardString.append(whiteBG);
+            cardString.append(color);
+            cardString.append(card.getCardSuit().getSuit());
+            cardString.append(whiteBG);
+            cardString.append(" ".repeat(3 - isTen));
+            cardString.append(whiteBG);
+            cardString.append(color);
+            cardString.append(card.getCardRank().getCardRankDigit());
+            cardString.append(reset);
+            cardString.append(" ".repeat(3));
+
+        }
+
+        cardString.append("\n");
+
+        return cardString.toString();
+    }
+
 }

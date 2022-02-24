@@ -96,9 +96,29 @@ public class Game {
 
     }
 
+    private boolean havePlayersSeenHands() {
+        int count = 0;
+        for(PlayerHandler player : listOfPlayers) {
+            count += player.seenHand;
+        }
+
+        return count == currentPlayersConnected();
+    }
+
+    protected int getWinningPlayerIndex() {
+
+       int winningPoints = playerHands.stream()
+                .reduce(0, Math::max);
+
+       return playerHands.indexOf(winningPoints);
+
+    }
+
+
+
     public class PlayerHandler implements Runnable {
 
-        private Socket socket;
+        private final Socket socket;
         private BufferedWriter out;
         private Scanner in;
         private String message;
@@ -108,7 +128,7 @@ public class Game {
         private double bet;
         private int index;
         private boolean hasPlayerFolded;
-        private ArrayList<Card> bestHand;
+        private int seenHand;
 
         private PlayerHandler(Socket socket) {
             this.playerCards = new ArrayList<>(2);
@@ -120,20 +140,7 @@ public class Game {
             return username;
         }
 
-        protected boolean didIWin() {
 
-            if(this.hasPlayerFolded) {
-                return false;
-            }
-
-            int myPoints = playerHands.get(index);
-
-            for(Integer i : playerHands) {
-                if(i > myPoints) return false;
-            }
-
-            return true;
-        }
 
         public int getIndex() {
             return index;
@@ -160,8 +167,6 @@ public class Game {
                 out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
 
                 System.out.println(Messages.CONNECTING);
-
-                playerHands = new ArrayList<>();
 
                 while(!socket.isClosed()) {
 
@@ -193,7 +198,6 @@ public class Game {
                             counter++;
                         }
                     }
-
                     if(index == -1) {
                         synchronized (playerHands) {
                             addPlayer(this);
@@ -214,7 +218,7 @@ public class Game {
 
                     sendMessage(Messages.STARTING_ROUND);
 
-                    Thread.sleep(800);
+                    Thread.sleep((long) (Math.random() * 500));
 
                     givePlayerCards();
 
@@ -230,11 +234,15 @@ public class Game {
                         }
                     }
 
+                    Thread.sleep((long) (Math.random() * 100));
+
                     System.out.println(printCards(tableCards));
+
+                    Thread.sleep((long) (Math.random() * 100));
 
                     sendMessage(printCards(playerCards));
 
-                    Thread.sleep(800);
+                    Thread.sleep((long) (Math.random() * 250));
 
                     sendMessage(Messages.PLAYER_CALL);
 
@@ -252,7 +260,7 @@ public class Game {
                         }
                     }
 
-
+                    Thread.sleep((long) (Math.random() * 100));
 
                     while(!checkIfPlayersMadeDecision()) {
                         if(counter == 0) {
@@ -266,19 +274,34 @@ public class Game {
 
                     sendMessage("Cards in table: \n" + printCards(tableCards));
 
-                    int points = analyzePLayerHand();
+                    int points = 0;
+
                     if(!hasPlayerFolded) {
+                        points = analyzePlayerHand();
+                        Thread.sleep((long) (Math.random() * 100));
                         playerHands.set(index, points);
-                        synchronized (Game.this){
-                            pot += bet;
-                        }
+
+                        pot += bet;
                     }
+
+                    seenHand++;
 
                     System.out.println(username + " has " + points);
 
-                    sendMessage("You got a " +  getStringHand(points) + "!");
+                    sendMessage("You've got a " +  getStringHand(points) + "!");
 
-                    if(didIWin()) {
+                    sendMessage(printCards(getFinalHand()));
+
+                    counter = 0;
+                    while (!havePlayersSeenHands()) {
+                        if(counter == 0) {
+                            sendMessage(Messages.WAITING_TO_SEE_HAND);
+                            counter++;
+                        }
+                    }
+
+
+                    if(getWinningPlayerIndex() == index) {
                         System.out.println(username + " won!");
                         sendMessage(Messages.WINNER + (pot - bet) + " credits.");
                     } else {
@@ -286,13 +309,11 @@ public class Game {
                         sendMessage(Messages.LOSER + bet + " credits.");
                     }
 
-
                     System.out.println(Messages.CHECK_PLAYER);
                     String playerDecision = null;
                     if(in.hasNextLine()) {
                         playerDecision = in.nextLine();
                     }
-
 
                     System.out.println("Player decided: " + playerDecision);
 
@@ -312,6 +333,7 @@ public class Game {
                             counter++;
                         }
                     }
+                    seenHand--;
                     startNewRound();
                 }
             } catch (IOException e) {
@@ -355,8 +377,6 @@ public class Game {
             String black = ColorCodes.BLACK_BOLD;
             String red = ColorCodes.RED_BOLD_BRIGHT;
             String reset = ColorCodes.RESET;
-
-
 
             for(Card card : cardList) {
 
@@ -445,137 +465,36 @@ public class Game {
             return trues == currentPlayersConnected();
         }
 
-        private int analyzePLayerHand() {
-            int points = Math.max(this.playerCards.get(0)
-                    .getCardRank()
-                    .getCardRankPoints(), this.playerCards.get(1)
-                    .getCardRank()
-                    .getCardRankPoints());
-//            int points = 0;
-
-            this.playerCards.addAll(tableCards);
-
-            points += countCards(this.playerCards);
-
-            if(points < 400) {
-                points += checkForFlush(this.playerCards);
-            }
-
-            if(points < 200) {
-                points += checkForSequential(this.playerCards);
-            }
-            return points;
+        private int analyzePlayerHand() {
+            System.out.println("I got in analyze");
+            return HandAnalyzer.analyzeHand(this.playerCards, tableCards);
         }
 
-        private int countCards(ArrayList<Card> playerCards) {
-            int points = 0;
-            HashMap<CardRank, Integer> cardsCount = new HashMap<>();
-
-            List<CardRank> cardRanks = playerCards.stream()
-                    .map(Card::getCardRank).toList();
-
-            for(CardRank cardRank : cardRanks) {
-                if(cardsCount.containsKey(cardRank)) {
-                    cardsCount.put(cardRank, cardsCount.get(cardRank) + 1);
-                } else {
-                    cardsCount.put(cardRank, 1);
-                }
-            }
-
-            int triples = 0;
-            int pairs = 0;
-
-            for(CardRank c : cardsCount.keySet()) {
-
-                if(cardsCount.get(c) == 4) {
-                    return c.getCardRankPoints() + 1000;
-                }
-
-                if(cardsCount.get(c) == 3) {
-                    points += c.getCardRankPoints();
-                    triples++;
-                    continue;
-                }
-
-                if(cardsCount.get(c) == 2) {
-                    points += c.getCardRankPoints();
-                    pairs++;
-                }
-            }
-
-            if(pairs > 0 && triples == 0) {
-                return points + (pairs * 10);
-            }
-
-            if(pairs == 1 && triples == 1) {
-                return points + 500;
-            }
-            return 0;
-        }
-
-        private int checkForSequential(ArrayList<Card> playerCards) {
-            playerCards.sort(new Comparator<Card>() {
-                @Override
-                public int compare(Card o1, Card o2) {
-                    return Integer.compare(o1.getCardRank().getCardRankPoints(), o2.getCardRank().getCardRankPoints()) ;
-                }
-            });
-
-            int sequentialCounter = 0;
-            for (int i = 0; i < playerCards.size() - 1; i++) {
-                int card1Value = playerCards.get(i).getCardRank().getCardRankPoints();
-                int card2Value = playerCards.get(i + 1).getCardRank().getCardRankPoints();
-                if(card1Value == card2Value + 1) {
-                    sequentialCounter++;
-                } else {
-                    sequentialCounter = 0;
-                }
-            }
-            return sequentialCounter >= 5 ? 300 : 0;
-        }
-
-        private int checkForFlush(ArrayList<Card> playerCards) {
-            int points = 0;
-            HashMap<CardSuit, Integer> cardSuitCount = new HashMap<>();
-
-            List<CardSuit> cardSuits = playerCards.stream()
-                    .map(Card::getCardSuit).toList();
-
-            for(CardSuit cardSuit : cardSuits) {
-                if(cardSuitCount.containsKey(cardSuit)) {
-                    cardSuitCount.put(cardSuit, cardSuitCount.get(cardSuit) + 1);
-                } else {
-                    cardSuitCount.put(cardSuit, 1);
-                }
-            }
-
-            if(cardSuitCount.values().stream().noneMatch(value -> value >= 5)) {
-                return 0;
-            }
-            return 400;
+        private ArrayList<Card> getFinalHand() {
+            return HandAnalyzer.makeFinalHand(playerHands.get(index), playerCards, tableCards);
         }
 
         private String getStringHand(int points) {
 
-            if(points > 1000) {
+            if(points > 2000) {
                 return "Four of a kind";
             }
-            if(points > 500) {
+            if(points > 1500) {
                 return "Full house";
             }
-            if(points > 400) {
+            if(points > 1000) {
                 return "Flush";
             }
-            if(points > 300) {
+            if(points > 750) {
                 return "Straight";
             }
-            if(points > 100) {
+            if(points > 500) {
                 return "Triplet";
             }
-            if(points > 27) {
+            if(points > 300) {
                 return "Double pair";
             }
-            if(points > 14) {
+            if(points > 150) {
                 return "Pair";
             }
             return "High card";
@@ -592,6 +511,10 @@ public class Game {
             roundOverVerification = new boolean[userLimit];
             playerHandCount = 0;
             hasPlayerFolded = false;
+            for (int i = 0; i < playerHands.size(); i++) {
+                playerHands.set(i,0);
+            }
+
 
         }
 
@@ -643,6 +566,10 @@ public class Game {
 
         public double getBet() {
             return bet;
+        }
+
+        protected int getSeenHand() {
+            return seenHand;
         }
     }
 }
