@@ -1,9 +1,13 @@
 package academy.mindswap.Client;
-import academy.mindswap.Server.deck.CardSuit;
 import academy.mindswap.utils.Messages;
 
 import java.io.*;
 import java.net.Socket;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 
@@ -17,6 +21,7 @@ public class Player {
     private BufferedReader bufferedReader;
     private volatile boolean isRoundOver;
     private volatile boolean hasRoundStarted;
+    private HashMap<String,Double> existingAccounts;
 
     public Player() {
         try {
@@ -31,7 +36,6 @@ public class Player {
 
     public void connectToServer ()  throws IOException {
 
-        readDatabase();
         Scanner in = new Scanner(socket.getInputStream());
         BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
         new Thread(new ConnectionHandler(this.socket, out)).start();
@@ -84,13 +88,26 @@ public class Player {
     }
 
     private void readDatabase() {
-        File data = new File("C:/MindSwap/PokerGame/FirstProject/resources/users");
-
         try {
-            FileInputStream dataInput = new FileInputStream(data);
+            List<String> listOfUsers = Files.readAllLines(Paths.get("resources/users.txt"));
+            existingAccounts = new HashMap<>();
+            listOfUsers.forEach(s -> existingAccounts.put(s.split("::")[0], Double.parseDouble(s.split("::")[1])));
 
-        } catch (FileNotFoundException e) {
+        } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    private void updateDatabase(){
+
+            StringBuilder userString = new StringBuilder();
+            existingAccounts
+                    .forEach((k,v) -> userString.append(k).append("::").append(v).append("\n"));
+        try {
+            FileWriter writer = new FileWriter("resources/users.txt");
+            writer.write(userString.toString());
+            writer.close();
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -203,22 +220,23 @@ public class Player {
 
     private void askForUserNameAndCredits() throws IOException {
 
+        readDatabase();
         this.bufferedReader = new BufferedReader(new InputStreamReader(System.in));
         System.out.println(Messages.ENTER_USERNAME);
-        this.clientUsername = bufferedReader.readLine();
-        System.out.println(Messages.ENTER_CREDITS);
+        String enteredUsername = bufferedReader.readLine();
 
-        while(credits == 0.0) {
-
-            String strCredits = bufferedReader.readLine();
-
-            if(checkIfStringIsValidDouble(strCredits)) {
-                System.out.println(Messages.VALID_CREDITS);
-                continue;
+        if (existingAccounts.containsKey(enteredUsername)) {
+            this.clientUsername = enteredUsername;
+            this.credits = existingAccounts.get(enteredUsername);
+            System.out.printf(Messages.USERNAME_ALREADY_EXISTS, this.clientUsername, this.credits);
+        } else {
+            this.clientUsername = enteredUsername;
+            this.credits = 10000;
+            existingAccounts.put(this.clientUsername,this.credits);
+            updateDatabase();
             }
-            this.credits = Double.parseDouble(strCredits);
         }
-    }
+
 
     public void closeAll() {
 
