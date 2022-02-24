@@ -12,8 +12,13 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
- * Poker Game v0.01
+ * Poker Game v1.01
  * Creates a server that can run poker games
+ * BUGS TO FIX:
+ * - When player exits, the lists get fucked ***FIXED***
+ * - There's a line between lines and player commands
+ * - PLayers can play with credits < 1
+ *
  */
 
 public class Game {
@@ -114,7 +119,19 @@ public class Game {
 
     }
 
+    private void startNewRound() {
+        deck = DeckFactory.createFullDeck();
+        pot = 0;
+        tableCards = Collections.synchronizedSet(new HashSet<>(5));
+        gameDecisionsVerification = new boolean[userLimit];
+        roundOverVerification = new boolean[userLimit];
+        playerHandCount = 0;
 
+        for (int i = 0; i < playerHands.size(); i++) {
+            playerHands.set(i,0);
+        }
+
+    }
 
     public class PlayerHandler implements Runnable {
 
@@ -139,8 +156,6 @@ public class Game {
         public String getUsername() {
             return username;
         }
-
-
 
         public int getIndex() {
             return index;
@@ -190,8 +205,6 @@ public class Game {
                     int counter = 0;
 
                     System.out.println("Placing player in table...");
-
-
                     while(isGameUnderWay()) {
                         if(counter == 0) {
                             sendMessage(Messages.WAITING_FOR_ROUND);
@@ -212,6 +225,7 @@ public class Game {
                             sendMessage(Messages.WAITING_FOR_PLAYERS);
                             counter++;
                         }
+                        loading();
                     }
 
                     counter = 0;
@@ -300,7 +314,6 @@ public class Game {
                         }
                     }
 
-
                     if(getWinningPlayerIndex() == index) {
                         System.out.println(username + " won!");
                         sendMessage(Messages.WINNER + (pot - bet) + " credits.");
@@ -320,7 +333,7 @@ public class Game {
                     if(playerDecision.equalsIgnoreCase("exit")) {
                         playerHands.remove(index);
                         removePlayer(this);
-                        System.out.println();
+                        System.out.println(Messages.PLAYER_DISCONNECTED);
                         break;
                     }
 
@@ -332,9 +345,9 @@ public class Game {
                             sendMessage(Messages.WAITING_FOR_NEXT_ROUND);
                             counter++;
                         }
+                        if(havePlayersDecidedToPlay()) break;
                     }
-                    seenHand--;
-                    startNewRound();
+                    restartTable();
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -343,7 +356,7 @@ public class Game {
             } finally {
                 try {
                     socket.close();
-                    removePlayer(this);
+
                 } catch (IOException e) {
                     System.out.println(Messages.PLAYER_DISCONNECTED);
                 }
@@ -500,29 +513,14 @@ public class Game {
             return "High card";
         }
 
-        private void startNewRound() {
-
-            playerCards = new ArrayList<>(2);
-            deck = DeckFactory.createFullDeck();
-            bet = 0;
-            pot = 0;
-            tableCards = Collections.synchronizedSet(new HashSet<>());
-            gameDecisionsVerification = new boolean[userLimit];
-            roundOverVerification = new boolean[userLimit];
-            playerHandCount = 0;
-            hasPlayerFolded = false;
-            for (int i = 0; i < playerHands.size(); i++) {
-                playerHands.set(i,0);
-            }
-
-
-        }
-
         private boolean havePlayersDecidedToPlay() {
             int trues = 0;
             for(boolean b : roundOverVerification) {
                 if(b) trues++;
             }
+//            System.out.println("Trues: " + trues);
+//            System.out.println("PLayers: " + listOfPlayers.size());
+//            System.out.println("PLayersIndex: " + playerHands.size());
 
             return trues == playerHands.size();
         }
@@ -566,6 +564,38 @@ public class Game {
 
         public double getBet() {
             return bet;
+        }
+
+        private void loading() throws IOException, InterruptedException {
+            long animationSpeed = 800;
+            String black = ColorCodes.BLACK_BOLD;
+            String red = ColorCodes.RED_BOLD_BRIGHT;
+            String reset = ColorCodes.RESET;
+            StringBuilder loadingAnimation = new StringBuilder();
+            while(currentPlayersConnected() <= 1) {
+
+                Thread.sleep(animationSpeed);
+                sendMessage("\b" + black + CardSuit.CLUBS.getSuit());
+
+                Thread.sleep(animationSpeed);
+                sendMessage("\b" + red + CardSuit.HEARTS.getSuit());
+
+                Thread.sleep(animationSpeed);
+                sendMessage("\b" + black + CardSuit.SPADES.getSuit());
+
+                Thread.sleep(animationSpeed);
+                sendMessage("\b" + red + CardSuit.DIAMONDS.getSuit());
+
+            }
+
+        }
+
+        private void restartTable() {
+            bet = 0;
+            seenHand--;
+            playerCards = new ArrayList<>(2);
+            hasPlayerFolded = false;
+            startNewRound();
         }
 
         protected int getSeenHand() {

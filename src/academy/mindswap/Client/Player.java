@@ -1,4 +1,5 @@
 package academy.mindswap.Client;
+import academy.mindswap.Server.deck.CardSuit;
 import academy.mindswap.utils.Messages;
 
 import java.io.*;
@@ -9,12 +10,11 @@ import java.util.regex.Pattern;
 public class Player {
 
     private Socket socket;
-    private String hostName = "localhost";
-    private int portNumber = 8081;
+    private final String hostName = "localhost";
+    private final int portNumber = 8081;
     private String clientUsername;
     private double credits;
     private BufferedReader bufferedReader;
-    private BufferedWriter bufferedWriter;
     private volatile boolean isRoundOver;
     private volatile boolean hasRoundStarted;
 
@@ -25,7 +25,7 @@ public class Player {
 
         } catch (IOException e) {
             System.out.println("Couldn't connect.");
-            closeAll(socket, bufferedReader, bufferedWriter);
+            closeAll();
         }
     }
 
@@ -36,6 +36,11 @@ public class Player {
 
         while (in.hasNextLine()) {
             String serverMessage = in.nextLine();
+
+            if(serverMessage.contains("\b")) {
+                System.out.print(serverMessage);
+                continue;
+            }
             System.out.println(serverMessage);
 
             if(serverMessage.startsWith("You lost")) {
@@ -94,6 +99,9 @@ public class Player {
             synchronized (this) {
                 while (socket.isConnected()) {
                     try {
+                        if(socket.isClosed()) {
+                            break;
+                        }
                         this.bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
                         this.bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
@@ -128,6 +136,7 @@ public class Player {
                             bufferedWriter.write(call);
                             bufferedWriter.newLine();
                             bufferedWriter.flush();
+
                             counter = 0;
                             while(!isRoundOver) {
 
@@ -137,6 +146,7 @@ public class Player {
                                     bufferedWriter.newLine();
                                     bufferedWriter.flush();
                                     counter++;
+
                                 }
 
                             }
@@ -150,6 +160,7 @@ public class Player {
                                 bufferedWriter.write(decision);
                                 bufferedWriter.newLine();
                                 bufferedWriter.flush();
+                                closeAll();
                                 System.out.println(Messages.PLAYER_DISCONNECTED + clientUsername);
                                 break;
                             }
@@ -193,14 +204,11 @@ public class Player {
         }
     }
 
-    public void closeAll(Socket socket, BufferedReader bufferedReader, BufferedWriter bufferedWriter) {
+    public void closeAll() {
 
         try {
             if (bufferedReader != null) {
                 bufferedReader.close();
-            }
-            if (bufferedWriter != null) {
-                bufferedWriter.close();
             }
             if (socket != null) {
                 socket.close();
