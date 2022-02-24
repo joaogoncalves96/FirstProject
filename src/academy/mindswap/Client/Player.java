@@ -1,9 +1,9 @@
 package academy.mindswap.Client;
-import academy.mindswap.Server.deck.CardSuit;
 import academy.mindswap.utils.Messages;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.HashMap;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 
@@ -17,6 +17,7 @@ public class Player {
     private BufferedReader bufferedReader;
     private volatile boolean isRoundOver;
     private volatile boolean hasRoundStarted;
+    private HashMap<String,Double> existingAccounts;
     private int turnsLeft;
     private int previousTurn;
 
