@@ -28,6 +28,7 @@ public class Player {
     private int turnsLeft;
     private int previousTurn;
     private boolean isMyTurn;
+    private boolean isAllin;
 
 
     public Player() {
@@ -119,6 +120,7 @@ public class Player {
                 System.out.printf(Messages.CURRENT_CREDITS, credits);
                 isRoundOver = true;
                 hasRoundStarted = false;
+                isAllin = false;
                 continue;
 
             }
@@ -132,11 +134,16 @@ public class Player {
                 System.out.printf(Messages.CURRENT_CREDITS, credits);
                 isRoundOver = true;
                 hasRoundStarted = false;
+                isAllin = false;
                 continue;
             }
 
             if(serverMessage.startsWith("Starting round")) {
                 hasRoundStarted = true;
+            }
+
+            if(serverMessage.equals(Messages.IS_ALL_IN)) {
+                isAllin = true;
             }
 
 
@@ -191,23 +198,15 @@ public class Player {
 
 
                             input = new Scanner(System.in);
-                            counter = 0;
+
                             while(turnsLeft != -2) {
 
                                 while (!isMyTurn) {
-                                    if (counter == 0) {
-                                        System.out.println(ColorCodes.PURPLE_BOLD_BRIGHT + System.currentTimeMillis() + ColorCodes.RESET);
-                                        System.out.println(ColorCodes.PURPLE_BOLD_BRIGHT + "I'm locked" + ColorCodes.RESET);
-                                        counter++;
-                                    }
-
                                     if(isRoundOver) break;
-                                    Thread.sleep(1500);
-                                    System.out.println(ColorCodes.PURPLE_BOLD_BRIGHT + isMyTurn + ColorCodes.RESET);
+                                    Thread.sleep((long) (1000 * Math.random()));
                                 }
                                 if(isRoundOver) break;
-                                System.out.println(ColorCodes.YELLOW_BOLD_BRIGHT +  "I'm  no longer locked" + ColorCodes.RESET);
-                                counter = 0;
+
                                 String call = input.nextLine();
 
                                 if(!checkForValidCommand(call)) {
@@ -217,6 +216,7 @@ public class Player {
                                 }
 
                                 if(turnsLeft == -2) break;
+
                                 bufferedWriter.write(call);
                                 bufferedWriter.newLine();
                                 bufferedWriter.flush();

@@ -1,5 +1,7 @@
 package academy.mindswap.utils;
 
+import academy.mindswap.Server.Game;
+
 public class Messages {
 
 
@@ -39,6 +41,10 @@ public class Messages {
     public static final String NEXT = "Next turn!";
     public static final String PLAYER_TURN = "It's your turn.";
     public static final String ALL_PLAYERS_FOLDED = "Everyone else folded!";
+    public static final String IS_ALL_IN = "You're All in!";
+    public static final String TAX_PAY = "You have payed " + Game.getTABLE_FEE() + " credits to play this round.";
+    public static final String CALL = " has called the bet!";
+
 
 
 }

@@ -6,7 +6,9 @@ import academy.mindswap.utils.Messages;
 public class AllinHandler implements CommandHandler {
     @Override
     public void execute(Game game, Game.PlayerHandler playerHandler) {
-        playerHandler.setBet(playerHandler.getCredits());
+        playerHandler.bet(playerHandler.getCredits());
+        playerHandler.wentAllIn();
+
         game.broadCastMessage(playerHandler.getUsername() +
                 Messages.ALL_IN +
                 playerHandler.getCredits() +

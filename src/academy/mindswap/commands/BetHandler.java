@@ -10,10 +10,10 @@ public class BetHandler implements CommandHandler {
     @Override
     public void execute(Game game, Game.PlayerHandler playerHandler) throws PlayerDisconnectedException {
         try {
-            playerHandler.askForBet();
+            double bet = playerHandler.askForBet();
             game.broadCastMessage(playerHandler.getUsername() +
                     Messages.BET +
-                    playerHandler.getBet() +
+                    bet +
                     Messages.CREDITS);
 
         } catch (IOException e) {

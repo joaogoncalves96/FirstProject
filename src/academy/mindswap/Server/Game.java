@@ -35,9 +35,11 @@ public class Game {
     private double pot;
     private List<Integer> playerHands;
     private int playerHandCount;
+    private double lastBet;
     private int TURN_DECIDER;
     private int LAST_ROUND_STARTER;
     private int TURNS_LEFT;
+    private final static double TABLE_FEE = 100.00;
 
 
     public Game(int tableLimit) {
@@ -65,6 +67,10 @@ public class Game {
         while(listOfPlayers.size() < userLimit) {
             service.submit(new PlayerHandler(serverSocket.accept()));
         }
+    }
+
+    public double getLastBet() {
+        return lastBet;
     }
 
     private void addPlayer(PlayerHandler player) {
@@ -147,6 +153,10 @@ public class Game {
 
     }
 
+    public static double getTABLE_FEE() {
+        return TABLE_FEE;
+    }
+
     public class PlayerHandler implements Runnable {
 
         private final Socket socket;
@@ -160,7 +170,8 @@ public class Game {
         private int index;
         private boolean hasPlayerFolded;
         private int seenHand;
-        private boolean isMyTurn;
+        private boolean hasAllIn;
+
 
         private PlayerHandler(Socket socket) {
             this.playerCards = new ArrayList<>(2);
@@ -252,7 +263,13 @@ public class Game {
 
                     Thread.sleep((long) (1000 * Math.random()));
 
+                    this.credits -= TABLE_FEE;
+
+                    pot += TABLE_FEE;
+
                     writePlayerInTable();
+
+                    sendMessage(Messages.TAX_PAY);
 
                     givePlayerCards();
 
@@ -276,15 +293,13 @@ public class Game {
 
                     Thread.sleep((long) (Math.random() * 100));
 
-
-                    System.out.println("Turns left: " + TURNS_LEFT);
-                    System.out.println("Turn decider: " + TURN_DECIDER);
-                    System.out.println("Last round: " + LAST_ROUND_STARTER);
-                    System.out.println("Time: " + System.currentTimeMillis());
+//                    System.out.println("Turns left: " + TURNS_LEFT);
+//                    System.out.println("Turn decider: " + TURN_DECIDER);
+//                    System.out.println("Last round: " + LAST_ROUND_STARTER);
+//                    System.out.println("Time: " + System.currentTimeMillis());
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////// TURNS
-
                     while(TURNS_LEFT != -2) {
                         String playerChoice = null;
                         while(!canIdoMyTurn()) {
@@ -294,8 +309,6 @@ public class Game {
                             }
                         }
 
-
-
                         Thread.sleep(50);
 
                         if(haveAllOtherPlayersFolded() || hasPlayerFolded) {
@@ -303,16 +316,24 @@ public class Game {
                             break;
                         }
 
-                        sendMessage(Messages.PLAYER_TURN);
 
                         Thread.sleep(100);
 
-                        sendMessage(Messages.PLAYER_CALL);
-
-                        if(!hasPlayerFolded) {
-                            playerChoice = in.nextLine();
+                        if(!hasAllIn) {
+                            sendMessage(Messages.PLAYER_TURN);
+                            Thread.sleep(100);
+                            sendMessage(Messages.PLAYER_CALL);
                         }
 
+                        if(hasAllIn) {
+                            sendMessage(Messages.ALL_IN);
+                            playerChoice = null;
+                        }
+
+
+                        if(!hasPlayerFolded || !hasAllIn) {
+                            playerChoice = in.nextLine();
+                        }
 
                         if(playerChoice != null) {
 
@@ -322,6 +343,11 @@ public class Game {
                                 System.out.println("Player decided.");
                                 gameDecisionsVerification[index] = true;
                             }
+                        }
+
+                        if(hasAllIn) {
+                            System.out.println(username + "is all in.");
+                            gameDecisionsVerification[index] = true;
                         }
 
                         if(hasPlayerFolded) {
@@ -348,7 +374,6 @@ public class Game {
                             sendMessage("Cards in table: \n" +
                                     printCards(tableCards));
                         }
-
 
                         sendMessage(Messages.NEXT);
 
@@ -378,8 +403,6 @@ public class Game {
                         points = analyzePlayerHand();
                         Thread.sleep((long) (Math.random() * 100));
                         playerHands.set(index, points);
-
-                        pot += bet;
                     }
 
                     seenHand++;
@@ -404,11 +427,13 @@ public class Game {
                         System.out.println(username + " won!");
 
                         sendMessage(Messages.WINNER + (pot - bet) + " credits.");
+                        this.credits += (pot - bet);
 
                     } else {
 
                         System.out.println(username + " lost :(");
-                        sendMessage(Messages.LOSER + bet + " credits.");
+                        sendMessage(Messages.LOSER + (bet + TABLE_FEE) + " credits.");
+                        this.credits -= (TABLE_FEE + bet);
 
                     }
 
@@ -593,6 +618,10 @@ public class Game {
             return trues == currentPlayersConnected();
         }
 
+        public void wentAllIn() {
+            this.hasAllIn = true;
+        }
+
         private int analyzePlayerHand() {
             System.out.println("I got in analyze");
             return HandAnalyzer.analyzeHand(this.playerCards, tableCards);
@@ -659,19 +688,17 @@ public class Game {
         }
 
         private void dealWithCommand(String action) throws PlayerDisconnectedException {
-
             Command command = Command.getCommandFromDescription(action);
 
             command.getCommandHandler().execute(Game.this, this);
-
         }
 
         public void fold() {
             this.hasPlayerFolded = true;
         }
 
-        public void setBet(double bet) {
-            this.bet = bet;
+        public void bet(double bet) {
+            this.bet += bet;
         }
 
         public double getCredits() {
@@ -682,11 +709,12 @@ public class Game {
             return listOfPlayers.get(TURN_DECIDER).getUsername();
         }
 
-        public void askForBet() throws IOException, PlayerDisconnectedException {
+        public double askForBet() throws IOException, PlayerDisconnectedException {
             sendMessage(Messages.INSERT_BET);
             double value = Double.parseDouble(in.nextLine());
             bet += value;
             credits -=value;
+            return value;
         }
 
         public double getBet() {
@@ -746,6 +774,7 @@ public class Game {
 
         private synchronized void restartTable() {
             TURNS_LEFT = 2;
+            this.hasAllIn = false;
             bet = 0;
             seenHand--;
             playerCards = new ArrayList<>(2);
