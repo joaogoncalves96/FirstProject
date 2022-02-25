@@ -23,7 +23,7 @@ The poker contains:
 
 Instructions of Poker:
 Call -> When a player makes the bet amount made by an equal of the opponents.
-Bet -> When a player bets on the round, he leaves the following options to the others: fold , call (if he has a strong hand) or all-in. The winner of the pot is the one who made the biggest bet.
+Bet -> When a player bets on the round, he leaves the following options to the others: fold , call (if he has a strong hand) or all-in. The winner of the pot is whoever has the best hand.
 All-In -> When a player uses all credits to bet or to cover a bet of equal or greater value.
 Fold -> When a player resigns from the pot, he cannot bet in the present round.
 
