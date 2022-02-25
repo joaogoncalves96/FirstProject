@@ -49,6 +49,11 @@ public class Player {
         while (in.hasNextLine()) {
             String serverMessage = in.nextLine();
 
+            if(serverMessage.equals(Messages.ALL_PLAYERS_FOLDED)) {
+                turnsLeft = -2;
+                continue;
+            }
+
             if(serverMessage.contains("\b")) {
                 System.out.print(serverMessage);
                 continue;
@@ -173,6 +178,9 @@ public class Player {
                             bufferedReader = new BufferedReader(new InputStreamReader(System.in));
 
                             while(turnsLeft != -2) {
+
+
+
                                 String call = bufferedReader.readLine();
 
                                 if(!checkForValidCommand(call)) {
@@ -192,12 +200,15 @@ public class Player {
                                     bufferedWriter.newLine();
                                     bufferedWriter.flush();
                                 }
+                                if(call.contains("/fold")) {
+                                    break;
+                                }
 
                                 while (turnsLeft == previousTurn) {
                                 }
                                 previousTurn = turnsLeft;
                             }
-
+                            Thread.sleep(1000);
                             System.out.println(Messages.CONTINUE_PLAYING);
                             String decision = bufferedReader.readLine();
 
@@ -219,6 +230,8 @@ public class Player {
 
                         }
                     } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
                 }

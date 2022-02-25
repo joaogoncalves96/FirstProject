@@ -37,6 +37,7 @@ public class Messages {
             "-Must be between 3 and 18 characters\n" +
             "-No special characters.";
     public static final String NEXT = "Next turn!";
+    public static final String ALL_PLAYERS_FOLDED = "Everyone else folded!";
 
 
 }

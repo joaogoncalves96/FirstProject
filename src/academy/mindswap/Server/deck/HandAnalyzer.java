@@ -285,7 +285,6 @@ public class HandAnalyzer {
     }
 
     private static boolean hasStraight(ArrayList<Card> hand) {
-        System.out.println("DO I?");
         hand.sort(new Comparator<Card>() {
             @Override
             public int compare(Card o1, Card o2) {

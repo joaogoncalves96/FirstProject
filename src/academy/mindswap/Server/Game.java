@@ -128,6 +128,10 @@ public class Game {
 
     }
 
+    private synchronized boolean haveAllOtherPlayersFolded() {
+        return listOfPlayers.stream().filter(player -> !player.hasPlayerFolded).count() == 1;
+    }
+
     private void startNewRound() {
         deck = DeckFactory.createFullDeck();
         pot = 0;
@@ -282,7 +286,15 @@ public class Game {
                             }
                         }
 
+                        Thread.sleep(50);
+
+                        if(haveAllOtherPlayersFolded() || hasPlayerFolded) {
+                            sendMessage(Messages.ALL_PLAYERS_FOLDED);
+                            break;
+                        }
+
                         sendMessage(Messages.PLAYER_CALL);
+
                         if(!hasPlayerFolded) {
                             playerChoice = in.nextLine();
                         }
@@ -296,6 +308,11 @@ public class Game {
                                 System.out.println("Player decided.");
                                 gameDecisionsVerification[index] = true;
                             }
+                        }
+
+                        if(hasPlayerFolded) {
+                            decideTurn();
+                            break;
                         }
 
                         Thread.sleep(50);
@@ -360,6 +377,7 @@ public class Game {
                     sendMessage(printCards(getFinalHand()));
 
                     counter = 0;
+
                     while (!havePlayersSeenHands()) {
                         if(counter == 0) {
                             sendMessage(Messages.WAITING_TO_SEE_HAND);
@@ -615,7 +633,7 @@ public class Game {
             return (playerHandCount / 2) == listOfPlayers.size();
         }
 
-        private void dealWithCommand(String action) {
+        private void dealWithCommand(String action) throws PlayerDisconnectedException {
 
             Command command = Command.getCommandFromDescription(action);
 
