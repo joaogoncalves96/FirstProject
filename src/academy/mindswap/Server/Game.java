@@ -35,7 +35,7 @@ public class Game {
     private double pot;
     private final List<Integer> playerHands;
     private int playerHandCount;
-    private double lastBet;
+    private volatile double lastBet;
     private int TURN_DECIDER;
     private int LAST_ROUND_STARTER;
     private int TURNS_LEFT;
@@ -409,6 +409,8 @@ public class Game {
 
                         if(!(TURN_DECIDER == index)) {
                             Thread.sleep(100);
+                            this.playerLastBet = 0;
+
                         } else {
                             TURNS_LEFT--;
                             TURN_DECIDER = LAST_ROUND_STARTER;
@@ -748,6 +750,7 @@ public class Game {
             playerLastBet = value;
             bet += value;
             credits -=value;
+            doAction();
         }
 
         public double getPlayerLastBet() {

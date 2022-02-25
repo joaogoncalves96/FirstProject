@@ -3,6 +3,7 @@ joao::10000.0
 Tiago::10000.0
 rui::10000.0
 ewrwe::10000.0
+Manel::10000.0
 Jorge::10000.0
 dudeman::10000.0
 BoyDude::10000.0
@@ -42,6 +43,7 @@ JorgeDude::10000.0
 Rodrigo::10000.0
 DudeMan_23::10000.0
 man::10000.0
+david::10000.0
 ManBoy::10000.0
 boyMan::10000.0
 jorge::10000.0

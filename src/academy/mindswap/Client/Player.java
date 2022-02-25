@@ -31,6 +31,7 @@ public class Player {
     private boolean isMyTurn;
     private double betToMatch;
     private boolean playerHasToBet;
+    private boolean mustDoAction;
 
     public Player() {
         try {
@@ -91,6 +92,10 @@ public class Player {
     private void readServerMessage(Scanner in) throws IOException {
         while (in.hasNextLine()) {
             String serverMessage = in.nextLine();
+
+            if(serverMessage.contains("can't")) {
+                mustDoAction = true;
+            }
 
             if(serverMessage.contains(Messages.PLEASE_BET)) {
                 playerHasToBet = true;
@@ -221,6 +226,8 @@ public class Player {
                                 bufferedWriter.newLine();
                                 bufferedWriter.flush();
 
+                                mustDoAction = false;
+
                                 if(call.contains(Command.BET.getDescription())) {
                                     String bet;
                                     while(!isValidBet(bet = input.nextLine())) {
@@ -243,11 +250,11 @@ public class Player {
 
                                 while (turnsLeft == previousTurn) {
                                     Thread.sleep(100);
-                                    if(playerHasToBet) {
+                                    if(playerHasToBet || mustDoAction) {
                                         break;
                                     }
                                 }
-                                if(playerHasToBet) {
+                                if(playerHasToBet || mustDoAction) {
                                     isMyTurn = true;
                                     continue;
                                 }

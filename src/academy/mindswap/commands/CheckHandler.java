@@ -11,11 +11,13 @@ public class CheckHandler implements CommandHandler {
     public void execute(Game game, Game.PlayerHandler playerHandler) throws PlayerDisconnectedException {
         if(!playerHandler.hasPlayerMatchedBet())  {
             try {
-                playerHandler.askForBet();
+                playerHandler.sendMessage("You have to match the current bet.");
+                return;
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
         game.broadCastMessage(playerHandler.getUsername() + Messages.PLAYER_CHECKED);
+        playerHandler.doAction();
     }
 }
