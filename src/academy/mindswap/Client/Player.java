@@ -92,6 +92,11 @@ public class Player {
         while (in.hasNextLine()) {
             String serverMessage = in.nextLine();
 
+            if(serverMessage.contains(Messages.PLEASE_BET)) {
+                playerHasToBet = true;
+                continue;
+            }
+
             if(serverMessage.contains("Last bet: ")) {
                 serverMessage = serverMessage.replace("Last bet: ","");
                 betToMatch = Double.parseDouble(serverMessage);
@@ -142,9 +147,7 @@ public class Player {
             if(serverMessage.startsWith("Starting round")) {
                 hasRoundStarted = true;
             }
-            if(serverMessage.equals(Messages.PLAYER_HAS_TO_BET)) {
-                playerHasToBet = true;
-            }
+
         }
         System.out.println(ColorCodes.RED_BOLD_BRIGHT + "Server disconnected" + ColorCodes.RESET);
         socket.close();
@@ -224,22 +227,28 @@ public class Player {
                                         if(isValidBet(bet)) {
                                             break;
                                         }
-                                        System.out.println(Messages.MATCH_BET);
+                                        System.out.println("INVALID BET");
                                     }
                                     bufferedWriter.write(bet);
                                     bufferedWriter.newLine();
                                     bufferedWriter.flush();
+
+                                    playerHasToBet = false;
+                                    betToMatch = 0;
+
                                 }
                                 if(call.contains(Command.FOLD.getDescription())) {
                                     break;
                                 }
 
                                 while (turnsLeft == previousTurn) {
+                                    Thread.sleep(100);
                                     if(playerHasToBet) {
                                         break;
                                     }
                                 }
                                 if(playerHasToBet) {
+                                    isMyTurn = true;
                                     continue;
                                 }
 

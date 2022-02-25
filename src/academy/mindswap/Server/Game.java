@@ -172,6 +172,7 @@ public class Game {
         private int seenHand;
         private boolean hasAllIn;
         private double playerLastBet;
+        private boolean mustDoAction;
 
         private PlayerHandler(Socket socket) {
             this.playerCards = new ArrayList<>(2);
@@ -296,6 +297,8 @@ public class Game {
                         while(!canIdoMyTurn()) {
                             if(counter == 0) {
                                 sendMessage(whichPlayerIsDeciding() + Messages.CURRENT_PLAYER_DECIDING);
+                                System.out.println("username = " + username);
+                                System.out.println("TURN_DECIDER = " + TURN_DECIDER);
                                 counter++;
                             }
                             Thread.sleep(10);
@@ -323,15 +326,20 @@ public class Game {
                         if(!hasPlayerFolded && !hasAllIn) {
                             if(!hasPlayerMatchedBet()) {
                                 sendMessage(Messages.PLAYER_HAS_TO_BET);
+                                sendMessage(Messages.PLEASE_BET);
+                                gameDecisionsVerification[index] = false;
                             }
                             playerChoice = getUserInput();
+                            mustDoAction = true;
                         }
+//                        System.out.println(ColorCodes.BLUE_BOLD_BRIGHT + "GOT HERE" + username + ColorCodes.RESET);
+//                        System.out.println(ColorCodes.BLUE_BOLD_BRIGHT + "DECISION: " + gameDecisionsVerification[index] + ColorCodes.RESET);
                         while(!gameDecisionsVerification[index]) {
                             if(playerChoice != null) {
-
+//                                System.out.println(ColorCodes.YELLOW_BOLD_BRIGHT + "GOT HERE" + username + ColorCodes.RESET);
                                 dealWithCommand(playerChoice);
 
-                                if(playerChoice.equals(Command.HELP.getDescription())) {
+                                if(mustDoAction) {
                                     playerChoice = getUserInput();
                                     continue;
                                 }
@@ -342,7 +350,6 @@ public class Game {
 
 
                         if(!hasPlayerMatchedBet()) {
-                            sendMessage(Messages.MATCH_BET);
                             gameDecisionsVerification[index] = false;
                             continue;
                         }
@@ -406,6 +413,8 @@ public class Game {
                             TURNS_LEFT--;
                             TURN_DECIDER = LAST_ROUND_STARTER;
                             gameDecisionsVerification = new boolean[userLimit];
+                            this.playerLastBet = 0;
+                            lastBet = 0;
                         }
                     }
 
@@ -638,6 +647,11 @@ public class Game {
             this.hasAllIn = true;
         }
 
+        public void doAction() {
+            this.mustDoAction = false;
+        }
+
+
         private int analyzePlayerHand() {
             System.out.println("I got in analyze");
             return HandAnalyzer.analyzeHand(this.playerCards, tableCards);
@@ -712,6 +726,7 @@ public class Game {
         }
 
         public void bet(double bet) {
+            this.playerLastBet = bet;
             this.bet += bet;
         }
 

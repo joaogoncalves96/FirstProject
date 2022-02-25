@@ -52,11 +52,14 @@ public class Messages {
     public static final String RAISE = " has raised!";
     public static final String CALL = " has called the bet!";
     public static final String PLAYER_CHECKED = " has checked.";
+    public static final String CANT_CALL = "You can't call if a bet hasn't been made.";
+    public static final String CANT_RAISE = "You can't raise if a bet hasn't been made.";
     public static final String MATCH_BET = "You have to call or raise the current bet.";
-    public static final String PLAYER_HAS_TO_BET = "Do you want to match the bet?\nRAISE || CALL || BET || ALLIN";
+    public static final String PLAYER_HAS_TO_BET = "Do you want to match the bet?\nRAISE || CALL || BET || ALLIN || FOLD";
     public static final String CARD_SPACE = " ".repeat(5) + "\n" +
                                             " ".repeat(5) + "\n" +
                                             " ".repeat(5) + "\n";
+    public static final String PLEASE_BET = "Please make a bet.";
 
     public static final String HELP = "/call : You match the current highest bet.\n" +
                                       "/bet : Bet an amount of money that must match or be higher than the current bet.\n" +
