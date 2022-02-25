@@ -14,14 +14,18 @@ public class HandTester {
         ArrayList<Card> playerHand = new ArrayList<>(2);
         Set<Card> tableCards = new HashSet<>(2);
 
-        playerHand.add(new Card(CardRank.DEUCE, CardSuit.HEARTS));
-        playerHand.add(new Card(CardRank.EIGHT, CardSuit.HEARTS));
+//        10 Q J K 7
+
+//        9 2
+
+        playerHand.add(new Card(CardRank.NINE, CardSuit.HEARTS));
+        playerHand.add(new Card(CardRank.DEUCE, CardSuit.SPADES));
 
         tableCards.add(new Card(CardRank.TEN, CardSuit.CLUBS));
-        tableCards.add(new Card(CardRank.SEVEN, CardSuit.HEARTS));
+        tableCards.add(new Card(CardRank.QUEEN, CardSuit.HEARTS));
         tableCards.add(new Card(CardRank.JACK, CardSuit.DIAMONDS));
-        tableCards.add(new Card(CardRank.SIX, CardSuit.HEARTS));
-        tableCards.add(new Card(CardRank.NINE, CardSuit.CLUBS));
+        tableCards.add(new Card(CardRank.SEVEN, CardSuit.HEARTS));
+        tableCards.add(new Card(CardRank.KING, CardSuit.CLUBS));
         System.out.println();
         System.out.println(printCards(playerHand));
         System.out.println();

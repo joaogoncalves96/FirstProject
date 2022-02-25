@@ -1,10 +1,17 @@
 package academy.mindswap.Client;
-import academy.mindswap.Server.deck.CardSuit;
 import academy.mindswap.utils.Messages;
 
 import java.io.*;
 import java.net.Socket;
+
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 import java.util.Scanner;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Player {
@@ -17,6 +24,10 @@ public class Player {
     private BufferedReader bufferedReader;
     private volatile boolean isRoundOver;
     private volatile boolean hasRoundStarted;
+    private HashMap<String,Double> existingAccounts;
+    private int turnsLeft;
+    private int previousTurn;
+
 
     public Player() {
         try {
@@ -31,7 +42,6 @@ public class Player {
 
     public void connectToServer ()  throws IOException {
 
-        readDatabase();
         Scanner in = new Scanner(socket.getInputStream());
         BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
         new Thread(new ConnectionHandler(this.socket, out)).start();
@@ -43,7 +53,13 @@ public class Player {
                 System.out.print(serverMessage);
                 continue;
             }
+
+            if(serverMessage.equals(Messages.NEXT)) {
+                turnsLeft--;
+            }
+
             System.out.println(serverMessage);
+
 
             if(serverMessage.startsWith("You lost")) {
 
@@ -84,26 +100,36 @@ public class Player {
     }
 
     private void readDatabase() {
-        File data = new File("C:/MindSwap/PokerGame/FirstProject/resources/users");
-
         try {
-            FileInputStream dataInput = new FileInputStream(data);
+            List<String> listOfUsers = Files.readAllLines(Paths.get("resources/users"));
+            existingAccounts = new HashMap<>();
+            listOfUsers.forEach(s -> existingAccounts.put(s.split("::")[0], Double.parseDouble(s.split("::")[1])));
 
-        } catch (FileNotFoundException e) {
+        } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    private void updateDatabase(){
+
+            StringBuilder userString = new StringBuilder();
+            existingAccounts
+                    .forEach((k,v) -> userString.append(k).append("::").append(v).append("\n"));
+        try {
+            FileWriter writer = new FileWriter("resources/users.txt");
+            writer.write(userString.toString());
+            writer.close();
+
         } catch (IOException e) {
             e.printStackTrace();
         }
 
     }
 
-
     class ConnectionHandler implements Runnable {
 
-        private BufferedReader bufferedReader;
         private BufferedWriter bufferedWriter;
-        private Socket socket;
-
+        private final Socket socket;
 
         private ConnectionHandler(Socket socket, BufferedWriter out) {
             this.socket = socket;
@@ -119,7 +145,6 @@ public class Player {
                             break;
                         }
                         this.bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-                        this.bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
                         bufferedWriter.write(clientUsername);
                         bufferedWriter.newLine();
@@ -128,6 +153,9 @@ public class Player {
                         bufferedWriter.write(String.valueOf(credits));
                         bufferedWriter.newLine();
                         bufferedWriter.flush();
+
+                        turnsLeft = 2;
+                        previousTurn = 2;
 
 
                         while(!socket.isClosed()) {
@@ -141,33 +169,33 @@ public class Player {
                             }
 
 
-                            this.bufferedReader = new BufferedReader(new InputStreamReader(System.in));
-                            String call = bufferedReader.readLine();
+                            bufferedReader = new BufferedReader(new InputStreamReader(System.in));
 
-                            if(!checkForValidCommand(call)) {
-                                System.out.println(Messages.VALID_COMMAND);
-                                continue;
-                            }
+                            while(turnsLeft != -2) {
+                                String call = bufferedReader.readLine();
 
-                            bufferedWriter.write(call);
-                            bufferedWriter.newLine();
-                            bufferedWriter.flush();
+                                if(!checkForValidCommand(call)) {
+                                    if(turnsLeft == -2) break;
+                                    System.out.println(Messages.VALID_COMMAND);
+                                    continue;
+                                }
 
-                            counter = 0;
-                            while(!isRoundOver) {
+                                if(turnsLeft == -2) break;
+                                bufferedWriter.write(call);
+                                bufferedWriter.newLine();
+                                bufferedWriter.flush();
 
-                                if(call.contains("/bet") && counter == 0) {
+                                if(call.contains("/bet")) {
                                     String bet = bufferedReader.readLine();
                                     bufferedWriter.write(bet);
                                     bufferedWriter.newLine();
                                     bufferedWriter.flush();
-                                    counter++;
-
                                 }
 
+                                while (turnsLeft == previousTurn) {
+                                }
+                                previousTurn = turnsLeft;
                             }
-
-
 
                             System.out.println(Messages.CONTINUE_PLAYING);
                             String decision = bufferedReader.readLine();
@@ -186,6 +214,7 @@ public class Player {
                             bufferedWriter.flush();
 
                             isRoundOver = false;
+                            turnsLeft = 2;
 
                         }
                     } catch (IOException e) {
@@ -201,24 +230,47 @@ public class Player {
         }
     }
 
+    private boolean checkForValidUserName(String username){
+        String regex = "[a-zA-Z0-9_-]{3,18}";
+
+        Pattern pattern = Pattern.compile(regex);
+
+        if(username == null) {
+            return false;
+        }
+
+        Matcher matcher = pattern.matcher(username);
+
+        return matcher.matches();
+
+    }
+
     private void askForUserNameAndCredits() throws IOException {
+
+        readDatabase();
 
         this.bufferedReader = new BufferedReader(new InputStreamReader(System.in));
         System.out.println(Messages.ENTER_USERNAME);
-        this.clientUsername = bufferedReader.readLine();
-        System.out.println(Messages.ENTER_CREDITS);
+        String enteredUsername = bufferedReader.readLine();
 
-        while(credits == 0.0) {
-
-            String strCredits = bufferedReader.readLine();
-
-            if(checkIfStringIsValidDouble(strCredits)) {
-                System.out.println(Messages.VALID_CREDITS);
-                continue;
-            }
-            this.credits = Double.parseDouble(strCredits);
+        if(!checkForValidUserName(enteredUsername)) {
+            System.out.println(Messages.USERNAME_INVALID);
+            askForUserNameAndCredits();
+            return;
         }
-    }
+
+        if (existingAccounts.containsKey(enteredUsername)) {
+            this.clientUsername = enteredUsername;
+            this.credits = existingAccounts.get(enteredUsername);
+            System.out.printf(Messages.USERNAME_ALREADY_EXISTS, this.clientUsername, this.credits);
+        } else {
+            this.clientUsername = enteredUsername;
+            this.credits = 10000;
+            existingAccounts.put(this.clientUsername,this.credits);
+            updateDatabase();
+            }
+        }
+
 
     public void closeAll() {
 
