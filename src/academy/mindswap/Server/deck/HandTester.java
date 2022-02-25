@@ -9,33 +9,34 @@ import java.util.Set;
 
 public class HandTester {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
 
-        ArrayList<Card> playerHand = new ArrayList<>(2);
-        Set<Card> tableCards = new HashSet<>(2);
+//        ArrayList<Card> playerHand = new ArrayList<>(2);
+//        Set<Card> tableCards = new HashSet<>(2);
+//
+////        10 Q J K 7
+//
+////        9 2
+//
+//        playerHand.add(new Card(CardRank.NINE, CardSuit.HEARTS));
+//        playerHand.add(new Card(CardRank.DEUCE, CardSuit.SPADES));
+//
+//        tableCards.add(new Card(CardRank.TEN, CardSuit.CLUBS));
+//        tableCards.add(new Card(CardRank.QUEEN, CardSuit.HEARTS));
+//        tableCards.add(new Card(CardRank.JACK, CardSuit.DIAMONDS));
+//        tableCards.add(new Card(CardRank.SEVEN, CardSuit.HEARTS));
+//        tableCards.add(new Card(CardRank.KING, CardSuit.CLUBS));
+//        System.out.println();
+//        System.out.println(printCards(playerHand));
+//        System.out.println();
+//        System.out.println(printCards(tableCards));
+//        int points = HandAnalyzer.analyzeHand(playerHand, tableCards);
+//
+//        ArrayList<Card> result = HandAnalyzer.makeFinalHand(points, playerHand, tableCards);
+//        System.out.println("Points: " + points);
+//        System.out.println();
+//        System.out.println(printCards(result));
 
-//        10 Q J K 7
-
-//        9 2
-
-        playerHand.add(new Card(CardRank.NINE, CardSuit.HEARTS));
-        playerHand.add(new Card(CardRank.DEUCE, CardSuit.SPADES));
-
-        tableCards.add(new Card(CardRank.TEN, CardSuit.CLUBS));
-        tableCards.add(new Card(CardRank.QUEEN, CardSuit.HEARTS));
-        tableCards.add(new Card(CardRank.JACK, CardSuit.DIAMONDS));
-        tableCards.add(new Card(CardRank.SEVEN, CardSuit.HEARTS));
-        tableCards.add(new Card(CardRank.KING, CardSuit.CLUBS));
-        System.out.println();
-        System.out.println(printCards(playerHand));
-        System.out.println();
-        System.out.println(printCards(tableCards));
-        int points = HandAnalyzer.analyzeHand(playerHand, tableCards);
-
-        ArrayList<Card> result = HandAnalyzer.makeFinalHand(points, playerHand, tableCards);
-        System.out.println("Points: " + points);
-        System.out.println();
-        System.out.println(printCards(result));
 
     }
 

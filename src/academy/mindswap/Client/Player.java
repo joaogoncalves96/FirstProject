@@ -101,7 +101,7 @@ public class Player {
 
     private void readDatabase() {
         try {
-            List<String> listOfUsers = Files.readAllLines(Paths.get("resources/users"));
+            List<String> listOfUsers = Files.readAllLines(Paths.get("resources/users.txt"));
             existingAccounts = new HashMap<>();
             listOfUsers.forEach(s -> existingAccounts.put(s.split("::")[0], Double.parseDouble(s.split("::")[1])));
 
@@ -116,6 +116,7 @@ public class Player {
             existingAccounts
                     .forEach((k,v) -> userString.append(k).append("::").append(v).append("\n"));
         try {
+
             FileWriter writer = new FileWriter("resources/users.txt");
             writer.write(userString.toString());
             writer.close();
@@ -225,6 +226,8 @@ public class Player {
                     socket.close();
                 } catch (IOException e) {
                     e.printStackTrace();
+                } finally {
+                    updateDatabase();
                 }
             }
         }

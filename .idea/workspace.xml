@@ -7,11 +7,12 @@
     </artifacts-to-build>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5758b74b-1b07-478a-8926-8d348cfc6100" name="Changes" comment="updating hand analyzer">
+    <list default="true" id="5758b74b-1b07-478a-8926-8d348cfc6100" name="Changes" comment="added username checker">
+      <change afterPath="$PROJECT_DIR$/src/academy/mindswap/Server/GameExceptions/GameExceptions.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/academy/mindswap/Server/GameExceptions/PlayerDisconnectedException.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/tests" beforeDir="false" afterPath="$PROJECT_DIR$/resources/tests" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/academy/mindswap/Client/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/Client/Player.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/academy/mindswap/Server/deck/HandAnalyzer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/Server/deck/HandAnalyzer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/academy/mindswap/Server/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/Server/Game.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/academy/mindswap/Server/deck/HandTester.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/Server/deck/HandTester.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/academy/mindswap/utils/Messages.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/utils/Messages.java" afterDir="false" />
     </list>
@@ -33,7 +34,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="main" />
+        <entry key="$PROJECT_DIR$" value="bug-fixing" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -71,7 +72,7 @@
       <recent name="academy.mindswap.Client" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.Launch Player 3">
+  <component name="RunManager" selected="Application.HandTester">
     <configuration name="HandTester" type="Application" factoryName="Application">
       <option name="MAIN_CLASS_NAME" value="academy.mindswap.Server.deck.HandTester" />
       <module name="FirstProject" />
@@ -334,8 +335,26 @@
       <option name="project" value="LOCAL" />
       <updated>1645711989667</updated>
     </task>
-    <option name="localTasksCounter" value="30" />
+    <task id="LOCAL-00030" summary="added username checker">
+      <created>1645781350172</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1645781350172</updated>
+    </task>
+    <option name="localTasksCounter" value="31" />
     <servers />
+  </component>
+  <component name="Vcs.Log.History.Properties">
+    <option name="COLUMN_ID_ORDER">
+      <list>
+        <option value="Default.Root" />
+        <option value="Default.Author" />
+        <option value="Default.Date" />
+        <option value="Default.Subject" />
+        <option value="Space.CommitStatus" />
+      </list>
+    </option>
   </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
@@ -376,7 +395,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="added synchronized verificator" />
     <MESSAGE value="added connection handler for client, fixed deal cards to players" />
     <MESSAGE value="fixed table cards, fixed player thread, added player handler" />
     <MESSAGE value="added bet command, added check for valid double string" />
@@ -401,6 +419,7 @@
     <MESSAGE value="fixed synching problems, fixed final hand display" />
     <MESSAGE value="player exit fixed" />
     <MESSAGE value="fixes exit 2" />
-    <option name="LAST_COMMIT_MESSAGE" value="fixes exit 2" />
+    <MESSAGE value="added username checker" />
+    <option name="LAST_COMMIT_MESSAGE" value="added username checker" />
   </component>
 </project>

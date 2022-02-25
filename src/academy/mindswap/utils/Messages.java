@@ -32,7 +32,7 @@ public class Messages {
     public static final String WAITING_TO_SEE_HAND = "Waiting for players too see their hands..";
     public static final String CREDITS = " credits!";
     public static final String CONTINUE_PLAYING = "Do you want to play another round? \nType EXIT to leave game, press enter to play another round. \n";
-    public static final String USERNAME_ALREADY_EXISTS = "Welome %s. You have %.2f credits. %n";
+    public static final String USERNAME_ALREADY_EXISTS = "Welcome %s. You have %.2f credits. %n";
     public static final String USERNAME_INVALID = "Please enter a valid username:\n" +
             "-Must be between 3 and 18 characters\n" +
             "-No special characters.";
