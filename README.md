@@ -10,10 +10,10 @@ To enter the Poker table you need to have credits in your account.
 When you enter the Poker game for the first time, you activate an account with virtual game credits.
 If you already have your own account, the game will give you the credits you have saved.
 
-A contestant is dealt two cards. Then when everyone has two cards, they can place bets.
-Then the table presents 3 cards and players can bet again or fold.
-The table then presents the second-to-last card, and then the last card.
-The player with the best hand wins the combination of all credits.
+Each player receives 2 cards from Dealer(Server). Then when everyone has two cards, they can place bets.
+Then the table presents 3 cards(FLOP) and players can bet again or fold.
+The table then presents the second-to-last card (TURN), and then the last card(RIVER).
+The player with the best hand wins the combination of all credits(POT).
 
 The poker contains:
 /call;
