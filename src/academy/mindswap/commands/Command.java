@@ -6,7 +6,9 @@ public enum Command {
     BET("/bet", new BetHandler()),
     FOLD("/fold", new FoldHandler()),
     ALLIN("/allin", new AllinHandler()),
-    CHECK("/check", new CheckHandler());
+    CHECK("/check", new CheckHandler()),
+    HELP("/help", new HelpHandler()),
+    RAISE("/raise", new RaiseHandler());
 
     private final String description;
     private final CommandHandler commandHandler;

@@ -24,7 +24,9 @@ public class Messages {
     public static final String PLACED_BET = "Bet placed, waiting for all the players to bet...";
     public static final String CURRENT_CREDITS = "You know have %.2f credits. %n";
     public static final String WAITING_FOR_NEXT_ROUND = "Waiting for players to decide...";
-    public static final String PLAYER_CALL = "What do you want to do? \nCHECK || BET || CALL || ALL-IN || FOLD \n";
+    public static final String PLAYER_CALL = "What do you want to do? \nCHECK || BET || CALL || " +
+                                                "ALL-IN || FOLD || RAISE || HELP \n";
+
     public static final String CHECK_PLAYER = "Reading players decisions...";
     public static final String FOLDED = " has folded.\n";
     public static final String BET = " has bet ";
@@ -32,7 +34,9 @@ public class Messages {
     public static final String CURRENT_PLAYER_DECIDING = " is deciding...";
     public static final String WAITING_TO_SEE_HAND = "Waiting for players too see their hands..";
     public static final String CREDITS = " credits!";
-    public static final String CONTINUE_PLAYING = "Do you want to play another round? \nType EXIT to leave game, press enter to play another round. \n";
+    public static final String CONTINUE_PLAYING = "Do you want to play another round? \nType" +
+            ColorCodes.RED_BOLD_BRIGHT +" EXIT " + ColorCodes.RESET
+            + "to leave the game, press enter to play another round.";
     public static final String USERNAME_ALREADY_EXISTS = "Welcome %s. You have %.2f credits. %n";
     public static final String USERNAME_INVALID = "Please enter a valid username:\n" +
             "-Must be between 3 and 18 characters\n" +
@@ -41,19 +45,25 @@ public class Messages {
     public static final String PLAYER_TURN = "It's your turn.";
     public static final String ALL_PLAYERS_FOLDED = "Everyone else folded!";
     public static final String IS_ALL_IN = "You're All in!";
-    public static final String TAX_PAY = "You have payed " + ColorCodes.GREEN_BOLD_BRIGHT
+    public static final String TAX_PAY = ColorCodes.RESET + "You have payed " + ColorCodes.GREEN_BOLD_BRIGHT
             + Game.getTABLE_FEE() + ColorCodes.RESET + " credits to play this round.";
 
+
+    public static final String RAISE = " has raised!";
     public static final String CALL = " has called the bet!";
     public static final String PLAYER_CHECKED = " has checked.";
     public static final String MATCH_BET = "You have to call or raise the current bet.";
-    public static final String PLAYER_HAS_TO_BET = "Do you want to match the bet?";
-
-
+    public static final String PLAYER_HAS_TO_BET = "Do you want to match the bet?\nRAISE || CALL || BET || ALLIN";
     public static final String CARD_SPACE = " ".repeat(5) + "\n" +
                                             " ".repeat(5) + "\n" +
                                             " ".repeat(5) + "\n";
 
+    public static final String HELP = "/call : You match the current highest bet.\n" +
+                                      "/bet : Bet an amount of money that must match or be higher than the current bet.\n" +
+                                      "/raise : Bets the current highest bet + 50%.\n" +
+                                      "/fold : You fold and lose this round.\n" +
+                                      "/allin : You bet all your current credits. No more decisions can be made.\n"+
+                                      "/check : Skips turn, can only be made when there's no higher bet.\n";
 
 
 

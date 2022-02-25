@@ -359,6 +359,8 @@ public class Player {
                 command.equalsIgnoreCase("/bet") ||
                 command.equalsIgnoreCase("/fold") ||
                 command.equalsIgnoreCase("/check") ||
+                command.equalsIgnoreCase("/help") ||
+                command.equalsIgnoreCase("/raise") ||
                 command.equalsIgnoreCase("/allin");
     }
 }

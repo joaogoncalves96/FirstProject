@@ -258,6 +258,8 @@ public class Game {
 
                     this.credits -= TABLE_FEE;
 
+                    this.bet += TABLE_FEE;
+
                     pot += TABLE_FEE;
 
                     writePlayersInTable();
@@ -288,6 +290,7 @@ public class Game {
 
                     // Game turns
                     while(TURNS_LEFT != -2) {
+
                         String playerChoice = null;
 
                         while(!canIdoMyTurn()) {
@@ -321,16 +324,22 @@ public class Game {
                             if(!hasPlayerMatchedBet()) {
                                 sendMessage(Messages.PLAYER_HAS_TO_BET);
                             }
-                            playerChoice = in.nextLine();
+                            playerChoice = getUserInput();
                         }
+                        while(!gameDecisionsVerification[index]) {
+                            if(playerChoice != null) {
 
-                        if(playerChoice != null) {
+                                dealWithCommand(playerChoice);
 
-                            dealWithCommand(playerChoice);
-                            System.out.println("Player decided.");
+                                if(playerChoice.equals(Command.HELP.getDescription())) {
+                                    playerChoice = getUserInput();
+                                    continue;
+                                }
+                                System.out.println("Player decided.");
+                            }
                             gameDecisionsVerification[index] = true;
-
                         }
+
 
                         if(!hasPlayerMatchedBet()) {
                             sendMessage(Messages.MATCH_BET);
@@ -672,7 +681,7 @@ public class Game {
             return trues == playerHands.size();
         }
 
-        private void sendMessage(String message) throws IOException, PlayerDisconnectedException {
+        public void sendMessage(String message) throws IOException, PlayerDisconnectedException {
 
             if(socket.isClosed()) {
                 throw new PlayerDisconnectedException();
@@ -690,8 +699,10 @@ public class Game {
             return (playerHandCount / 2) == listOfPlayers.size();
         }
 
-        private void dealWithCommand(String action) throws PlayerDisconnectedException {
+        private void dealWithCommand(String action) throws PlayerDisconnectedException, IOException {
             Command command = Command.getCommandFromDescription(action);
+
+            assert command != null;
 
             command.getCommandHandler().execute(Game.this, this);
         }
@@ -790,6 +801,10 @@ public class Game {
 
         private boolean otherPlayersMatchedBet() {
             return listOfPlayers.stream().filter(PlayerHandler::hasPlayerMatchedBet).count() == listOfPlayers.size();
+        }
+
+        private String getUserInput() {
+           return in.nextLine();
         }
     }
 }
