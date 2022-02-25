@@ -29,7 +29,7 @@ Fold -> When a player resigns from the pot, he cannot bet in the present round.
 
 Hands (From best to worst):
 <div align="left">
-<img src="https://user-images.githubusercontent.com/97889790/155700493-2b522a7f-4604-4350-a318-d514cf7724aa.png" width="400px" />
+<img src="https://user-images.githubusercontent.com/97889790/155700493-2b522a7f-4604-4350-a318-d514cf7724aa.png" width="300px" />
 </div>
 
 
