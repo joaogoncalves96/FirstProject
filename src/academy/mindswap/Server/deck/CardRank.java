@@ -15,9 +15,9 @@ public enum CardRank {
     THREE(3, "Three","3"),
     DEUCE(2, "Deuce","2");
 
-    private int cardRankPoints;
-    private String cardRankDescription;
-    private String cardRankDigit;
+    private final int cardRankPoints;
+    private final String cardRankDescription;
+    private final String cardRankDigit;
 
 
     CardRank(int cardRankPoints, String cardRankDescription, String cardRankDigit) {

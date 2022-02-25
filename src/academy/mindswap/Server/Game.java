@@ -24,7 +24,7 @@ import java.util.concurrent.Executors;
 
 public class Game {
 
-    private List<PlayerHandler> listOfPlayers;
+    private final List<PlayerHandler> listOfPlayers;
     private final int PORT = 8081;
     private ExecutorService service;
     private final int userLimit;
@@ -33,7 +33,7 @@ public class Game {
     private boolean[] gameDecisionsVerification;
     private boolean[] roundOverVerification;
     private double pot;
-    private List<Integer> playerHands;
+    private final List<Integer> playerHands;
     private int playerHandCount;
     private double lastBet;
     private int TURN_DECIDER;
@@ -133,8 +133,10 @@ public class Game {
     }
 
     private void startNewRound() {
+
         deck = DeckFactory.createFullDeck();
         pot = 0;
+        lastBet = 0;
         tableCards = Collections.synchronizedSet(new HashSet<>(5));
         gameDecisionsVerification = new boolean[userLimit];
         roundOverVerification = new boolean[userLimit];
@@ -206,26 +208,24 @@ public class Game {
                 while(!socket.isClosed()) {
 
                     LAST_ROUND_STARTER = TURN_DECIDER;
+
                     // Get player username
-                    while (message == null && username == null) {
+                    if(message == null && username == null) {
                         message = in.nextLine();
                         System.out.printf("User: %s has connected.%n", message);
                         username = message;
                         message = null;
-                        break;
                     }
                     // Get player credits
-                    while (message == null && credits == 0.0) {
+                    if(message == null && credits == 0.0) {
                         message = in.nextLine();
                         credits = Double.parseDouble(message);
                         System.out.printf(Messages.PLAYER_CREDITS_ENTER, credits);
                         message = null;
-                        break;
                     }
 
                     int counter = 0;
 
-                    System.out.println("Placing player in table...");
                     while(isGameUnderWay()) {
                         if(counter == 0) {
                             sendMessage(Messages.WAITING_FOR_ROUND);
@@ -260,7 +260,7 @@ public class Game {
 
                     pot += TABLE_FEE;
 
-                    writePlayerInTable();
+                    writePlayersInTable();
 
                     sendMessage(Messages.TAX_PAY);
 
@@ -286,27 +286,24 @@ public class Game {
 
                     Thread.sleep((long) (Math.random() * 100));
 
-//////////////////// TURNS
-
+                    // Game turns
                     while(TURNS_LEFT != -2) {
                         String playerChoice = null;
-
 
                         while(!canIdoMyTurn()) {
                             if(counter == 0) {
                                 sendMessage(whichPlayerIsDeciding() + Messages.CURRENT_PLAYER_DECIDING);
                                 counter++;
                             }
-                            Thread.sleep(200);
+                            Thread.sleep(10);
                         }
 
-                        Thread.sleep(50);
+                        Thread.sleep(10);
 
                         if(haveAllOtherPlayersFolded() || hasPlayerFolded) {
                             sendMessage(Messages.ALL_PLAYERS_FOLDED);
                             break;
                         }
-
 
                         Thread.sleep(100);
 
@@ -320,25 +317,19 @@ public class Game {
                             sendMessage(Messages.ALL_IN);
                         }
 
-
                         if(!hasPlayerFolded && !hasAllIn) {
-                            System.out.println("username = " + username);
                             if(!hasPlayerMatchedBet()) {
                                 sendMessage(Messages.PLAYER_HAS_TO_BET);
                             }
                             playerChoice = in.nextLine();
                         }
 
-                        System.out.println("playerChoice = " + playerChoice);
-
                         if(playerChoice != null) {
 
                             dealWithCommand(playerChoice);
+                            System.out.println("Player decided.");
+                            gameDecisionsVerification[index] = true;
 
-                            synchronized (gameDecisionsVerification) {
-                                System.out.println("Player decided.");
-                                gameDecisionsVerification[index] = true;
-                            }
                         }
 
                         if(!hasPlayerMatchedBet()) {
@@ -365,11 +356,10 @@ public class Game {
 
                             if(counter == 0) {
                                 decideTurn();
-                                System.out.println(Messages.WAITING_FOR_NEXT_ROUND);
                                 sendMessage(Messages.WAITING_FOR_NEXT_ROUND);
-                                System.out.println("TURN_DECIDER = " + TURN_DECIDER + " " + username);
                                 counter++;
                             }
+
                             if(!hasPlayerMatchedBet()) {
                                 Thread.sleep(150);
                                 break;
@@ -383,9 +373,13 @@ public class Game {
                         if(TURNS_LEFT >= 0) {
                             sendMessage("Cards in table: \n" +
                                     printCards(tableCards.stream().toList().subList(0,tableCards.size() - TURNS_LEFT)));
+                            sendMessage(Messages.PLAYER_CARDS);
+                            sendMessage(printCards(playerCards));
                         } else {
                             sendMessage("Cards in table: \n" +
                                     printCards(tableCards));
+                            sendMessage(Messages.PLAYER_CARDS);
+                            sendMessage(printCards(playerCards));
                         }
 
 
@@ -468,6 +462,7 @@ public class Game {
                     Thread.sleep((long) (1000 * Math.random()));
 
                     roundOverVerification[index] = true;
+
                     counter = 0;
 
                     while(!havePlayersDecidedToPlay()) {
@@ -475,7 +470,6 @@ public class Game {
                             sendMessage(Messages.WAITING_FOR_NEXT_ROUND);
                             counter++;
                         }
-                        if(havePlayersDecidedToPlay()) break;
                     }
 
                     if(TURN_DECIDER == index) {
@@ -630,10 +624,9 @@ public class Game {
         }
 
         public void wentAllIn() {
-
-            setLastBet(bet);
+            playerLastBet = credits;
+            setLastBet(playerLastBet);
             this.hasAllIn = true;
-
         }
 
         private int analyzePlayerHand() {
@@ -731,15 +724,12 @@ public class Game {
             credits -=value;
         }
 
-        public double getBet() {
-            return bet;
-        }
-
         public double getPlayerLastBet() {
             return playerLastBet;
         }
 
-        private void writePlayerInTable() throws PlayerDisconnectedException, IOException {
+        private void writePlayersInTable() throws PlayerDisconnectedException, IOException {
+
             StringBuilder message = new StringBuilder();
             message.append(ColorCodes.BLUE_BOLD_BRIGHT);
 
@@ -750,7 +740,6 @@ public class Game {
         }
 
         private void loading() throws IOException, InterruptedException, PlayerDisconnectedException {
-
             long animationSpeed = 500;
             String black = ColorCodes.BLACK_BOLD;
             String red = ColorCodes.RED_BOLD_BRIGHT;
@@ -770,9 +759,7 @@ public class Game {
                 sendMessage("\b" + red + CardSuit.DIAMONDS.getSuit());
 
             }
-
             sendMessage(reset);
-
         }
 
         private synchronized boolean canIdoMyTurn() {
@@ -781,13 +768,10 @@ public class Game {
 
         private void decideTurn() {
             if(TURN_DECIDER == listOfPlayers.size() - 1) {
-                System.out.println(ColorCodes.YELLOW_BOLD_BRIGHT + TURN_DECIDER + "<>" + listOfPlayers.size() + ColorCodes.RESET);
                 TURN_DECIDER = 0;
                 return;
             }
-
             TURN_DECIDER++;
-            System.out.println(ColorCodes.PURPLE_BOLD_BRIGHT + TURN_DECIDER + "<>" + listOfPlayers.size() + ColorCodes.RESET);
         }
 
         private synchronized void restartTable() {
@@ -795,10 +779,9 @@ public class Game {
             this.hasAllIn = false;
             bet = 0;
             seenHand--;
+            playerLastBet = 0;
             playerCards = new ArrayList<>(2);
             hasPlayerFolded = false;
-
-
         }
 
         public boolean hasPlayerMatchedBet() {

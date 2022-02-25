@@ -13,6 +13,5 @@ public class AllinHandler implements CommandHandler {
                 Messages.ALL_IN +
                 playerHandler.getCredits() +
                 Messages.CREDITS);
-
     }
 }

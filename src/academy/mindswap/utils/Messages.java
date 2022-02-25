@@ -4,7 +4,6 @@ import academy.mindswap.Server.Game;
 
 public class Messages {
 
-
     public static final String CONNECTING = "Connecting player...";
     public static final String WAITING_FOR_PLAYERS = "Please wait for another player to connect...";
     public static final String WAITING_FOR_ROUND = "Please wait for the current round to be over.";
@@ -42,11 +41,21 @@ public class Messages {
     public static final String PLAYER_TURN = "It's your turn.";
     public static final String ALL_PLAYERS_FOLDED = "Everyone else folded!";
     public static final String IS_ALL_IN = "You're All in!";
-    public static final String TAX_PAY = "You have payed " + Game.getTABLE_FEE() + " credits to play this round.";
+    public static final String TAX_PAY = "You have payed " + ColorCodes.GREEN_BOLD_BRIGHT
+            + Game.getTABLE_FEE() + ColorCodes.RESET + " credits to play this round.";
+
     public static final String CALL = " has called the bet!";
     public static final String PLAYER_CHECKED = " has checked.";
     public static final String MATCH_BET = "You have to call or raise the current bet.";
     public static final String PLAYER_HAS_TO_BET = "Do you want to match the bet?";
+
+
+    public static final String CARD_SPACE = " ".repeat(5) + "\n" +
+                                            " ".repeat(5) + "\n" +
+                                            " ".repeat(5) + "\n";
+
+
+
 
 
 

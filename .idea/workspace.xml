@@ -7,13 +7,16 @@
     </artifacts-to-build>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5758b74b-1b07-478a-8926-8d348cfc6100" name="Changes" comment="added call added table fee, needs all in fix">
-      <change afterPath="$PROJECT_DIR$/src/academy/mindswap/commands/CheckHandler.java" afterDir="false" />
+    <list default="true" id="5758b74b-1b07-478a-8926-8d348cfc6100" name="Changes" comment="added call check and bet matching needs some bug-fixing">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/users.txt" beforeDir="false" afterPath="$PROJECT_DIR$/resources/users.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/academy/mindswap/Client/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/Client/Player.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/academy/mindswap/Server/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/Server/Game.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/academy/mindswap/commands/BetHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/commands/BetHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/academy/mindswap/Server/deck/Card.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/Server/deck/Card.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/academy/mindswap/Server/deck/CardRank.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/Server/deck/CardRank.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/academy/mindswap/Server/deck/CardSuit.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/Server/deck/CardSuit.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/academy/mindswap/Server/deck/Deck.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/Server/deck/Deck.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/academy/mindswap/commands/AllinHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/commands/AllinHandler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/academy/mindswap/commands/Command.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/commands/Command.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/academy/mindswap/utils/Messages.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/utils/Messages.java" afterDir="false" />
     </list>
@@ -67,6 +70,7 @@
     <property name="project.structure.last.edited" value="Artifacts" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.20229885" />
+    <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
   </component>
   <component name="RecentsManager">
     <key name="CreateClassDialog.RecentsKey">
@@ -374,7 +378,14 @@
       <option name="project" value="LOCAL" />
       <updated>1645793565811</updated>
     </task>
-    <option name="localTasksCounter" value="35" />
+    <task id="LOCAL-00035" summary="added call check and bet matching needs some bug-fixing">
+      <created>1645802085587</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1645802085587</updated>
+    </task>
+    <option name="localTasksCounter" value="36" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
@@ -427,7 +438,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="upgraded analyzer, added winner checker" />
     <MESSAGE value="added new round mechanic" />
     <MESSAGE value="added better bet verifications and if player wants to keep playing" />
     <MESSAGE value="repaired decisions, upgraded verifications, added credits update" />
@@ -452,6 +462,7 @@
     <MESSAGE value="added fold mechanic needs crash fixing" />
     <MESSAGE value="fixed stupid fucking bug with +1" />
     <MESSAGE value="added call added table fee, needs all in fix" />
-    <option name="LAST_COMMIT_MESSAGE" value="added call added table fee, needs all in fix" />
+    <MESSAGE value="added call check and bet matching needs some bug-fixing" />
+    <option name="LAST_COMMIT_MESSAGE" value="added call check and bet matching needs some bug-fixing" />
   </component>
 </project>

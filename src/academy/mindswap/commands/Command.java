@@ -8,8 +8,8 @@ public enum Command {
     ALLIN("/allin", new AllinHandler()),
     CHECK("/check", new CheckHandler());
 
-    private String description;
-    private CommandHandler commandHandler;
+    private final String description;
+    private final CommandHandler commandHandler;
 
     Command(String description, CommandHandler commandHandler) {
         this.description = description;

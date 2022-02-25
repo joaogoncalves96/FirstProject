@@ -8,8 +8,8 @@ public enum CardSuit {
     HEARTS( "♥", "Hearts"),
     DIAMONDS(  "♦", "Diamonds");
 
-    private String suit;
-    private String suitDescription;
+    private final String suit;
+    private final String suitDescription;
 
     CardSuit(String s, String suitDescription) {
         this.suit = s;

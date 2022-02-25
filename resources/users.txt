@@ -22,6 +22,7 @@ superguy::10000.0
 Luis::10000.0
 Man::10000.0
 MAN::10000.0
+helloooo::10000.0
 OmegaDude::10000.0
 dudeeeeee::10000.0
 guyman::10000.0

@@ -1,4 +1,5 @@
 package academy.mindswap.Client;
+import academy.mindswap.commands.Command;
 import academy.mindswap.utils.ColorCodes;
 import academy.mindswap.utils.Messages;
 
@@ -31,8 +32,6 @@ public class Player {
     private double betToMatch;
     private boolean playerHasToBet;
 
-
-
     public Player() {
         try {
             this.socket = new Socket(hostName, portNumber);
@@ -49,6 +48,7 @@ public class Player {
         Scanner in = new Scanner(socket.getInputStream());
         BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
         new Thread(new ConnectionHandler(this.socket, out)).start();
+
         while(!socket.isClosed()) {
             readServerMessage(in);
         }
@@ -118,48 +118,33 @@ public class Player {
 
             System.out.println(serverMessage);
 
-
             if(serverMessage.startsWith("You lost")) {
 
                 serverMessage = serverMessage.replace(Messages.LOSER,"")
                         .replace(" credits.","");
-
                 credits -= Double.parseDouble(serverMessage);
                 System.out.printf(Messages.CURRENT_CREDITS, credits);
                 isRoundOver = true;
                 hasRoundStarted = false;
-//                isAllin = false;
                 continue;
-
             }
 
             if(serverMessage.startsWith("Congrats")) {
-
                 serverMessage = serverMessage.replace(Messages.WINNER,"")
                         .replace(" credits.","");
-
                 credits += Double.parseDouble(serverMessage);
                 System.out.printf(Messages.CURRENT_CREDITS, credits);
                 isRoundOver = true;
                 hasRoundStarted = false;
-//                isAllin = false;
                 continue;
             }
 
             if(serverMessage.startsWith("Starting round")) {
                 hasRoundStarted = true;
             }
-
-            if(serverMessage.equals(Messages.IS_ALL_IN)) {
-//                isAllin = true;
-            }
-
             if(serverMessage.equals(Messages.PLAYER_HAS_TO_BET)) {
                 playerHasToBet = true;
             }
-
-
-
         }
         System.out.println(ColorCodes.RED_BOLD_BRIGHT + "Server disconnected" + ColorCodes.RESET);
         socket.close();
@@ -233,7 +218,7 @@ public class Player {
                                 bufferedWriter.newLine();
                                 bufferedWriter.flush();
 
-                                if(call.contains("/bet")) {
+                                if(call.contains(Command.BET.getDescription())) {
                                     String bet;
                                     while(!isValidBet(bet = input.nextLine())) {
                                         if(isValidBet(bet)) {
@@ -245,7 +230,7 @@ public class Player {
                                     bufferedWriter.newLine();
                                     bufferedWriter.flush();
                                 }
-                                if(call.contains("/fold")) {
+                                if(call.contains(Command.FOLD.getDescription())) {
                                     break;
                                 }
 
@@ -257,10 +242,13 @@ public class Player {
                                 if(playerHasToBet) {
                                     continue;
                                 }
+
                                 previousTurn = turnsLeft;
                                 isMyTurn = false;
                             }
-                            Thread.sleep(1000);
+
+                            Thread.sleep(500);
+
                             System.out.println(Messages.CONTINUE_PLAYING);
                             String decision = input.nextLine();
 
@@ -282,16 +270,12 @@ public class Player {
                             turnsLeft = 2;
 
                         }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    } catch (InterruptedException e) {
+                    } catch (IOException | InterruptedException e) {
                         e.printStackTrace();
                     }
                 }
                 try {
-                    socket.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
+                    closeAll();
                 } finally {
                     updateDatabase();
                 }
