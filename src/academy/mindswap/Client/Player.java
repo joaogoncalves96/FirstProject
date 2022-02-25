@@ -1,4 +1,5 @@
 package academy.mindswap.Client;
+import academy.mindswap.utils.ColorCodes;
 import academy.mindswap.utils.Messages;
 
 import java.io.*;
@@ -6,7 +7,6 @@ import java.net.Socket;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -21,12 +21,13 @@ public class Player {
     private final int portNumber = 8081;
     private String clientUsername;
     private double credits;
-    private BufferedReader bufferedReader;
+    private Scanner input;
     private volatile boolean isRoundOver;
     private volatile boolean hasRoundStarted;
     private HashMap<String,Double> existingAccounts;
     private int turnsLeft;
     private int previousTurn;
+    private boolean isMyTurn;
 
 
     public Player() {
@@ -45,9 +46,52 @@ public class Player {
         Scanner in = new Scanner(socket.getInputStream());
         BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
         new Thread(new ConnectionHandler(this.socket, out)).start();
+        while(!socket.isClosed()) {
+            readServerMessage(in);
+        }
 
+    }
+
+    public boolean checkIfStringIsValidDouble(String doubleString) {
+        Pattern regex = Pattern.compile("[^0-9]");
+        return regex.matcher(doubleString).find();
+    }
+
+    private void readDatabase() {
+        try {
+            List<String> listOfUsers = Files.readAllLines(Paths.get("resources/users.txt"));
+            existingAccounts = new HashMap<>();
+            listOfUsers.forEach(s -> existingAccounts.put(s.split("::")[0], Double.parseDouble(s.split("::")[1])));
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void updateDatabase(){
+
+            StringBuilder userString = new StringBuilder();
+            existingAccounts
+                    .forEach((k,v) -> userString.append(k).append("::").append(v).append("\n"));
+        try {
+
+            FileWriter writer = new FileWriter("resources/users.txt");
+            writer.write(userString.toString());
+            writer.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private void readServerMessage(Scanner in) throws IOException {
         while (in.hasNextLine()) {
             String serverMessage = in.nextLine();
+
+            if(serverMessage.equals(Messages.PLAYER_TURN)) {
+                isMyTurn = true;
+            }
 
             if(serverMessage.equals(Messages.ALL_PLAYERS_FOLDED)) {
                 turnsLeft = -2;
@@ -95,41 +139,11 @@ public class Player {
                 hasRoundStarted = true;
             }
 
+
+
         }
+        System.out.println(ColorCodes.RED_BOLD_BRIGHT + "Server disconnected" + ColorCodes.RESET);
         socket.close();
-    }
-
-    public boolean checkIfStringIsValidDouble(String doubleString) {
-        Pattern regex = Pattern.compile("[^0-9]");
-        return regex.matcher(doubleString).find();
-    }
-
-    private void readDatabase() {
-        try {
-            List<String> listOfUsers = Files.readAllLines(Paths.get("resources/users.txt"));
-            existingAccounts = new HashMap<>();
-            listOfUsers.forEach(s -> existingAccounts.put(s.split("::")[0], Double.parseDouble(s.split("::")[1])));
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void updateDatabase(){
-
-            StringBuilder userString = new StringBuilder();
-            existingAccounts
-                    .forEach((k,v) -> userString.append(k).append("::").append(v).append("\n"));
-        try {
-
-            FileWriter writer = new FileWriter("resources/users.txt");
-            writer.write(userString.toString());
-            writer.close();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
     }
 
     class ConnectionHandler implements Runnable {
@@ -162,6 +176,7 @@ public class Player {
 
                         turnsLeft = 2;
                         previousTurn = 2;
+                        isMyTurn = false;
 
 
                         while(!socket.isClosed()) {
@@ -175,13 +190,25 @@ public class Player {
                             }
 
 
-                            bufferedReader = new BufferedReader(new InputStreamReader(System.in));
-
+                            input = new Scanner(System.in);
+                            counter = 0;
                             while(turnsLeft != -2) {
 
+                                while (!isMyTurn) {
+                                    if (counter == 0) {
+                                        System.out.println(ColorCodes.PURPLE_BOLD_BRIGHT + System.currentTimeMillis() + ColorCodes.RESET);
+                                        System.out.println(ColorCodes.PURPLE_BOLD_BRIGHT + "I'm locked" + ColorCodes.RESET);
+                                        counter++;
+                                    }
 
-
-                                String call = bufferedReader.readLine();
+                                    if(isRoundOver) break;
+                                    Thread.sleep(1500);
+                                    System.out.println(ColorCodes.PURPLE_BOLD_BRIGHT + isMyTurn + ColorCodes.RESET);
+                                }
+                                if(isRoundOver) break;
+                                System.out.println(ColorCodes.YELLOW_BOLD_BRIGHT +  "I'm  no longer locked" + ColorCodes.RESET);
+                                counter = 0;
+                                String call = input.nextLine();
 
                                 if(!checkForValidCommand(call)) {
                                     if(turnsLeft == -2) break;
@@ -195,7 +222,7 @@ public class Player {
                                 bufferedWriter.flush();
 
                                 if(call.contains("/bet")) {
-                                    String bet = bufferedReader.readLine();
+                                    String bet = input.nextLine();
                                     bufferedWriter.write(bet);
                                     bufferedWriter.newLine();
                                     bufferedWriter.flush();
@@ -207,10 +234,11 @@ public class Player {
                                 while (turnsLeft == previousTurn) {
                                 }
                                 previousTurn = turnsLeft;
+                                isMyTurn = false;
                             }
                             Thread.sleep(1000);
                             System.out.println(Messages.CONTINUE_PLAYING);
-                            String decision = bufferedReader.readLine();
+                            String decision = input.nextLine();
 
                             if(decision.equalsIgnoreCase("exit")) {
                                 bufferedWriter.write(decision);
@@ -226,6 +254,7 @@ public class Player {
                             bufferedWriter.flush();
 
                             isRoundOver = false;
+                            isMyTurn = false;
                             turnsLeft = 2;
 
                         }
@@ -265,9 +294,9 @@ public class Player {
 
         readDatabase();
 
-        this.bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+        this.input = new Scanner(System.in);
         System.out.println(Messages.ENTER_USERNAME);
-        String enteredUsername = bufferedReader.readLine();
+        String enteredUsername = input.nextLine();
 
         if(!checkForValidUserName(enteredUsername)) {
             System.out.println(Messages.USERNAME_INVALID);
@@ -287,12 +316,11 @@ public class Player {
             }
         }
 
-
     public void closeAll() {
 
         try {
-            if (bufferedReader != null) {
-                bufferedReader.close();
+            if (input != null) {
+                input.close();
             }
             if (socket != null) {
                 socket.close();

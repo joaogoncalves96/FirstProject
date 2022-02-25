@@ -139,7 +139,7 @@ public class Game {
         gameDecisionsVerification = new boolean[userLimit];
         roundOverVerification = new boolean[userLimit];
         playerHandCount = 0;
-        TURN_DECIDER = LAST_ROUND_STARTER + 1;
+        TURN_DECIDER = LAST_ROUND_STARTER;
 
         for (int i = 0; i < playerHands.size(); i++) {
             playerHands.set(i,0);
@@ -274,6 +274,14 @@ public class Game {
 
                     System.out.println("Waiting for player choices...");
 
+                    Thread.sleep((long) (Math.random() * 100));
+
+
+                    System.out.println("Turns left: " + TURNS_LEFT);
+                    System.out.println("Turn decider: " + TURN_DECIDER);
+                    System.out.println("Last round: " + LAST_ROUND_STARTER);
+                    System.out.println("Time: " + System.currentTimeMillis());
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////// TURNS
 
@@ -286,12 +294,18 @@ public class Game {
                             }
                         }
 
+
+
                         Thread.sleep(50);
 
                         if(haveAllOtherPlayersFolded() || hasPlayerFolded) {
                             sendMessage(Messages.ALL_PLAYERS_FOLDED);
                             break;
                         }
+
+                        sendMessage(Messages.PLAYER_TURN);
+
+                        Thread.sleep(100);
 
                         sendMessage(Messages.PLAYER_CALL);
 
@@ -399,7 +413,9 @@ public class Game {
                     }
 
                     System.out.println(Messages.CHECK_PLAYER);
+
                     String playerDecision = null;
+
                     if(in.hasNextLine()) {
                         playerDecision = in.nextLine();
                     }
@@ -413,6 +429,8 @@ public class Game {
                         break;
                     }
 
+                    Thread.sleep((long) (1000 * Math.random()));
+
                     roundOverVerification[index] = true;
                     counter = 0;
 
@@ -423,7 +441,14 @@ public class Game {
                         }
                         if(havePlayersDecidedToPlay()) break;
                     }
+
+                    if(TURN_DECIDER == index) {
+                        startNewRound();
+                        restartTable();
+                        continue;
+                    }
                     restartTable();
+
                 }
                 if(socket.isClosed()) {
                     throw new PlayerDisconnectedException();
@@ -653,17 +678,15 @@ public class Game {
             return credits;
         }
 
-        private void assignRandomColor() {
-
-        }
-
         private String whichPlayerIsDeciding() {
             return listOfPlayers.get(TURN_DECIDER).getUsername();
         }
 
         public void askForBet() throws IOException, PlayerDisconnectedException {
             sendMessage(Messages.INSERT_BET);
-            bet += Double.parseDouble(in.nextLine());
+            double value = Double.parseDouble(in.nextLine());
+            bet += value;
+            credits -=value;
         }
 
         public double getBet() {
@@ -675,11 +698,9 @@ public class Game {
             message.append(ColorCodes.BLUE_BOLD_BRIGHT);
 
             for(PlayerHandler p : listOfPlayers) {
-                message.append(p.getUsername()).append("is playing this round!\n");
+                message.append(p.getUsername()).append(" is playing this round!\n");
             }
-
             sendMessage(message.toString());
-
         }
 
         private void loading() throws IOException, InterruptedException, PlayerDisconnectedException {
@@ -723,13 +744,13 @@ public class Game {
             System.out.println(ColorCodes.PURPLE_BOLD_BRIGHT + TURN_DECIDER + "<>" + listOfPlayers.size() + ColorCodes.RESET);
         }
 
-        private void restartTable() {
+        private synchronized void restartTable() {
             TURNS_LEFT = 2;
             bet = 0;
             seenHand--;
             playerCards = new ArrayList<>(2);
             hasPlayerFolded = false;
-            startNewRound();
+
 
         }
     }

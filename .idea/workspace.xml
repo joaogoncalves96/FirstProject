@@ -7,13 +7,11 @@
     </artifacts-to-build>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5758b74b-1b07-478a-8926-8d348cfc6100" name="Changes" comment="some fixes">
+    <list default="true" id="5758b74b-1b07-478a-8926-8d348cfc6100" name="Changes" comment="added fold mechanic needs crash fixing">
+      <change afterPath="$PROJECT_DIR$/resources/users.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/academy/mindswap/Client/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/Client/Player.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/academy/mindswap/Server/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/Server/Game.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/academy/mindswap/Server/deck/HandAnalyzer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/Server/deck/HandAnalyzer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/academy/mindswap/commands/BetHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/commands/BetHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/academy/mindswap/commands/CommandHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/commands/CommandHandler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/academy/mindswap/utils/Messages.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/utils/Messages.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -349,7 +347,14 @@
       <option name="project" value="LOCAL" />
       <updated>1645782944170</updated>
     </task>
-    <option name="localTasksCounter" value="32" />
+    <task id="LOCAL-00032" summary="added fold mechanic needs crash fixing">
+      <created>1645785503272</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1645785503272</updated>
+    </task>
+    <option name="localTasksCounter" value="33" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
@@ -402,7 +407,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="fixed table cards, fixed player thread, added player handler" />
     <MESSAGE value="added bet command, added check for valid double string" />
     <MESSAGE value="added hand analyzer" />
     <MESSAGE value="upgraded analyzer, added winner checker" />
@@ -427,6 +431,7 @@
     <MESSAGE value="fixes exit 2" />
     <MESSAGE value="added username checker" />
     <MESSAGE value="some fixes" />
-    <option name="LAST_COMMIT_MESSAGE" value="some fixes" />
+    <MESSAGE value="added fold mechanic needs crash fixing" />
+    <option name="LAST_COMMIT_MESSAGE" value="added fold mechanic needs crash fixing" />
   </component>
 </project>
