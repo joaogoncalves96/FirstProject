@@ -7,14 +7,14 @@
     </artifacts-to-build>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5758b74b-1b07-478a-8926-8d348cfc6100" name="Changes" comment="fixed stupid fucking bug with +1">
+    <list default="true" id="5758b74b-1b07-478a-8926-8d348cfc6100" name="Changes" comment="added call added table fee, needs all in fix">
+      <change afterPath="$PROJECT_DIR$/src/academy/mindswap/commands/CheckHandler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/users.txt" beforeDir="false" afterPath="$PROJECT_DIR$/resources/users.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/academy/mindswap/Client/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/Client/Player.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/academy/mindswap/Server/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/Server/Game.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/academy/mindswap/commands/AllinHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/commands/AllinHandler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/academy/mindswap/commands/BetHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/commands/BetHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/academy/mindswap/commands/CallHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/commands/CallHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/academy/mindswap/commands/Command.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/commands/Command.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/academy/mindswap/utils/Messages.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/utils/Messages.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -69,6 +69,9 @@
     <property name="project.structure.side.proportion" value="0.20229885" />
   </component>
   <component name="RecentsManager">
+    <key name="CreateClassDialog.RecentsKey">
+      <recent name="academy.mindswap.commands" />
+    </key>
     <key name="CopyClassDialog.RECENTS_KEY">
       <recent name="academy.mindswap.Client" />
     </key>
@@ -364,7 +367,14 @@
       <option name="project" value="LOCAL" />
       <updated>1645790111106</updated>
     </task>
-    <option name="localTasksCounter" value="34" />
+    <task id="LOCAL-00034" summary="added call added table fee, needs all in fix">
+      <created>1645793565811</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1645793565811</updated>
+    </task>
+    <option name="localTasksCounter" value="35" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
@@ -417,7 +427,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="added hand analyzer" />
     <MESSAGE value="upgraded analyzer, added winner checker" />
     <MESSAGE value="added new round mechanic" />
     <MESSAGE value="added better bet verifications and if player wants to keep playing" />
@@ -442,6 +451,7 @@
     <MESSAGE value="some fixes" />
     <MESSAGE value="added fold mechanic needs crash fixing" />
     <MESSAGE value="fixed stupid fucking bug with +1" />
-    <option name="LAST_COMMIT_MESSAGE" value="fixed stupid fucking bug with +1" />
+    <MESSAGE value="added call added table fee, needs all in fix" />
+    <option name="LAST_COMMIT_MESSAGE" value="added call added table fee, needs all in fix" />
   </component>
 </project>

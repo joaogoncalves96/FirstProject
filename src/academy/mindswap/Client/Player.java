@@ -28,7 +28,9 @@ public class Player {
     private int turnsLeft;
     private int previousTurn;
     private boolean isMyTurn;
-    private boolean isAllin;
+    private double betToMatch;
+    private boolean playerHasToBet;
+
 
 
     public Player() {
@@ -90,6 +92,12 @@ public class Player {
         while (in.hasNextLine()) {
             String serverMessage = in.nextLine();
 
+            if(serverMessage.contains("Last bet: ")) {
+                serverMessage = serverMessage.replace("Last bet: ","");
+                betToMatch = Double.parseDouble(serverMessage);
+                continue;
+            }
+
             if(serverMessage.equals(Messages.PLAYER_TURN)) {
                 isMyTurn = true;
             }
@@ -120,7 +128,7 @@ public class Player {
                 System.out.printf(Messages.CURRENT_CREDITS, credits);
                 isRoundOver = true;
                 hasRoundStarted = false;
-                isAllin = false;
+//                isAllin = false;
                 continue;
 
             }
@@ -134,7 +142,7 @@ public class Player {
                 System.out.printf(Messages.CURRENT_CREDITS, credits);
                 isRoundOver = true;
                 hasRoundStarted = false;
-                isAllin = false;
+//                isAllin = false;
                 continue;
             }
 
@@ -143,7 +151,11 @@ public class Player {
             }
 
             if(serverMessage.equals(Messages.IS_ALL_IN)) {
-                isAllin = true;
+//                isAllin = true;
+            }
+
+            if(serverMessage.equals(Messages.PLAYER_HAS_TO_BET)) {
+                playerHasToBet = true;
             }
 
 
@@ -222,7 +234,13 @@ public class Player {
                                 bufferedWriter.flush();
 
                                 if(call.contains("/bet")) {
-                                    String bet = input.nextLine();
+                                    String bet;
+                                    while(!isValidBet(bet = input.nextLine())) {
+                                        if(isValidBet(bet)) {
+                                            break;
+                                        }
+                                        System.out.println(Messages.MATCH_BET);
+                                    }
                                     bufferedWriter.write(bet);
                                     bufferedWriter.newLine();
                                     bufferedWriter.flush();
@@ -232,6 +250,12 @@ public class Player {
                                 }
 
                                 while (turnsLeft == previousTurn) {
+                                    if(playerHasToBet) {
+                                        break;
+                                    }
+                                }
+                                if(playerHasToBet) {
+                                    continue;
                                 }
                                 previousTurn = turnsLeft;
                                 isMyTurn = false;
@@ -290,6 +314,21 @@ public class Player {
 
     }
 
+    private boolean isValidBet(String bet) throws InterruptedException {
+        if(bet == null) {
+            return false;
+        }
+
+        if(checkIfStringIsValidDouble(bet)) {
+            System.out.println(Messages.MATCH_BET);
+            return false;
+        }
+
+        Thread.sleep(100);
+
+        return !(Double.parseDouble(bet) < betToMatch);
+    }
+
     private void askForUserNameAndCredits() throws IOException {
 
         readDatabase();
@@ -332,9 +371,10 @@ public class Player {
 
     private boolean checkForValidCommand(String command) {
 
-        return command.equalsIgnoreCase("/call") ||
+        return  command.equalsIgnoreCase("/call") ||
                 command.equalsIgnoreCase("/bet") ||
                 command.equalsIgnoreCase("/fold") ||
+                command.equalsIgnoreCase("/check") ||
                 command.equalsIgnoreCase("/allin");
     }
 }

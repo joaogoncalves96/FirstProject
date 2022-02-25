@@ -25,7 +25,7 @@ public class Messages {
     public static final String PLACED_BET = "Bet placed, waiting for all the players to bet...";
     public static final String CURRENT_CREDITS = "You know have %.2f credits. %n";
     public static final String WAITING_FOR_NEXT_ROUND = "Waiting for players to decide...";
-    public static final String PLAYER_CALL = "What do you want to do? \nBET || CALL || ALL-IN || FOLD \n";
+    public static final String PLAYER_CALL = "What do you want to do? \nCHECK || BET || CALL || ALL-IN || FOLD \n";
     public static final String CHECK_PLAYER = "Reading players decisions...";
     public static final String FOLDED = " has folded.\n";
     public static final String BET = " has bet ";
@@ -44,6 +44,9 @@ public class Messages {
     public static final String IS_ALL_IN = "You're All in!";
     public static final String TAX_PAY = "You have payed " + Game.getTABLE_FEE() + " credits to play this round.";
     public static final String CALL = " has called the bet!";
+    public static final String PLAYER_CHECKED = " has checked.";
+    public static final String MATCH_BET = "You have to call or raise the current bet.";
+    public static final String PLAYER_HAS_TO_BET = "Do you want to match the bet?";
 
 
 

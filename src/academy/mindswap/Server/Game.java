@@ -16,7 +16,7 @@ import java.util.concurrent.Executors;
  * Poker Game v1.01
  * Creates a server that can run poker games
  * BUGS TO FIX:
- * - When player exits, the lists get fucked ***FIXED***
+ *
  * - There's a line between lines and player commands
  * - PLayers can play with credits < 1
  *
@@ -81,10 +81,6 @@ public class Game {
         this.listOfPlayers.remove(player);
     }
 
-    private boolean checkIfPlayerExists(PlayerHandler player) {
-        return listOfPlayers.contains(player);
-    }
-
     private int currentPlayersConnected() {
         return listOfPlayers.size();
     }
@@ -97,9 +93,7 @@ public class Game {
         for(PlayerHandler player : listOfPlayers) {
             try {
                 player.sendMessage(message);
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (PlayerDisconnectedException e) {
+            } catch (IOException | PlayerDisconnectedException e) {
                 e.printStackTrace();
             }
         }
@@ -153,6 +147,10 @@ public class Game {
 
     }
 
+    public void setLastBet(double bet) {
+        this.lastBet = bet;
+    }
+
     public static double getTABLE_FEE() {
         return TABLE_FEE;
     }
@@ -171,7 +169,7 @@ public class Game {
         private boolean hasPlayerFolded;
         private int seenHand;
         private boolean hasAllIn;
-
+        private double playerLastBet;
 
         private PlayerHandler(Socket socket) {
             this.playerCards = new ArrayList<>(2);
@@ -183,15 +181,10 @@ public class Game {
             return username;
         }
 
-        public int getIndex() {
-            return index;
-        }
-
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
-            if (!(o instanceof PlayerHandler)) return false;
-            PlayerHandler that = (PlayerHandler) o;
+            if (!(o instanceof PlayerHandler that)) return false;
             return username.equals(that.username);
         }
 
@@ -293,20 +286,18 @@ public class Game {
 
                     Thread.sleep((long) (Math.random() * 100));
 
-//                    System.out.println("Turns left: " + TURNS_LEFT);
-//                    System.out.println("Turn decider: " + TURN_DECIDER);
-//                    System.out.println("Last round: " + LAST_ROUND_STARTER);
-//                    System.out.println("Time: " + System.currentTimeMillis());
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////// TURNS
+
                     while(TURNS_LEFT != -2) {
                         String playerChoice = null;
+
+
                         while(!canIdoMyTurn()) {
                             if(counter == 0) {
                                 sendMessage(whichPlayerIsDeciding() + Messages.CURRENT_PLAYER_DECIDING);
                                 counter++;
                             }
+                            Thread.sleep(200);
                         }
 
                         Thread.sleep(50);
@@ -327,13 +318,18 @@ public class Game {
 
                         if(hasAllIn) {
                             sendMessage(Messages.ALL_IN);
-                            playerChoice = null;
                         }
 
 
-                        if(!hasPlayerFolded || !hasAllIn) {
+                        if(!hasPlayerFolded && !hasAllIn) {
+                            System.out.println("username = " + username);
+                            if(!hasPlayerMatchedBet()) {
+                                sendMessage(Messages.PLAYER_HAS_TO_BET);
+                            }
                             playerChoice = in.nextLine();
                         }
+
+                        System.out.println("playerChoice = " + playerChoice);
 
                         if(playerChoice != null) {
 
@@ -345,8 +341,14 @@ public class Game {
                             }
                         }
 
+                        if(!hasPlayerMatchedBet()) {
+                            sendMessage(Messages.MATCH_BET);
+                            gameDecisionsVerification[index] = false;
+                            continue;
+                        }
+
                         if(hasAllIn) {
-                            System.out.println(username + "is all in.");
+                            System.out.println(username + " is all in.");
                             gameDecisionsVerification[index] = true;
                         }
 
@@ -359,14 +361,25 @@ public class Game {
 
                         counter = 0;
 
-                        while(!checkIfPlayersMadeDecision()) {
+                        while(!checkIfPlayersMadeDecision() || !otherPlayersMatchedBet()) {
+
                             if(counter == 0) {
                                 decideTurn();
                                 System.out.println(Messages.WAITING_FOR_NEXT_ROUND);
                                 sendMessage(Messages.WAITING_FOR_NEXT_ROUND);
+                                System.out.println("TURN_DECIDER = " + TURN_DECIDER + " " + username);
                                 counter++;
                             }
+                            if(!hasPlayerMatchedBet()) {
+                                Thread.sleep(150);
+                                break;
+                            }
                         }
+
+                        if(!hasPlayerMatchedBet()) {
+                            continue;
+                        }
+
                         if(TURNS_LEFT >= 0) {
                             sendMessage("Cards in table: \n" +
                                     printCards(tableCards.stream().toList().subList(0,tableCards.size() - TURNS_LEFT)));
@@ -374,6 +387,7 @@ public class Game {
                             sendMessage("Cards in table: \n" +
                                     printCards(tableCards));
                         }
+
 
                         sendMessage(Messages.NEXT);
 
@@ -384,9 +398,7 @@ public class Game {
                         Thread.sleep(500);
 
                         if(!(TURN_DECIDER == index)) {
-
                             Thread.sleep(100);
-
                         } else {
                             TURNS_LEFT--;
                             TURN_DECIDER = LAST_ROUND_STARTER;
@@ -394,7 +406,6 @@ public class Game {
                         }
                     }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////// SHOW CARDS
 
                     int points = 0;
@@ -619,7 +630,10 @@ public class Game {
         }
 
         public void wentAllIn() {
+
+            setLastBet(bet);
             this.hasAllIn = true;
+
         }
 
         private int analyzePlayerHand() {
@@ -662,10 +676,6 @@ public class Game {
             for(boolean b : roundOverVerification) {
                 if(b) trues++;
             }
-//            System.out.println("Trues: " + trues);
-//            System.out.println("PLayers: " + listOfPlayers.size());
-//            System.out.println("PLayersIndex: " + playerHands.size());
-
             return trues == playerHands.size();
         }
 
@@ -709,16 +719,24 @@ public class Game {
             return listOfPlayers.get(TURN_DECIDER).getUsername();
         }
 
-        public double askForBet() throws IOException, PlayerDisconnectedException {
+        public void askForBet() throws IOException, PlayerDisconnectedException {
+
+            sendMessage("Last bet: " + lastBet);
             sendMessage(Messages.INSERT_BET);
+
             double value = Double.parseDouble(in.nextLine());
+            lastBet = value;
+            playerLastBet = value;
             bet += value;
             credits -=value;
-            return value;
         }
 
         public double getBet() {
             return bet;
+        }
+
+        public double getPlayerLastBet() {
+            return playerLastBet;
         }
 
         private void writePlayerInTable() throws PlayerDisconnectedException, IOException {
@@ -733,7 +751,7 @@ public class Game {
 
         private void loading() throws IOException, InterruptedException, PlayerDisconnectedException {
 
-            long animationSpeed = 750;
+            long animationSpeed = 500;
             String black = ColorCodes.BLACK_BOLD;
             String red = ColorCodes.RED_BOLD_BRIGHT;
             String reset = ColorCodes.RESET;
@@ -761,7 +779,7 @@ public class Game {
             return index == TURN_DECIDER;
         }
 
-        private synchronized void decideTurn() {
+        private void decideTurn() {
             if(TURN_DECIDER == listOfPlayers.size() - 1) {
                 System.out.println(ColorCodes.YELLOW_BOLD_BRIGHT + TURN_DECIDER + "<>" + listOfPlayers.size() + ColorCodes.RESET);
                 TURN_DECIDER = 0;
@@ -781,6 +799,14 @@ public class Game {
             hasPlayerFolded = false;
 
 
+        }
+
+        public boolean hasPlayerMatchedBet() {
+            return this.playerLastBet == lastBet;
+        }
+
+        private boolean otherPlayersMatchedBet() {
+            return listOfPlayers.stream().filter(PlayerHandler::hasPlayerMatchedBet).count() == listOfPlayers.size();
         }
     }
 }
