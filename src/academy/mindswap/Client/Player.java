@@ -163,39 +163,6 @@ public class Player {
         socket.close();
     }
 
-    public boolean checkIfStringIsValidDouble(String doubleString) {
-        Pattern regex = Pattern.compile("[^0-9]");
-        return regex.matcher(doubleString).find();
-    }
-
-    private void readDatabase() {
-        try {
-            List<String> listOfUsers = Files.readAllLines(Paths.get("resources/users.txt"));
-            existingAccounts = new HashMap<>();
-            listOfUsers.forEach(s -> existingAccounts.put(s.split("::")[0], Double.parseDouble(s.split("::")[1])));
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void updateDatabase(){
-
-            StringBuilder userString = new StringBuilder();
-            existingAccounts
-                    .forEach((k,v) -> userString.append(k).append("::").append(v).append("\n"));
-        try {
-            FileWriter writer = new FileWriter("resources/users.txt");
-            writer.write(userString.toString());
-            writer.close();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-    }
-
-
     class ConnectionHandler implements Runnable {
 
         private BufferedWriter bufferedWriter;

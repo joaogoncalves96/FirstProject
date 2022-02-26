@@ -96,8 +96,6 @@ public class Game {
                 player.sendMessage(message);
             } catch (IOException | PlayerDisconnectedException e) {
                 e.printStackTrace();
-            } catch (PlayerDisconnectedException e) {
-                e.printStackTrace();
             }
         }
     }
@@ -730,8 +728,6 @@ public class Game {
                 if(b) trues++;
             }
             Thread.sleep(10);
-            System.out.println("trues = " + trues);
-            System.out.println("playerHands = " + playerHands.size());
             return trues == playerHands.size();
         }
 
@@ -787,17 +783,6 @@ public class Game {
             sendMessage(Messages.INSERT_BET);
 
             double value = Double.parseDouble(in.nextLine());
-//            if(value > credits) {
-//                System.out.println(Messages.NOT_ENOUGH_CREDITS);
-//                askForBet();
-//                return;
-//            }
-//
-//            if(value <= 0) {
-//                System.out.println(Messages.VALID_CREDITS);
-//                askForBet();
-//                return;
-//            }
             lastBet = value;
             playerLastBet = value;
             bet += value;
