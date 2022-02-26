@@ -7,6 +7,7 @@ public class FoldHandler implements CommandHandler{
     @Override
     public void execute(Game game, Game.PlayerHandler playerHandler) {
         playerHandler.fold();
+        playerHandler.doAction();
         game.broadCastMessage(playerHandler.getUsername() + Messages.FOLDED);
     }
 }

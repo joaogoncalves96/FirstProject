@@ -5,10 +5,13 @@ public enum Command {
     CALL("/call", new CallHandler()),
     BET("/bet", new BetHandler()),
     FOLD("/fold", new FoldHandler()),
-    ALLIN("/allin", new AllinHandler());
+    ALLIN("/allin", new AllinHandler()),
+    CHECK("/check", new CheckHandler()),
+    HELP("/help", new HelpHandler()),
+    RAISE("/raise", new RaiseHandler());
 
-    private String description;
-    private CommandHandler commandHandler;
+    private final String description;
+    private final CommandHandler commandHandler;
 
     Command(String description, CommandHandler commandHandler) {
         this.description = description;

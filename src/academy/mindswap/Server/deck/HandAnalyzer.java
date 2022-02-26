@@ -2,8 +2,9 @@ package academy.mindswap.Server.deck;
 import academy.mindswap.utils.ColorCodes;
 import java.util.*;
 
-/**
- *
+/** Hand Analyzer Class
+ * This class takes in lists of Card objects and returns either your best hand or the points of your best hand.
+ * Use either analyzeHand to get the points of your hand, or makeFinalHand to get the list of cards with your best hand
  *
  *
  */
@@ -75,7 +76,7 @@ public class HandAnalyzer {
                     .get()
                     .getCardRankPoints();
 
-            points += 500 + cardValue;
+            points += 500 + cardValue + highestCard;
             return points;
         }
 
@@ -88,7 +89,7 @@ public class HandAnalyzer {
                     .map(CardRank::getCardRankPoints)
                     .reduce(0, Math::max);
 
-            points += 300 + cardValue;
+            points += 300 + cardValue + highestCard;
             return points;
         }
 
@@ -102,7 +103,7 @@ public class HandAnalyzer {
                     .get()
                     .getCardRankPoints();
 
-            points += 150 + cardValue;
+            points += 150 + cardValue + highestCard;
             return points;
 
         }
@@ -166,6 +167,8 @@ public class HandAnalyzer {
 
         });
 
+        printCards(finalHand);
+
         for (int i = 0; i < hand.size() - 1; i++) {
 
             int cardValue1 = hand.get(i).getCardRank().getCardRankPoints();
@@ -173,6 +176,10 @@ public class HandAnalyzer {
             if(finalHand.size() >= 5 && cardValue1 != cardValue2 + 1) break;
             if(cardValue1 == cardValue2 - 1) {
                 finalHand.add(hand.get(i));
+                if(finalHand.size() == 4 && i == hand.size() - 2) {
+                    finalHand.add(hand.get(i + 1));
+                    break;
+                }
                 continue;
             }
             finalHand = new ArrayList<>(5);
@@ -244,9 +251,6 @@ public class HandAnalyzer {
         }
 
         ArrayList<Card> finalHand = new ArrayList<>(5);
-//        hand.stream()
-//                .filter(card -> card.getCardRank().equals(cardRank1) || card.getCardRank().equals(cardRank2))
-//                .forEach(finalHand::add);
 
         for(Card card : hand) {
             if(card.getCardRank().equals(cardRank1)) {
@@ -282,14 +286,12 @@ public class HandAnalyzer {
     }
 
     private static boolean hasStraight(ArrayList<Card> hand) {
-
         hand.sort(new Comparator<Card>() {
             @Override
             public int compare(Card o1, Card o2) {
                 return Integer.compare(o1.getCardRank().getCardRankPoints(), o2.getCardRank().getCardRankPoints()) ;
             }
         });
-
 
         int sequentialCounter = 0;
         for (int i = 0; i < hand.size() - 1; i++) {
@@ -303,7 +305,7 @@ public class HandAnalyzer {
                 sequentialCounter = 0;
             }
         }
-        return sequentialCounter >= 5;
+        return sequentialCounter >= 4;
     }
 
     private static HashMap<CardRank, Integer> rankCounter(ArrayList<Card> hand) {

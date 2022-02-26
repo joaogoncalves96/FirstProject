@@ -16,7 +16,7 @@ import java.util.concurrent.Executors;
  * Poker Game v1.01
  * Creates a server that can run poker games
  * BUGS TO FIX:
- * - When player exits, the lists get fucked ***FIXED***
+ *
  * - There's a line between lines and player commands
  * - PLayers can play with credits < 1
  *
@@ -24,7 +24,7 @@ import java.util.concurrent.Executors;
 
 public class Game {
 
-    private List<PlayerHandler> listOfPlayers;
+    private final List<PlayerHandler> listOfPlayers;
     private final int PORT = 8081;
     private ExecutorService service;
     private final int userLimit;
@@ -33,11 +33,13 @@ public class Game {
     private boolean[] gameDecisionsVerification;
     private boolean[] roundOverVerification;
     private double pot;
-    private List<Integer> playerHands;
+    private final List<Integer> playerHands;
     private int playerHandCount;
+    private volatile double lastBet;
     private int TURN_DECIDER;
     private int LAST_ROUND_STARTER;
     private int TURNS_LEFT;
+    private final static double TABLE_FEE = 100.00;
 
 
     public Game(int tableLimit) {
@@ -58,7 +60,7 @@ public class Game {
 
         ServerSocket serverSocket = new ServerSocket(PORT);
 
-        System.out.println("Server initiated. Waiting for users.txt to connect.");
+        System.out.println("Server initiated. Waiting for users to connect.");
 
         service = Executors.newCachedThreadPool();
 
@@ -67,16 +69,16 @@ public class Game {
         }
     }
 
+    public double getLastBet() {
+        return lastBet;
+    }
+
     private void addPlayer(PlayerHandler player) {
         this.listOfPlayers.add(player);
     }
 
     private void removePlayer(PlayerHandler player) {
         this.listOfPlayers.remove(player);
-    }
-
-    private boolean checkIfPlayerExists(PlayerHandler player) {
-        return listOfPlayers.contains(player);
     }
 
     private int currentPlayersConnected() {
@@ -91,9 +93,7 @@ public class Game {
         for(PlayerHandler player : listOfPlayers) {
             try {
                 player.sendMessage(message);
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (PlayerDisconnectedException e) {
+            } catch (IOException | PlayerDisconnectedException e) {
                 e.printStackTrace();
             }
         }
@@ -121,26 +121,40 @@ public class Game {
 
     protected int getWinningPlayerIndex() {
 
-       int winningPoints = playerHands.stream()
+        int winningPoints = playerHands.stream()
                 .reduce(0, Math::max);
 
-       return playerHands.indexOf(winningPoints);
+        return playerHands.indexOf(winningPoints);
 
     }
 
+    private synchronized boolean haveAllOtherPlayersFolded() {
+        return listOfPlayers.stream().filter(player -> !player.hasPlayerFolded).count() == 1;
+    }
+
     private void startNewRound() {
+
         deck = DeckFactory.createFullDeck();
         pot = 0;
+        lastBet = 0;
         tableCards = Collections.synchronizedSet(new HashSet<>(5));
         gameDecisionsVerification = new boolean[userLimit];
         roundOverVerification = new boolean[userLimit];
         playerHandCount = 0;
-        TURN_DECIDER = LAST_ROUND_STARTER + 1;
+        TURN_DECIDER = LAST_ROUND_STARTER;
 
         for (int i = 0; i < playerHands.size(); i++) {
             playerHands.set(i,0);
         }
 
+    }
+
+    public void setLastBet(double bet) {
+        this.lastBet = bet;
+    }
+
+    public static double getTABLE_FEE() {
+        return TABLE_FEE;
     }
 
     public class PlayerHandler implements Runnable {
@@ -156,7 +170,9 @@ public class Game {
         private int index;
         private boolean hasPlayerFolded;
         private int seenHand;
-        private boolean isMyTurn;
+        private boolean hasAllIn;
+        private double playerLastBet;
+        private boolean mustDoAction;
 
         private PlayerHandler(Socket socket) {
             this.playerCards = new ArrayList<>(2);
@@ -168,15 +184,10 @@ public class Game {
             return username;
         }
 
-        public int getIndex() {
-            return index;
-        }
-
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
-            if (!(o instanceof PlayerHandler)) return false;
-            PlayerHandler that = (PlayerHandler) o;
+            if (!(o instanceof PlayerHandler that)) return false;
             return username.equals(that.username);
         }
 
@@ -198,26 +209,25 @@ public class Game {
                 while(!socket.isClosed()) {
 
                     LAST_ROUND_STARTER = TURN_DECIDER;
+
                     // Get player username
-                    while (message == null && username == null) {
+                    if(message == null && username == null) {
                         message = in.nextLine();
                         System.out.printf("User: %s has connected.%n", message);
                         username = message;
                         message = null;
-                        break;
                     }
                     // Get player credits
-                    while (message == null && credits == 0.0) {
+                    if(message == null && credits == 0.0) {
                         message = in.nextLine();
                         credits = Double.parseDouble(message);
                         System.out.printf(Messages.PLAYER_CREDITS_ENTER, credits);
                         message = null;
-                        break;
                     }
 
                     int counter = 0;
 
-                    System.out.println("Placing player in table...");
+                    // This while locks players that connect during a round
                     while(isGameUnderWay()) {
                         if(counter == 0) {
                             sendMessage(Messages.WAITING_FOR_ROUND);
@@ -225,6 +235,7 @@ public class Game {
                         }
                     }
 
+                    //Add player to list
                     if(index == -1) {
                         synchronized (playerHands) {
                             addPlayer(this);
@@ -233,6 +244,7 @@ public class Game {
                         }
                     }
 
+                    // Only starts round if there's enough players connected
                     while (currentPlayersConnected() <= 1) {
                         if(counter == 0){
                             System.out.println(Messages.WAITING_FOR_PLAYERS);
@@ -248,12 +260,22 @@ public class Game {
 
                     Thread.sleep((long) (1000 * Math.random()));
 
-                    writePlayerInTable();
+                    this.credits -= TABLE_FEE;
+
+                    this.bet += TABLE_FEE;
+
+                    pot += TABLE_FEE;
+
+                    writePlayersInTable();
+
+                    sendMessage(Messages.TAX_PAY);
 
                     givePlayerCards();
 
                     playerHandCount += 2;
 
+
+                    //Only one player performs the method to deal the cards to the table.
                     if(playersHaveCards()) {
                         synchronized (tableCards){
                             if(tableCards.isEmpty()) {
@@ -270,85 +292,157 @@ public class Game {
 
                     System.out.println("Waiting for player choices...");
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////// TURNS
+                    Thread.sleep((long) (Math.random() * 100));
 
+                    // Game turns
                     while(TURNS_LEFT != -2) {
+
                         String playerChoice = null;
+
+                        // Traps players waiting for their turn.
                         while(!canIdoMyTurn()) {
                             if(counter == 0) {
                                 sendMessage(whichPlayerIsDeciding() + Messages.CURRENT_PLAYER_DECIDING);
                                 counter++;
                             }
+                            Thread.sleep(10);
                         }
 
-                        sendMessage(Messages.PLAYER_CALL);
-                        if(!hasPlayerFolded) {
-                            playerChoice = in.nextLine();
+                        Thread.sleep(10);
+
+                        // Breaks loop if the player has folded, or if other players folded
+                        if(haveAllOtherPlayersFolded() || hasPlayerFolded) {
+                            sendMessage(Messages.ALL_PLAYERS_FOLDED);
+                            break;
+                        }
+
+                        Thread.sleep(100);
+
+
+                        //Prevents All in players from making turns
+                        if(!hasAllIn) {
+                            sendMessage(Messages.PLAYER_TURN);
+                            Thread.sleep(100);
+                            sendMessage(Messages.PLAYER_CALL);
+                        }
+
+                        // Send a message saying that the player is all in
+                        if(hasAllIn) {
+                            sendMessage(Messages.ALL_IN);
                         }
 
 
-                        if(playerChoice != null) {
-
-                            dealWithCommand(playerChoice);
-
-                            synchronized (gameDecisionsVerification) {
-                                System.out.println("Player decided.");
-                                gameDecisionsVerification[index] = true;
+                        // Verification to ask the user for input and checking whether he matched the bet.
+                        if(!hasPlayerFolded && !hasAllIn) {
+                            if(!hasPlayerMatchedBet()) {
+                                sendMessage(Messages.PLAYER_HAS_TO_BET);
+                                sendMessage(Messages.PLEASE_BET);
+                                gameDecisionsVerification[index] = false;
                             }
+                            playerChoice = getUserInput();
+                            mustDoAction = true;
+                        }
+
+                        // Traps player until he does a valid action that keeps the game going
+                        while(!gameDecisionsVerification[index]) {
+                            if(playerChoice != null) {
+                                dealWithCommand(playerChoice);
+
+                                if(mustDoAction) {
+                                    playerChoice = getUserInput();
+                                    continue;
+                                }
+                                System.out.println("Player decided.");
+                            }
+                            gameDecisionsVerification[index] = true;
+                        }
+
+                        // Making sure player matches bet
+                        if(!hasPlayerMatchedBet()) {
+                            gameDecisionsVerification[index] = false;
+                            continue;
+                        }
+
+                        // Making sure the player stays in all in.
+                        if(hasAllIn) {
+                            System.out.println(username + " is all in.");
+                            gameDecisionsVerification[index] = true;
+                        }
+
+                        // Folded players still use TURN_DECIDER and then leave the loop
+                        if(hasPlayerFolded) {
+                            decideTurn();
+                            break;
                         }
 
                         Thread.sleep(50);
 
                         counter = 0;
 
-                        while(!checkIfPlayersMadeDecision()) {
+                        // Traps players waiting for other to make decision
+                        while(!checkIfPlayersMadeDecision() || !otherPlayersMatchedBet()) {
+
                             if(counter == 0) {
                                 decideTurn();
-                                System.out.println(Messages.WAITING_FOR_NEXT_ROUND);
                                 sendMessage(Messages.WAITING_FOR_NEXT_ROUND);
                                 counter++;
                             }
+
+                            if(!hasPlayerMatchedBet() || haveAllOtherPlayersFolded()) {
+                                Thread.sleep(150);
+                                break;
+                            }
                         }
+
+                        if(!hasPlayerMatchedBet()) {
+                            continue;
+                        }
+
+                        if(haveAllOtherPlayersFolded()) {
+                            break;
+                        }
+
+                        // Sends the cards to the players
                         if(TURNS_LEFT >= 0) {
                             sendMessage("Cards in table: \n" +
                                     printCards(tableCards.stream().toList().subList(0,tableCards.size() - TURNS_LEFT)));
+                            sendMessage(Messages.PLAYER_CARDS);
+                            sendMessage(printCards(playerCards));
                         } else {
                             sendMessage("Cards in table: \n" +
                                     printCards(tableCards));
+                            sendMessage(Messages.PLAYER_CARDS);
+                            sendMessage(printCards(playerCards));
                         }
 
 
                         sendMessage(Messages.NEXT);
 
-                        if(!hasPlayerFolded) {
-                            pot += bet;
-                        }
-
                         Thread.sleep(500);
 
+                        // Iterates to next turn
                         if(!(TURN_DECIDER == index)) {
-
                             Thread.sleep(100);
+                            this.playerLastBet = 0;
 
                         } else {
                             TURNS_LEFT--;
                             TURN_DECIDER = LAST_ROUND_STARTER;
                             gameDecisionsVerification = new boolean[userLimit];
+                            this.playerLastBet = 0;
+                            lastBet = 0;
                         }
                     }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////// SHOW CARDS
 
                     int points = 0;
 
+                    // Only count points if player hasn't folded
                     if(!hasPlayerFolded) {
                         points = analyzePlayerHand();
                         Thread.sleep((long) (Math.random() * 100));
                         playerHands.set(index, points);
-
-                        pot += bet;
                     }
 
                     seenHand++;
@@ -360,6 +454,8 @@ public class Game {
                     sendMessage(printCards(getFinalHand()));
 
                     counter = 0;
+
+                    // Traps players who have seen hands until others do
                     while (!havePlayersSeenHands()) {
                         if(counter == 0) {
                             sendMessage(Messages.WAITING_TO_SEE_HAND);
@@ -367,35 +463,46 @@ public class Game {
                         }
                     }
 
+
+                    // Sending message to winners and losers
                     if(getWinningPlayerIndex() == index) {
 
                         System.out.println(username + " won!");
 
                         sendMessage(Messages.WINNER + (pot - bet) + " credits.");
+                        this.credits += (pot - bet);
 
                     } else {
 
                         System.out.println(username + " lost :(");
-                        sendMessage(Messages.LOSER + bet + " credits.");
+                        sendMessage(Messages.LOSER + (bet + TABLE_FEE) + " credits.");
+                        this.credits -= (TABLE_FEE + bet);
 
                     }
 
                     System.out.println(Messages.CHECK_PLAYER);
+
                     String playerDecision = null;
+
+
+                    // Check if players wants to stay in the game
                     if(in.hasNextLine()) {
                         playerDecision = in.nextLine();
                     }
 
                     System.out.println("Player decided: " + playerDecision);
 
-                    if(playerDecision.equalsIgnoreCase("exit")) {
+                    if(playerDecision != null && playerDecision.equalsIgnoreCase("exit")) {
                         playerHands.remove(index);
                         removePlayer(this);
                         System.out.println(Messages.PLAYER_DISCONNECTED);
                         break;
                     }
 
+                    Thread.sleep((long) (1000 * Math.random()));
+
                     roundOverVerification[index] = true;
+
                     counter = 0;
 
                     while(!havePlayersDecidedToPlay()) {
@@ -403,9 +510,17 @@ public class Game {
                             sendMessage(Messages.WAITING_FOR_NEXT_ROUND);
                             counter++;
                         }
-                        if(havePlayersDecidedToPlay()) break;
+                    }
+
+
+                    // Reset variables to initiate new game
+                    if(TURN_DECIDER == index) {
+                        startNewRound();
+                        restartTable();
+                        continue;
                     }
                     restartTable();
+
                 }
                 if(socket.isClosed()) {
                     throw new PlayerDisconnectedException();
@@ -550,6 +665,17 @@ public class Game {
             return trues == currentPlayersConnected();
         }
 
+        public void wentAllIn() {
+            playerLastBet = credits;
+            setLastBet(playerLastBet);
+            pot += playerLastBet;
+            this.hasAllIn = true;
+        }
+
+        public void doAction() {
+            this.mustDoAction = false;
+        }
+
         private int analyzePlayerHand() {
             System.out.println("I got in analyze");
             return HandAnalyzer.analyzeHand(this.playerCards, tableCards);
@@ -585,19 +711,18 @@ public class Game {
             return "High card";
         }
 
-        private boolean havePlayersDecidedToPlay() {
+        private boolean havePlayersDecidedToPlay() throws InterruptedException {
             int trues = 0;
             for(boolean b : roundOverVerification) {
                 if(b) trues++;
             }
-//            System.out.println("Trues: " + trues);
-//            System.out.println("PLayers: " + listOfPlayers.size());
-//            System.out.println("PLayersIndex: " + playerHands.size());
-
+            Thread.sleep(10);
+            System.out.println("trues = " + trues);
+            System.out.println("playerHands = " + playerHands.size());
             return trues == playerHands.size();
         }
 
-        private void sendMessage(String message) throws IOException, PlayerDisconnectedException {
+        public void sendMessage(String message) throws IOException, PlayerDisconnectedException {
 
             if(socket.isClosed()) {
                 throw new PlayerDisconnectedException();
@@ -615,28 +740,25 @@ public class Game {
             return (playerHandCount / 2) == listOfPlayers.size();
         }
 
-        private void dealWithCommand(String action) {
-
+        private void dealWithCommand(String action) throws PlayerDisconnectedException, IOException {
             Command command = Command.getCommandFromDescription(action);
 
-            command.getCommandHandler().execute(Game.this, this);
+            assert command != null;
 
+            command.getCommandHandler().execute(Game.this, this);
         }
 
         public void fold() {
             this.hasPlayerFolded = true;
         }
 
-        public void setBet(double bet) {
-            this.bet = bet;
+        public void bet(double bet) {
+            this.playerLastBet = bet;
+            this.bet += bet;
         }
 
         public double getCredits() {
             return credits;
-        }
-
-        private void assignRandomColor() {
-
         }
 
         private String whichPlayerIsDeciding() {
@@ -644,29 +766,46 @@ public class Game {
         }
 
         public void askForBet() throws IOException, PlayerDisconnectedException {
+
+            sendMessage("Last bet: " + lastBet);
             sendMessage(Messages.INSERT_BET);
-            bet += Double.parseDouble(in.nextLine());
+
+            double value = Double.parseDouble(in.nextLine());
+//            if(value > credits) {
+//                System.out.println(Messages.NOT_ENOUGH_CREDITS);
+//                askForBet();
+//                return;
+//            }
+//
+//            if(value <= 0) {
+//                System.out.println(Messages.VALID_CREDITS);
+//                askForBet();
+//                return;
+//            }
+            lastBet = value;
+            playerLastBet = value;
+            bet += value;
+            credits -=value;
+            doAction();
         }
 
-        public double getBet() {
-            return bet;
+        public double getPlayerLastBet() {
+            return playerLastBet;
         }
 
-        private void writePlayerInTable() throws PlayerDisconnectedException, IOException {
+        private void writePlayersInTable() throws PlayerDisconnectedException, IOException {
+
             StringBuilder message = new StringBuilder();
             message.append(ColorCodes.BLUE_BOLD_BRIGHT);
 
             for(PlayerHandler p : listOfPlayers) {
-                message.append(p.getUsername()).append("is playing this round!\n");
+                message.append(p.getUsername()).append(" is playing this round!\n");
             }
-
             sendMessage(message.toString());
-
         }
 
         private void loading() throws IOException, InterruptedException, PlayerDisconnectedException {
-
-            long animationSpeed = 750;
+            long animationSpeed = 500;
             String black = ColorCodes.BLACK_BOLD;
             String red = ColorCodes.RED_BOLD_BRIGHT;
             String reset = ColorCodes.RESET;
@@ -685,34 +824,41 @@ public class Game {
                 sendMessage("\b" + red + CardSuit.DIAMONDS.getSuit());
 
             }
-
             sendMessage(reset);
-
         }
 
         private synchronized boolean canIdoMyTurn() {
             return index == TURN_DECIDER;
         }
 
-        private synchronized void decideTurn() {
+        private void decideTurn() {
             if(TURN_DECIDER == listOfPlayers.size() - 1) {
-                System.out.println(ColorCodes.YELLOW_BOLD_BRIGHT + TURN_DECIDER + "<>" + listOfPlayers.size() + ColorCodes.RESET);
                 TURN_DECIDER = 0;
                 return;
             }
-
             TURN_DECIDER++;
-            System.out.println(ColorCodes.PURPLE_BOLD_BRIGHT + TURN_DECIDER + "<>" + listOfPlayers.size() + ColorCodes.RESET);
         }
 
-        private void restartTable() {
+        private synchronized void restartTable() {
             TURNS_LEFT = 2;
+            this.hasAllIn = false;
             bet = 0;
             seenHand--;
+            playerLastBet = 0;
             playerCards = new ArrayList<>(2);
             hasPlayerFolded = false;
-            startNewRound();
+        }
 
+        public boolean hasPlayerMatchedBet() {
+            return this.playerLastBet == lastBet;
+        }
+
+        private boolean otherPlayersMatchedBet() {
+            return listOfPlayers.stream().filter(PlayerHandler::hasPlayerMatchedBet).count() == listOfPlayers.size();
+        }
+
+        private String getUserInput() {
+           return in.nextLine();
         }
     }
 }

@@ -6,17 +6,23 @@ import academy.mindswap.utils.Messages;
 
 import java.io.IOException;
 
-public class CallHandler implements CommandHandler{
+public class RaiseHandler implements CommandHandler {
     @Override
     public void execute(Game game, Game.PlayerHandler playerHandler) throws PlayerDisconnectedException, IOException {
+
         if(game.getLastBet() == 0.0) {
-            playerHandler.sendMessage(Messages.CANT_CALL);
+            playerHandler.sendMessage(Messages.CANT_RAISE);
             return;
         }
+        double bet = game.getLastBet();
 
         playerHandler.doAction();
-        double lastBet = game.getLastBet();
-        playerHandler.bet(lastBet);
-        game.broadCastMessage(playerHandler.getUsername() + Messages.CALL);
+        playerHandler.bet(bet * 1.5);
+        game.setLastBet(bet * 1.5);
+        game.broadCastMessage(playerHandler.getUsername() +
+                Messages.RAISE +
+                (bet * 1.5) +
+                Messages.CREDITS);
+
     }
 }

@@ -28,3 +28,9 @@
 
 //        return cardRank.getCardRankDescription() + " of " + cardSuit.getSuitDescription() + "(" +cardRank.getCardRankDigit() + cardSuit.getSuit() + ")" + "\n";
         return cardStringBuilder.toString() + ColorCodes.RESET + "\n";
+
+
+
+        10 Q J K 7
+
+        9 2

@@ -2,36 +2,95 @@ package academy.mindswap.Server.deck;
 
 import academy.mindswap.utils.ColorCodes;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
 
 public class HandTester {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
 
-        ArrayList<Card> playerHand = new ArrayList<>(2);
-        Set<Card> tableCards = new HashSet<>(2);
+//        ArrayList<Card> playerHand = new ArrayList<>(2);
+//        Set<Card> tableCards = new HashSet<>(2);
+//
+////        10 Q J K 7
+//
+////        9 2
+//
+//        playerHand.add(new Card(CardRank.NINE, CardSuit.HEARTS));
+//        playerHand.add(new Card(CardRank.DEUCE, CardSuit.SPADES));
+//
+//        tableCards.add(new Card(CardRank.TEN, CardSuit.CLUBS));
+//        tableCards.add(new Card(CardRank.QUEEN, CardSuit.HEARTS));
+//        tableCards.add(new Card(CardRank.JACK, CardSuit.DIAMONDS));
+//        tableCards.add(new Card(CardRank.SEVEN, CardSuit.HEARTS));
+//        tableCards.add(new Card(CardRank.KING, CardSuit.CLUBS));
+//        System.out.println();
+//        System.out.println(printCards(playerHand));
+//        System.out.println();
+//        System.out.println(printCards(tableCards));
+//        int points = HandAnalyzer.analyzeHand(playerHand, tableCards);
+//
+//        ArrayList<Card> result = HandAnalyzer.makeFinalHand(points, playerHand, tableCards);
+//        System.out.println("Points: " + points);
+//        System.out.println();
+//        System.out.println(printCards(result));
 
-        playerHand.add(new Card(CardRank.DEUCE, CardSuit.HEARTS));
-        playerHand.add(new Card(CardRank.EIGHT, CardSuit.HEARTS));
 
-        tableCards.add(new Card(CardRank.TEN, CardSuit.CLUBS));
-        tableCards.add(new Card(CardRank.SEVEN, CardSuit.HEARTS));
-        tableCards.add(new Card(CardRank.JACK, CardSuit.DIAMONDS));
-        tableCards.add(new Card(CardRank.SIX, CardSuit.HEARTS));
-        tableCards.add(new Card(CardRank.NINE, CardSuit.CLUBS));
-        System.out.println();
-        System.out.println(printCards(playerHand));
-        System.out.println();
-        System.out.println(printCards(tableCards));
-        int points = HandAnalyzer.analyzeHand(playerHand, tableCards);
+        File file = new File("resources/intro");
+        StringBuilder sb = new StringBuilder();
+        try {
+            Scanner scanner = new Scanner(file);
+            while(scanner.hasNext()){
+                sb
+//                        .append(ColorCodes.BLACK_BACKGROUND_BRIGHT)
+//                        .append(ColorCodes.WHITE_BOLD_BRIGHT)
+                        .append(scanner.nextLine())
+                        .append("\n");
+//                        .append(ColorCodes.RESET);
 
-        ArrayList<Card> result = HandAnalyzer.makeFinalHand(points, playerHand, tableCards);
-        System.out.println("Points: " + points);
-        System.out.println();
-        System.out.println(printCards(result));
+                try {
+                    Thread.sleep(10);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        String BLACK = "\033[1;90m"; // BLACK
+        String RED = "\033[1;91m";   // RED
+        String GREEN = "\033[1;92m"; // GREEN
+        String YELLOW = "\033[1;93m";// YELLOW
+        String BLUE = "\033[1;94m";  // BLUE
+        String PURPLE = "\033[1;95m";// PURPLE
+        String CYAN = "\033[1;96m";  // CYAN
+        String WHITE = "\033[1;97m"; // WHITE
+
+        String[] colorsArray = {BLACK, RED, GREEN, WHITE};
+
+//        System.out.println(sb.toString());
+
+        new Thread();
+
+        String[] introLines = sb.toString().split("\n");
+        int counter = 0;
+        long animationSpeed = 1;
+        while(true) {
+            for(String s : introLines) {
+                for (String s1 : s.split("")) {
+                    System.out.print(colorsArray[(int) (Math.random() * colorsArray.length)] + s1 + ColorCodes.RESET);
+                    Thread.sleep(animationSpeed);
+                }
+                System.out.println();
+            }
+        }
+
+
+
+
 
     }
 

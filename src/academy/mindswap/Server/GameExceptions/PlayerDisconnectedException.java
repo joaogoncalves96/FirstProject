@@ -1,7 +1,9 @@
 package academy.mindswap.Server.GameExceptions;
 
-public class PlayerDisconnectedException extends GameException {
+import academy.mindswap.utils.ColorCodes;
+
+public class PlayerDisconnectedException extends GameExceptions {
     public PlayerDisconnectedException() {
-        super("Player has disconnected suddenly, removing player from table.");
+        super(ColorCodes.RED_BOLD_BRIGHT + "PLAYER DISCONNECTED, UPDATING LIST..." + ColorCodes.RESET);
     }
 }
