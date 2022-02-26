@@ -42,6 +42,7 @@ public class Game {
     private final static double TABLE_FEE = 100.00;
 
 
+
     public Game(int tableLimit) {
 
         this.listOfPlayers = Collections.synchronizedList(new ArrayList<>());
@@ -60,7 +61,7 @@ public class Game {
 
         ServerSocket serverSocket = new ServerSocket(PORT);
 
-        System.out.println("Server initiated. Waiting for users to connect.");
+        System.out.println("Server initiated. Waiting for users.txt to connect.");
 
         service = Executors.newCachedThreadPool();
 
@@ -94,6 +95,8 @@ public class Game {
             try {
                 player.sendMessage(message);
             } catch (IOException | PlayerDisconnectedException e) {
+                e.printStackTrace();
+            } catch (PlayerDisconnectedException e) {
                 e.printStackTrace();
             }
         }
@@ -143,6 +146,7 @@ public class Game {
         playerHandCount = 0;
         TURN_DECIDER = LAST_ROUND_STARTER;
 
+
         for (int i = 0; i < playerHands.size(); i++) {
             playerHands.set(i,0);
         }
@@ -173,6 +177,7 @@ public class Game {
         private boolean hasAllIn;
         private double playerLastBet;
         private boolean mustDoAction;
+
 
         private PlayerHandler(Socket socket) {
             this.playerCards = new ArrayList<>(2);
@@ -236,6 +241,7 @@ public class Game {
                     }
 
                     //Add player to list
+
                     if(index == -1) {
                         synchronized (playerHands) {
                             addPlayer(this);
@@ -270,12 +276,13 @@ public class Game {
 
                     sendMessage(Messages.TAX_PAY);
 
+
                     givePlayerCards();
 
                     playerHandCount += 2;
 
-
                     //Only one player performs the method to deal the cards to the table.
+
                     if(playersHaveCards()) {
                         synchronized (tableCards){
                             if(tableCards.isEmpty()) {
@@ -300,11 +307,13 @@ public class Game {
                         String playerChoice = null;
 
                         // Traps players waiting for their turn.
+
                         while(!canIdoMyTurn()) {
                             if(counter == 0) {
                                 sendMessage(whichPlayerIsDeciding() + Messages.CURRENT_PLAYER_DECIDING);
                                 counter++;
                             }
+
                             Thread.sleep(10);
                         }
 
@@ -434,6 +443,7 @@ public class Game {
                         }
                     }
 
+
 //////////////////// SHOW CARDS
 
                     int points = 0;
@@ -470,13 +480,16 @@ public class Game {
                         System.out.println(username + " won!");
 
                         sendMessage(Messages.WINNER + (pot - bet) + " credits.");
+
                         this.credits += (pot - bet);
+
 
                     } else {
 
                         System.out.println(username + " lost :(");
                         sendMessage(Messages.LOSER + (bet + TABLE_FEE) + " credits.");
                         this.credits -= (TABLE_FEE + bet);
+
 
                     }
 
@@ -722,7 +735,9 @@ public class Game {
             return trues == playerHands.size();
         }
 
+
         public void sendMessage(String message) throws IOException, PlayerDisconnectedException {
+
 
             if(socket.isClosed()) {
                 throw new PlayerDisconnectedException();
@@ -761,6 +776,7 @@ public class Game {
             return credits;
         }
 
+
         private String whichPlayerIsDeciding() {
             return listOfPlayers.get(TURN_DECIDER).getUsername();
         }
@@ -791,6 +807,7 @@ public class Game {
 
         public double getPlayerLastBet() {
             return playerLastBet;
+
         }
 
         private void writePlayersInTable() throws PlayerDisconnectedException, IOException {
@@ -806,6 +823,7 @@ public class Game {
 
         private void loading() throws IOException, InterruptedException, PlayerDisconnectedException {
             long animationSpeed = 500;
+
             String black = ColorCodes.BLACK_BOLD;
             String red = ColorCodes.RED_BOLD_BRIGHT;
             String reset = ColorCodes.RESET;
@@ -842,11 +860,13 @@ public class Game {
         private synchronized void restartTable() {
             TURNS_LEFT = 2;
             this.hasAllIn = false;
+
             bet = 0;
             seenHand--;
             playerLastBet = 0;
             playerCards = new ArrayList<>(2);
             hasPlayerFolded = false;
+
         }
 
         public boolean hasPlayerMatchedBet() {
