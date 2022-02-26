@@ -2,8 +2,9 @@ package academy.mindswap.Server.deck;
 import academy.mindswap.utils.ColorCodes;
 import java.util.*;
 
-/**
- *
+/** Hand Analyzer Class
+ * This class takes in lists of Card objects and returns either your best hand or the points of your best hand.
+ * Use either analyzeHand to get the points of your hand, or makeFinalHand to get the list of cards with your best hand
  *
  *
  */
@@ -75,7 +76,7 @@ public class HandAnalyzer {
                     .get()
                     .getCardRankPoints();
 
-            points += 500 + cardValue;
+            points += 500 + cardValue + highestCard;
             return points;
         }
 
@@ -88,7 +89,7 @@ public class HandAnalyzer {
                     .map(CardRank::getCardRankPoints)
                     .reduce(0, Math::max);
 
-            points += 300 + cardValue;
+            points += 300 + cardValue + highestCard;
             return points;
         }
 
@@ -102,7 +103,7 @@ public class HandAnalyzer {
                     .get()
                     .getCardRankPoints();
 
-            points += 150 + cardValue;
+            points += 150 + cardValue + highestCard;
             return points;
 
         }

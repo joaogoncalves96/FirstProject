@@ -492,7 +492,7 @@ public class Game {
 
                     System.out.println("Player decided: " + playerDecision);
 
-                    if(playerDecision.equalsIgnoreCase("exit")) {
+                    if(playerDecision != null && playerDecision.equalsIgnoreCase("exit")) {
                         playerHands.remove(index);
                         removePlayer(this);
                         System.out.println(Messages.PLAYER_DISCONNECTED);
@@ -711,11 +711,14 @@ public class Game {
             return "High card";
         }
 
-        private boolean havePlayersDecidedToPlay() {
+        private boolean havePlayersDecidedToPlay() throws InterruptedException {
             int trues = 0;
             for(boolean b : roundOverVerification) {
                 if(b) trues++;
             }
+            Thread.sleep(10);
+            System.out.println("trues = " + trues);
+            System.out.println("playerHands = " + playerHands.size());
             return trues == playerHands.size();
         }
 

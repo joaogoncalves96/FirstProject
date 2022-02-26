@@ -61,3 +61,4 @@ DudeMan::10000.0
 BoyMan::10000.0
 OmegaGuy::10000.0
 dude::10000.0
+GuyMan::10000.0

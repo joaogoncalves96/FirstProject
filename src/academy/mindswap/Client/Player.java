@@ -251,7 +251,7 @@ public class Player {
 
                                 while (turnsLeft == previousTurn) {
                                     Thread.sleep(100);
-                                    if(playerHasToBet || mustDoAction) {
+                                    if(playerHasToBet || mustDoAction || isRoundOver) {
                                         break;
                                     }
                                 }
@@ -263,7 +263,7 @@ public class Player {
                                 previousTurn = turnsLeft;
                                 isMyTurn = false;
                             }
-
+                            existingAccounts.put(clientUsername, credits);
                             Thread.sleep(500);
 
                             System.out.println(Messages.CONTINUE_PLAYING);
@@ -281,6 +281,8 @@ public class Player {
                             bufferedWriter.write(decision);
                             bufferedWriter.newLine();
                             bufferedWriter.flush();
+
+
 
                             isRoundOver = false;
                             isMyTurn = false;
