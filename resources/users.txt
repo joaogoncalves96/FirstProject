@@ -35,6 +35,7 @@ guyman::10000.0
 rodri::10000.0
 DudeManboy::10000.0
 manuel::10000.0
+lol::10000.0
 David_Millasseau::10000.0
 guy::10000.0
 PokerDude::10000.0

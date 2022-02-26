@@ -7,12 +7,9 @@
     </artifacts-to-build>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5758b74b-1b07-478a-8926-8d348cfc6100" name="Changes" comment="fixed some all in and fold issues, added comments">
+    <list default="true" id="5758b74b-1b07-478a-8926-8d348cfc6100" name="Changes" comment="all in and fold perfected">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/users.txt" beforeDir="false" afterPath="$PROJECT_DIR$/resources/users.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/academy/mindswap/Client/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/Client/Player.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/academy/mindswap/Server/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/Server/Game.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/academy/mindswap/Server/deck/HandAnalyzer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/Server/deck/HandAnalyzer.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -32,7 +29,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="bug-fixing" />
+        <entry key="$PROJECT_DIR$" value="main" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -428,7 +425,14 @@
       <option name="project" value="LOCAL" />
       <updated>1645884707794</updated>
     </task>
-    <option name="localTasksCounter" value="43" />
+    <task id="LOCAL-00043" summary="all in and fold perfected">
+      <created>1645888391427</created>
+      <option name="number" value="00043" />
+      <option name="presentableId" value="LOCAL-00043" />
+      <option name="project" value="LOCAL" />
+      <updated>1645888391427</updated>
+    </task>
+    <option name="localTasksCounter" value="44" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
@@ -481,7 +485,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="player can join now mid round and keep playing" />
     <MESSAGE value="fixed some issues" />
     <MESSAGE value="added commands : added broadcast message" />
     <MESSAGE value="upgrading table card printer" />
@@ -506,6 +509,7 @@
     <MESSAGE value="fixed a ton of stuff" />
     <MESSAGE value="fixed valid credits" />
     <MESSAGE value="fixed some all in and fold issues, added comments" />
-    <option name="LAST_COMMIT_MESSAGE" value="fixed some all in and fold issues, added comments" />
+    <MESSAGE value="all in and fold perfected" />
+    <option name="LAST_COMMIT_MESSAGE" value="all in and fold perfected" />
   </component>
 </project>
