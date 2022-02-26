@@ -8,10 +8,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5758b74b-1b07-478a-8926-8d348cfc6100" name="Changes" comment="fixed a ton of stuff">
-      <change afterPath="$PROJECT_DIR$/resources/intro" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/academy/mindswap/Client/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/Client/Player.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/academy/mindswap/Server/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/Server/Game.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/academy/mindswap/Server/deck/HandTester.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/Server/deck/HandTester.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/academy/mindswap/utils/Messages.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/utils/Messages.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -73,7 +73,7 @@
       <recent name="academy.mindswap.Client" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.HandTester">
+  <component name="RunManager" selected="Application.Launch Player 2 client">
     <configuration name="HandTester" type="Application" factoryName="Application">
       <option name="MAIN_CLASS_NAME" value="academy.mindswap.Server.deck.HandTester" />
       <module name="FirstProject" />
@@ -406,7 +406,14 @@
       <option name="project" value="LOCAL" />
       <updated>1645810891937</updated>
     </task>
-    <option name="localTasksCounter" value="40" />
+    <task id="LOCAL-00040" summary="fixed a ton of stuff">
+      <created>1645812984175</created>
+      <option name="number" value="00040" />
+      <option name="presentableId" value="LOCAL-00040" />
+      <option name="project" value="LOCAL" />
+      <updated>1645812984175</updated>
+    </task>
+    <option name="localTasksCounter" value="41" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">

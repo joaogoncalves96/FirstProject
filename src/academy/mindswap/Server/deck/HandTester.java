@@ -44,11 +44,11 @@ public class HandTester {
             Scanner scanner = new Scanner(file);
             while(scanner.hasNext()){
                 sb
-                        .append(ColorCodes.BLACK_BACKGROUND_BRIGHT)
-                        .append(ColorCodes.WHITE_BOLD_BRIGHT)
+//                        .append(ColorCodes.BLACK_BACKGROUND_BRIGHT)
+//                        .append(ColorCodes.WHITE_BOLD_BRIGHT)
                         .append(scanner.nextLine())
-                        .append("\n")
-                        .append(ColorCodes.RESET);
+                        .append("\n");
+//                        .append(ColorCodes.RESET);
 
                 try {
                     Thread.sleep(10);
@@ -69,19 +69,22 @@ public class HandTester {
         String CYAN = "\033[1;96m";  // CYAN
         String WHITE = "\033[1;97m"; // WHITE
 
-        String[] colorsArray = {BLACK, RED, GREEN, YELLOW, BLUE, PURPLE, CYAN, WHITE};
+        String[] colorsArray = {BLACK, RED, GREEN, WHITE};
 
 //        System.out.println(sb.toString());
 
+        new Thread();
+
         String[] introLines = sb.toString().split("\n");
         int counter = 0;
-        long animationSpeed = 15;
+        long animationSpeed = 1;
         while(true) {
             for(String s : introLines) {
                 for (String s1 : s.split("")) {
-                    System.out.print(colorsArray[(int) (Math.random() * colorsArray.length)] + s1);
+                    System.out.print(colorsArray[(int) (Math.random() * colorsArray.length)] + s1 + ColorCodes.RESET);
                     Thread.sleep(animationSpeed);
                 }
+                System.out.println();
             }
         }
 

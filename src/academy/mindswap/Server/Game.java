@@ -653,7 +653,6 @@ public class Game {
             this.mustDoAction = false;
         }
 
-
         private int analyzePlayerHand() {
             System.out.println("I got in analyze");
             return HandAnalyzer.analyzeHand(this.playerCards, tableCards);
@@ -746,6 +745,17 @@ public class Game {
             sendMessage(Messages.INSERT_BET);
 
             double value = Double.parseDouble(in.nextLine());
+//            if(value > credits) {
+//                System.out.println(Messages.NOT_ENOUGH_CREDITS);
+//                askForBet();
+//                return;
+//            }
+//
+//            if(value <= 0) {
+//                System.out.println(Messages.VALID_CREDITS);
+//                askForBet();
+//                return;
+//            }
             lastBet = value;
             playerLastBet = value;
             bet += value;

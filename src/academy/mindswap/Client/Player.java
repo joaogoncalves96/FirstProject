@@ -320,11 +320,14 @@ public class Player {
         }
 
         if(checkIfStringIsValidDouble(bet)) {
-            System.out.println(Messages.MATCH_BET);
             return false;
         }
 
-        Thread.sleep(100);
+        if(Double.parseDouble(bet) < 0 || Double.parseDouble(bet) > credits) {
+            return false;
+        }
+
+        Thread.sleep(10);
 
         return !(Double.parseDouble(bet) < betToMatch);
     }
