@@ -232,6 +232,7 @@ public class Player {
                                     String bet;
                                     while(!isValidBet(bet = input.nextLine())) {
                                         if(isValidBet(bet)) {
+                                            credits -= Double.parseDouble(bet);
                                             break;
                                         }
                                         System.out.println("INVALID BET");

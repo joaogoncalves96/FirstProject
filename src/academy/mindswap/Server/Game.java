@@ -227,6 +227,7 @@ public class Game {
 
                     int counter = 0;
 
+                    // This while locks players that connect during a round
                     while(isGameUnderWay()) {
                         if(counter == 0) {
                             sendMessage(Messages.WAITING_FOR_ROUND);
@@ -234,6 +235,7 @@ public class Game {
                         }
                     }
 
+                    //Add player to list
                     if(index == -1) {
                         synchronized (playerHands) {
                             addPlayer(this);
@@ -242,6 +244,7 @@ public class Game {
                         }
                     }
 
+                    // Only starts round if there's enough players connected
                     while (currentPlayersConnected() <= 1) {
                         if(counter == 0){
                             System.out.println(Messages.WAITING_FOR_PLAYERS);
@@ -271,6 +274,8 @@ public class Game {
 
                     playerHandCount += 2;
 
+
+                    //Only one player performs the method to deal the cards to the table.
                     if(playersHaveCards()) {
                         synchronized (tableCards){
                             if(tableCards.isEmpty()) {
@@ -294,11 +299,10 @@ public class Game {
 
                         String playerChoice = null;
 
+                        // Traps players waiting for their turn.
                         while(!canIdoMyTurn()) {
                             if(counter == 0) {
                                 sendMessage(whichPlayerIsDeciding() + Messages.CURRENT_PLAYER_DECIDING);
-                                System.out.println("username = " + username);
-                                System.out.println("TURN_DECIDER = " + TURN_DECIDER);
                                 counter++;
                             }
                             Thread.sleep(10);
@@ -306,6 +310,7 @@ public class Game {
 
                         Thread.sleep(10);
 
+                        // Breaks loop if the player has folded, or if other players folded
                         if(haveAllOtherPlayersFolded() || hasPlayerFolded) {
                             sendMessage(Messages.ALL_PLAYERS_FOLDED);
                             break;
@@ -313,16 +318,21 @@ public class Game {
 
                         Thread.sleep(100);
 
+
+                        //Prevents All in players from making turns
                         if(!hasAllIn) {
                             sendMessage(Messages.PLAYER_TURN);
                             Thread.sleep(100);
                             sendMessage(Messages.PLAYER_CALL);
                         }
 
+                        // Send a message saying that the player is all in
                         if(hasAllIn) {
                             sendMessage(Messages.ALL_IN);
                         }
 
+
+                        // Verification to ask the user for input and checking whether he matched the bet.
                         if(!hasPlayerFolded && !hasAllIn) {
                             if(!hasPlayerMatchedBet()) {
                                 sendMessage(Messages.PLAYER_HAS_TO_BET);
@@ -332,11 +342,10 @@ public class Game {
                             playerChoice = getUserInput();
                             mustDoAction = true;
                         }
-//                        System.out.println(ColorCodes.BLUE_BOLD_BRIGHT + "GOT HERE" + username + ColorCodes.RESET);
-//                        System.out.println(ColorCodes.BLUE_BOLD_BRIGHT + "DECISION: " + gameDecisionsVerification[index] + ColorCodes.RESET);
+
+                        // Traps player until he does a valid action that keeps the game going
                         while(!gameDecisionsVerification[index]) {
                             if(playerChoice != null) {
-//                                System.out.println(ColorCodes.YELLOW_BOLD_BRIGHT + "GOT HERE" + username + ColorCodes.RESET);
                                 dealWithCommand(playerChoice);
 
                                 if(mustDoAction) {
@@ -348,17 +357,19 @@ public class Game {
                             gameDecisionsVerification[index] = true;
                         }
 
-
+                        // Making sure player matches bet
                         if(!hasPlayerMatchedBet()) {
                             gameDecisionsVerification[index] = false;
                             continue;
                         }
 
+                        // Making sure the player stays in all in.
                         if(hasAllIn) {
                             System.out.println(username + " is all in.");
                             gameDecisionsVerification[index] = true;
                         }
 
+                        // Folded players still use TURN_DECIDER and then leave the loop
                         if(hasPlayerFolded) {
                             decideTurn();
                             break;
@@ -368,6 +379,7 @@ public class Game {
 
                         counter = 0;
 
+                        // Traps players waiting for other to make decision
                         while(!checkIfPlayersMadeDecision() || !otherPlayersMatchedBet()) {
 
                             if(counter == 0) {
@@ -376,7 +388,7 @@ public class Game {
                                 counter++;
                             }
 
-                            if(!hasPlayerMatchedBet()) {
+                            if(!hasPlayerMatchedBet() || haveAllOtherPlayersFolded()) {
                                 Thread.sleep(150);
                                 break;
                             }
@@ -386,6 +398,11 @@ public class Game {
                             continue;
                         }
 
+                        if(haveAllOtherPlayersFolded()) {
+                            break;
+                        }
+
+                        // Sends the cards to the players
                         if(TURNS_LEFT >= 0) {
                             sendMessage("Cards in table: \n" +
                                     printCards(tableCards.stream().toList().subList(0,tableCards.size() - TURNS_LEFT)));
@@ -401,12 +418,9 @@ public class Game {
 
                         sendMessage(Messages.NEXT);
 
-                        if(!hasPlayerFolded) {
-                            pot += bet;
-                        }
-
                         Thread.sleep(500);
 
+                        // Iterates to next turn
                         if(!(TURN_DECIDER == index)) {
                             Thread.sleep(100);
                             this.playerLastBet = 0;
@@ -424,6 +438,7 @@ public class Game {
 
                     int points = 0;
 
+                    // Only count points if player hasn't folded
                     if(!hasPlayerFolded) {
                         points = analyzePlayerHand();
                         Thread.sleep((long) (Math.random() * 100));
@@ -440,6 +455,7 @@ public class Game {
 
                     counter = 0;
 
+                    // Traps players who have seen hands until others do
                     while (!havePlayersSeenHands()) {
                         if(counter == 0) {
                             sendMessage(Messages.WAITING_TO_SEE_HAND);
@@ -447,6 +463,8 @@ public class Game {
                         }
                     }
 
+
+                    // Sending message to winners and losers
                     if(getWinningPlayerIndex() == index) {
 
                         System.out.println(username + " won!");
@@ -466,6 +484,8 @@ public class Game {
 
                     String playerDecision = null;
 
+
+                    // Check if players wants to stay in the game
                     if(in.hasNextLine()) {
                         playerDecision = in.nextLine();
                     }
@@ -492,6 +512,8 @@ public class Game {
                         }
                     }
 
+
+                    // Reset variables to initiate new game
                     if(TURN_DECIDER == index) {
                         startNewRound();
                         restartTable();
@@ -646,6 +668,7 @@ public class Game {
         public void wentAllIn() {
             playerLastBet = credits;
             setLastBet(playerLastBet);
+            pot += playerLastBet;
             this.hasAllIn = true;
         }
 

@@ -8,6 +8,7 @@ public class AllinHandler implements CommandHandler {
     public void execute(Game game, Game.PlayerHandler playerHandler) {
         playerHandler.bet(playerHandler.getCredits());
         playerHandler.wentAllIn();
+        playerHandler.doAction();
 
         game.broadCastMessage(playerHandler.getUsername() +
                 Messages.ALL_IN +

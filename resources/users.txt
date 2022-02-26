@@ -20,6 +20,7 @@ Guy::10000.0
 GUY::10000.0
 manel::60000.0
 MyDudeBoy::10000.0
+omega::10000.0
 superguy::10000.0
 Luis::10000.0
 Man::10000.0
@@ -29,9 +30,11 @@ helloooo::10000.0
 OmegaDude::10000.0
 Megadude::10000.0
 dudeeeeee::10000.0
+mega::10000.0
 guyman::10000.0
 rodri::10000.0
 DudeManboy::10000.0
+manuel::10000.0
 David_Millasseau::10000.0
 guy::10000.0
 PokerDude::10000.0
