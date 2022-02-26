@@ -7,6 +7,11 @@
     </artifacts-to-build>
   </component>
   <component name="ChangeListManager">
+
+    <list default="true" id="5758b74b-1b07-478a-8926-8d348cfc6100" name="Changes" comment="all in and fold perfected">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/users.txt" beforeDir="false" afterPath="$PROJECT_DIR$/resources/users.txt" afterDir="false" />
+
     <list default="true" id="5758b74b-1b07-478a-8926-8d348cfc6100" name="Changes" comment="updating hand analyzer">
 
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
@@ -66,8 +71,12 @@
     <property name="project.structure.last.edited" value="Artifacts" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.20229885" />
+    <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
   </component>
   <component name="RecentsManager">
+    <key name="CreateClassDialog.RecentsKey">
+      <recent name="academy.mindswap.commands" />
+    </key>
     <key name="CopyClassDialog.RECENTS_KEY">
       <recent name="academy.mindswap.Client" />
     </key>
@@ -335,8 +344,117 @@
       <option name="project" value="LOCAL" />
       <updated>1645711989667</updated>
     </task>
-    <option name="localTasksCounter" value="30" />
+    <task id="LOCAL-00030" summary="added username checker">
+      <created>1645781350172</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1645781350172</updated>
+    </task>
+    <task id="LOCAL-00031" summary="some fixes">
+      <created>1645782944170</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1645782944170</updated>
+    </task>
+    <task id="LOCAL-00032" summary="added fold mechanic needs crash fixing">
+      <created>1645785503272</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1645785503272</updated>
+    </task>
+    <task id="LOCAL-00033" summary="fixed stupid fucking bug with +1">
+      <created>1645790111106</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1645790111106</updated>
+    </task>
+    <task id="LOCAL-00034" summary="added call added table fee, needs all in fix">
+      <created>1645793565811</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1645793565811</updated>
+    </task>
+    <task id="LOCAL-00035" summary="added call check and bet matching needs some bug-fixing">
+      <created>1645802085587</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1645802085587</updated>
+    </task>
+    <task id="LOCAL-00036" summary="cleaned code, bug fixing, improved UI">
+      <created>1645803875038</created>
+      <option name="number" value="00036" />
+      <option name="presentableId" value="LOCAL-00036" />
+      <option name="project" value="LOCAL" />
+      <updated>1645803875038</updated>
+    </task>
+    <task id="LOCAL-00037" summary="added help and raise, needs player fixing">
+      <created>1645805840805</created>
+      <option name="number" value="00037" />
+      <option name="presentableId" value="LOCAL-00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1645805840805</updated>
+    </task>
+    <task id="LOCAL-00038" summary="fixed some synching problems">
+      <created>1645809708026</created>
+      <option name="number" value="00038" />
+      <option name="presentableId" value="LOCAL-00038" />
+      <option name="project" value="LOCAL" />
+      <updated>1645809708026</updated>
+    </task>
+    <task id="LOCAL-00039" summary="fixed a ton of stuff">
+      <created>1645810891937</created>
+      <option name="number" value="00039" />
+      <option name="presentableId" value="LOCAL-00039" />
+      <option name="project" value="LOCAL" />
+      <updated>1645810891937</updated>
+    </task>
+    <task id="LOCAL-00040" summary="fixed a ton of stuff">
+      <created>1645812984175</created>
+      <option name="number" value="00040" />
+      <option name="presentableId" value="LOCAL-00040" />
+      <option name="project" value="LOCAL" />
+      <updated>1645812984175</updated>
+    </task>
+    <task id="LOCAL-00041" summary="fixed valid credits">
+      <created>1645883449247</created>
+      <option name="number" value="00041" />
+      <option name="presentableId" value="LOCAL-00041" />
+      <option name="project" value="LOCAL" />
+      <updated>1645883449247</updated>
+    </task>
+    <task id="LOCAL-00042" summary="fixed some all in and fold issues, added comments">
+      <created>1645884707794</created>
+      <option name="number" value="00042" />
+      <option name="presentableId" value="LOCAL-00042" />
+      <option name="project" value="LOCAL" />
+      <updated>1645884707794</updated>
+    </task>
+    <task id="LOCAL-00043" summary="all in and fold perfected">
+      <created>1645888391427</created>
+      <option name="number" value="00043" />
+      <option name="presentableId" value="LOCAL-00043" />
+      <option name="project" value="LOCAL" />
+      <updated>1645888391427</updated>
+    </task>
+    <option name="localTasksCounter" value="44" />
     <servers />
+  </component>
+  <component name="Vcs.Log.History.Properties">
+    <option name="COLUMN_ID_ORDER">
+      <list>
+        <option value="Default.Root" />
+        <option value="Default.Author" />
+        <option value="Default.Date" />
+        <option value="Default.Subject" />
+        <option value="Space.CommitStatus" />
+      </list>
+    </option>
   </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
@@ -349,7 +467,7 @@
                   <entry key="branch">
                     <value>
                       <list>
-                        <option value="origin/main" />
+                        <option value="final-fixes" />
                       </list>
                     </value>
                   </entry>
@@ -377,19 +495,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="added synchronized verificator" />
-    <MESSAGE value="added connection handler for client, fixed deal cards to players" />
-    <MESSAGE value="fixed table cards, fixed player thread, added player handler" />
-    <MESSAGE value="added bet command, added check for valid double string" />
-    <MESSAGE value="added hand analyzer" />
-    <MESSAGE value="upgraded analyzer, added winner checker" />
-    <MESSAGE value="added new round mechanic" />
-    <MESSAGE value="added better bet verifications and if player wants to keep playing" />
-    <MESSAGE value="repaired decisions, upgraded verifications, added credits update" />
-    <MESSAGE value="last commit before break, needs final player decision to be fixed" />
-    <MESSAGE value="created more booleans" />
-    <MESSAGE value="added scanner to playerhandler, fixed decision to keep playing" />
-    <MESSAGE value="player can join now mid round and keep playing" />
     <MESSAGE value="fixed some issues" />
     <MESSAGE value="added commands : added broadcast message" />
     <MESSAGE value="upgrading table card printer" />
@@ -402,6 +507,19 @@
     <MESSAGE value="fixed synching problems, fixed final hand display" />
     <MESSAGE value="player exit fixed" />
     <MESSAGE value="fixes exit 2" />
-    <option name="LAST_COMMIT_MESSAGE" value="fixes exit 2" />
+    <MESSAGE value="added username checker" />
+    <MESSAGE value="some fixes" />
+    <MESSAGE value="added fold mechanic needs crash fixing" />
+    <MESSAGE value="fixed stupid fucking bug with +1" />
+    <MESSAGE value="added call added table fee, needs all in fix" />
+    <MESSAGE value="added call check and bet matching needs some bug-fixing" />
+    <MESSAGE value="cleaned code, bug fixing, improved UI" />
+    <MESSAGE value="added help and raise, needs player fixing" />
+    <MESSAGE value="fixed some synching problems" />
+    <MESSAGE value="fixed a ton of stuff" />
+    <MESSAGE value="fixed valid credits" />
+    <MESSAGE value="fixed some all in and fold issues, added comments" />
+    <MESSAGE value="all in and fold perfected" />
+    <option name="LAST_COMMIT_MESSAGE" value="all in and fold perfected" />
   </component>
 </project>

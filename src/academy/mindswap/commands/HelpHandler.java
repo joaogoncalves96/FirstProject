@@ -6,13 +6,9 @@ import academy.mindswap.utils.Messages;
 
 import java.io.IOException;
 
-public class BetHandler implements CommandHandler {
+public class HelpHandler implements CommandHandler {
     @Override
     public void execute(Game game, Game.PlayerHandler playerHandler) throws PlayerDisconnectedException, IOException {
-            playerHandler.askForBet();
-            game.broadCastMessage(playerHandler.getUsername() +
-                    Messages.BET +
-                    playerHandler.getPlayerLastBet() +
-                    Messages.CREDITS);
+        playerHandler.sendMessage(Messages.HELP);
     }
 }

@@ -11,8 +11,8 @@ import java.util.Objects;
 
 public class Card {
 
-    private CardRank cardRank;
-    private CardSuit cardSuit;
+    private final CardRank cardRank;
+    private final CardSuit cardSuit;
 
 
     public Card(CardRank cardRank,CardSuit cardSuit) {

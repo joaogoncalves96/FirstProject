@@ -9,9 +9,9 @@ import java.util.Set;
 public class Deck {
 
     private final int DECK_MAX_SIZE = 52;
-    private Set<Card> deck;
-    private CardRank[] cardRank = CardRank.values();
-    private CardSuit[] cardSuit = CardSuit.values();
+    private final Set<Card> deck;
+    private final CardRank[] cardRank = CardRank.values();
+    private final CardSuit[] cardSuit = CardSuit.values();
 
     public Deck(Set<Card> deck) {
         this.deck = Collections.synchronizedSet(deck);
