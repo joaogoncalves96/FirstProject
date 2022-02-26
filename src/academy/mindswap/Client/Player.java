@@ -1,6 +1,8 @@
 package academy.mindswap.Client;
+
 import academy.mindswap.commands.Command;
 import academy.mindswap.utils.ColorCodes;
+
 import academy.mindswap.utils.Messages;
 
 import java.io.*;
@@ -8,6 +10,7 @@ import java.net.Socket;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -32,6 +35,7 @@ public class Player {
     private double betToMatch;
     private boolean playerHasToBet;
     private boolean mustDoAction;
+
 
     public Player() {
         try {
@@ -128,6 +132,7 @@ public class Player {
 
             System.out.println(serverMessage);
 
+
             if(serverMessage.startsWith("You lost")) {
 
                 serverMessage = serverMessage.replace(Messages.LOSER,"")
@@ -157,6 +162,39 @@ public class Player {
         System.out.println(ColorCodes.RED_BOLD_BRIGHT + "Server disconnected" + ColorCodes.RESET);
         socket.close();
     }
+
+    public boolean checkIfStringIsValidDouble(String doubleString) {
+        Pattern regex = Pattern.compile("[^0-9]");
+        return regex.matcher(doubleString).find();
+    }
+
+    private void readDatabase() {
+        try {
+            List<String> listOfUsers = Files.readAllLines(Paths.get("resources/users.txt"));
+            existingAccounts = new HashMap<>();
+            listOfUsers.forEach(s -> existingAccounts.put(s.split("::")[0], Double.parseDouble(s.split("::")[1])));
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void updateDatabase(){
+
+            StringBuilder userString = new StringBuilder();
+            existingAccounts
+                    .forEach((k,v) -> userString.append(k).append("::").append(v).append("\n"));
+        try {
+            FileWriter writer = new FileWriter("resources/users.txt");
+            writer.write(userString.toString());
+            writer.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
 
     class ConnectionHandler implements Runnable {
 
@@ -189,6 +227,7 @@ public class Player {
                         turnsLeft = 2;
                         previousTurn = 2;
                         isMyTurn = false;
+
 
 
                         while(!socket.isClosed()) {
@@ -265,7 +304,6 @@ public class Player {
                             }
                             existingAccounts.put(clientUsername, credits);
                             Thread.sleep(500);
-
                             System.out.println(Messages.CONTINUE_PLAYING);
                             String decision = input.nextLine();
 
@@ -285,7 +323,9 @@ public class Player {
 
 
                             isRoundOver = false;
+
                             isMyTurn = false;
+
                             turnsLeft = 2;
 
                         }
@@ -339,6 +379,7 @@ public class Player {
 
         readDatabase();
 
+
         this.input = new Scanner(System.in);
         System.out.println(Messages.ENTER_USERNAME);
         String enteredUsername = input.nextLine();
@@ -348,6 +389,7 @@ public class Player {
             askForUserNameAndCredits();
             return;
         }
+
 
         if (existingAccounts.containsKey(enteredUsername)) {
             this.clientUsername = enteredUsername;
