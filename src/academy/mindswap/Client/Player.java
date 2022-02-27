@@ -43,12 +43,20 @@ public class Player {
             askForUserNameAndCredits();
 
         } catch (IOException e) {
-            System.out.println("Couldn't connect.");
-            closeAll();
+
         }
     }
 
     public void connectToServer () throws IOException{
+
+        while (socket == null) {
+            try {
+                Thread.sleep(3000);
+                System.out.print(Messages.CANT_CONNECT);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
 
         Scanner in = new Scanner(socket.getInputStream());
         BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));

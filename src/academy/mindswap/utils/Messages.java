@@ -70,6 +70,8 @@ public class Messages {
                                       "/check : Skips turn, can only be made when there's no higher bet.\n";
 
     public static final String CURRENT_POT = "Current pot: ";
+    public static final String CANT_CONNECT = ColorCodes.RED_BOLD_BRIGHT +
+            "Server not online, trying to connect again " + ColorCodes.RESET;
 
 
 
