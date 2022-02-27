@@ -17,25 +17,21 @@ import academy.mindswap.utils.Messages;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.stream.Collectors;
 
 /**
  * Poker Game v1.01
  * Creates a server that can run poker games
- * BUGS TO FIX:
- *
- * - There's a line between lines and player commands
- * - PLayers can play with credits < 1
- *
  */
 
 public class Game {
 
     private final List<PlayerHandler> listOfPlayers;
-    private final int PORT = 8081;
-    private ExecutorService service;
     private final int userLimit;
     private Deck deck;
     private Set<Card> tableCards;
@@ -49,8 +45,6 @@ public class Game {
     private int LAST_ROUND_STARTER;
     private int TURNS_LEFT;
     private final static double TABLE_FEE = 100.00;
-
-
 
     public Game(int tableLimit) {
 
@@ -68,11 +62,12 @@ public class Game {
 
     public void startServer() throws IOException {
 
+        int PORT = 8081;
         ServerSocket serverSocket = new ServerSocket(PORT);
 
         System.out.println("Server initiated. Waiting for users.txt to connect.");
 
-        service = Executors.newCachedThreadPool();
+        ExecutorService service = Executors.newCachedThreadPool();
 
         while(listOfPlayers.size() < userLimit) {
             service.submit(new PlayerHandler(serverSocket.accept()));
@@ -162,7 +157,6 @@ public class Game {
         for (int i = 0; i < playerHands.size(); i++) {
             playerHands.set(i,0);
         }
-
     }
 
     public void setLastBet(double bet) {
@@ -278,6 +272,8 @@ public class Game {
 
                     counter = 0;
 
+//                    printIntro();
+
                     sendMessage(Messages.STARTING_ROUND);
 
                     Thread.sleep((long) (1000 * Math.random()));
@@ -292,13 +288,13 @@ public class Game {
 
                     sendMessage(Messages.TAX_PAY);
 
-
                     givePlayerCards();
+
+                    int playersInRound = listOfPlayers.size();
 
                     playerHandCount += 2;
 
                     //Only one player performs the method to deal the cards to the table.
-
                     if(playersHaveCards()) {
                         synchronized (tableCards){
                             if(tableCards.isEmpty()) {
@@ -323,13 +319,11 @@ public class Game {
                         String playerChoice = null;
 
                         // Traps players waiting for their turn.
-
                         while(!canIdoMyTurn()) {
                             if(counter == 0) {
                                 sendMessage(whichPlayerIsDeciding() + Messages.CURRENT_PLAYER_DECIDING);
                                 counter++;
                             }
-
                             Thread.sleep(10);
                         }
 
@@ -343,19 +337,12 @@ public class Game {
 
                         Thread.sleep(100);
 
-
                         //Prevents All in players from making turns
                         if(!hasAllIn) {
                             sendMessage(Messages.PLAYER_TURN);
                             Thread.sleep(100);
                             sendMessage(Messages.PLAYER_CALL);
                         }
-
-                        // Send a message saying that the player is all in
-                        if(hasAllIn) {
-                            sendMessage(Messages.ALL_IN);
-                        }
-
 
                         // Verification to ask the user for input and checking whether he matched the bet.
                         if(!hasPlayerFolded && !hasAllIn) {
@@ -371,6 +358,9 @@ public class Game {
                         // Traps player until he does a valid action that keeps the game going
                         while(!gameDecisionsVerification[index]) {
                             if(playerChoice != null) {
+                                if(credits == 0.0) {
+                                    playerChoice = Command.CHECK.getDescription();
+                                }
                                 dealWithCommand(playerChoice);
 
                                 if(mustDoAction) {
@@ -541,6 +531,9 @@ public class Game {
                             sendMessage(Messages.WAITING_FOR_NEXT_ROUND);
                             counter++;
                         }
+                        if(playersInRound != listOfPlayers.size()) {
+                            break;
+                        }
                     }
 
 
@@ -560,9 +553,7 @@ public class Game {
             } catch (PlayerDisconnectedException e) {
                 System.out.println("ERROR DISCONNECTED!");
                 e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (InterruptedException e) {
+            } catch (IOException | InterruptedException e) {
                 e.printStackTrace();
             } finally {
                 try {
@@ -580,7 +571,29 @@ public class Game {
                 }
             }
         }
-
+//        private void printIntro() {
+//
+//            try {
+//                List<String> divide = Files.readAllLines(Paths.get("./resources/intro"));
+//
+//               String intro = String.join("\n", divide);
+//
+//              String intro1 = ColorCodes.RED_BOLD_BRIGHT + intro + ColorCodes.RESET;
+//              String intro2 = ColorCodes.BLUE_BOLD_BRIGHT + intro + ColorCodes.RESET;
+//
+//               while (true)
+//
+//               sendMessage(intro);
+//
+//
+//
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            } catch (PlayerDisconnectedException e) {
+//                e.printStackTrace();
+//            }
+//
+//        }
         public synchronized void givePlayerCards() {
 
             CardRank[] cardRank = CardRank.values();
@@ -698,7 +711,10 @@ public class Game {
 
         public void wentAllIn() {
             playerLastBet = credits;
+            bet += playerLastBet;
             setLastBet(playerLastBet);
+            pot += playerLastBet;
+            this.credits = 0.0;
             this.hasAllIn = true;
         }
 
@@ -749,7 +765,6 @@ public class Game {
             return trues == playerHands.size();
         }
 
-
         public void sendMessage(String message) throws IOException, PlayerDisconnectedException {
 
 
@@ -785,12 +800,12 @@ public class Game {
             this.playerLastBet = bet;
             this.bet += bet;
             pot += bet;
+            this.credits -= bet;
         }
 
         public double getCredits() {
             return credits;
         }
-
 
         private String whichPlayerIsDeciding() {
             return listOfPlayers.get(TURN_DECIDER).getUsername();
@@ -832,6 +847,7 @@ public class Game {
             String black = ColorCodes.BLACK_BOLD;
             String red = ColorCodes.RED_BOLD_BRIGHT;
             String reset = ColorCodes.RESET;
+
             while(currentPlayersConnected() <= 1) {
 
                 Thread.sleep(animationSpeed);
@@ -871,6 +887,7 @@ public class Game {
             playerLastBet = 0;
             playerCards = new ArrayList<>(2);
             hasPlayerFolded = false;
+            mustDoAction = true;
 
         }
 

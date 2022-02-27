@@ -10,8 +10,6 @@
 
 package academy.mindswap.Server.deck;
 
-import academy.mindswap.utils.ColorCodes;
-
 import java.util.Objects;
 
 /**Card
@@ -45,8 +43,7 @@ public class Card {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Card)) return false;
-        Card card = (Card) o;
+        if (!(o instanceof Card card)) return false;
         return getCardSuit() == card.getCardSuit() && getCardRank() == card.getCardRank();
     }
 

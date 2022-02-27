@@ -19,7 +19,6 @@ import java.net.Socket;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -37,7 +36,6 @@ public class Player {
     private volatile boolean hasRoundStarted;
     private HashMap<String,Double> existingAccounts;
     private int turnsLeft;
-    private int previousTurn;
     private boolean isMyTurn;
     private double betToMatch;
     private boolean playerHasToBet;
@@ -50,15 +48,11 @@ public class Player {
      */
 
     public Player() {
-
-
         try {
             askForUserNameAndCredits();
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
     }
 
     /**
@@ -75,7 +69,6 @@ public class Player {
         while(!socket.isClosed()) {
             readServerMessage(in);
         }
-
     }
     /**
      * It serves to validate the double
@@ -253,13 +246,15 @@ public class Player {
                         bufferedWriter.flush();
 
                         turnsLeft = 2;
-                        previousTurn = 2;
+                        int previousTurn = 2;
                         isMyTurn = false;
+
 
                         /**
                          *If the player writes a command while a game is in progress,
                          *they will not be allowed to play that round
                          */
+
 
                         while(!socket.isClosed()) {
 
@@ -344,7 +339,6 @@ public class Player {
 
                                 while (turnsLeft == previousTurn) {
                                     Thread.sleep(100);
-//                                    System.out.println("stucj" );
                                     if(playerHasToBet || mustDoAction || isRoundOver) {
                                         break;
                                     }
@@ -357,6 +351,8 @@ public class Player {
                                 previousTurn = turnsLeft;
                                 isMyTurn = false;
                             }
+
+                            Thread.sleep(1000);
 
                             System.out.println(Messages.CONTINUE_PLAYING);
                             String decision = input.nextLine();
@@ -501,12 +497,13 @@ public class Player {
 
     private boolean checkForValidCommand(String command) {
 
-        return  command.equalsIgnoreCase("/call") ||
-                command.equalsIgnoreCase("/bet") ||
-                command.equalsIgnoreCase("/fold") ||
-                command.equalsIgnoreCase("/check") ||
-                command.equalsIgnoreCase("/help") ||
-                command.equalsIgnoreCase("/raise") ||
-                command.equalsIgnoreCase("/allin");
+        return  command.equals("/call") ||
+                command.equals("/bet") ||
+                command.equals("/fold") ||
+                command.equals("/check") ||
+                command.equals("/help") ||
+                command.equals("/raise") ||
+                command.equals("/wallet") ||
+                command.equals("/allin");
     }
 }

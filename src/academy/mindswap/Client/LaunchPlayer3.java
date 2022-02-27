@@ -9,6 +9,8 @@
 
 package academy.mindswap.Client;
 
+import academy.mindswap.utils.Messages;
+
 import java.io.IOException;
 
 public class LaunchPlayer3 {
@@ -25,7 +27,8 @@ public class LaunchPlayer3 {
         try {
             player3.connectToServer("localhost",8081);
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println(Messages.CANT_CONNECT);
+            System.exit(1);
         }
     }
 }
