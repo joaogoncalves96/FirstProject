@@ -4,12 +4,14 @@ Tiago::10000.0
 rui::10000.0
 ewrwe::10000.0
 Manel::10000.0
+Mota::11750.0
 Jorge::10000.0
 dudeman::10000.0
 BoyDude::10000.0
 jORGE::10000.0
 HolyMan::10000.0
 weffwe::10000.0
+few::10000.0
 Duders::10000.0
 hey::10000.0
 OmegaBlaster::10000.0
@@ -22,6 +24,7 @@ manel::60000.0
 MyDudeBoy::10000.0
 omega::10000.0
 superguy::10000.0
+Mariana::10100.0
 Luis::10000.0
 Man::10000.0
 MAN::10000.0
@@ -32,6 +35,7 @@ Megadude::10000.0
 dudeeeeee::10000.0
 mega::10000.0
 guyman::10000.0
+Ronaldo::10000.0
 rodri::10000.0
 DudeManboy::10000.0
 manuel::10000.0
@@ -59,11 +63,14 @@ mandude::10000.0
 Rui::10000.0
 RUI::10000.0
 tiago::10000.0
+Papa::8900.0
+ZZTop::9900.0
 Joao::10000.0
 milla::10000.0
 due::10000.0
 DudeMan::10000.0
 BoyMan::10000.0
 OmegaGuy::10000.0
+jogre::10000.0
 dude::10000.0
 GuyMan::10000.0

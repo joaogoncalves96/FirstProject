@@ -419,6 +419,8 @@ public class Game {
                         }
 
                         // Sends the cards to the players
+                        sendMessage(Messages.CURRENT_POT+ ColorCodes.GREEN_BOLD_BRIGHT + pot + ColorCodes.RESET + Messages.CREDITS);
+
                         if(TURNS_LEFT >= 0) {
                             sendMessage("Cards in table: \n" +
                                     printCards(tableCards.stream().toList().subList(0,tableCards.size() - TURNS_LEFT)));
@@ -494,8 +496,8 @@ public class Game {
                     } else {
 
                         System.out.println(username + " lost :(");
-                        sendMessage(Messages.LOSER + (bet + TABLE_FEE) + " credits.");
-                        this.credits -= (TABLE_FEE + bet);
+                        sendMessage(Messages.LOSER + bet + " credits.");
+                        this.credits -= bet;
 
 
                     }
@@ -688,7 +690,6 @@ public class Game {
         public void wentAllIn() {
             playerLastBet = credits;
             setLastBet(playerLastBet);
-            pot += playerLastBet;
             this.hasAllIn = true;
         }
 
@@ -697,7 +698,6 @@ public class Game {
         }
 
         private int analyzePlayerHand() {
-            System.out.println("I got in analyze");
             return HandAnalyzer.analyzeHand(this.playerCards, tableCards);
         }
 
@@ -775,6 +775,7 @@ public class Game {
         public void bet(double bet) {
             this.playerLastBet = bet;
             this.bet += bet;
+            pot += bet;
         }
 
         public double getCredits() {
@@ -795,6 +796,7 @@ public class Game {
             lastBet = value;
             playerLastBet = value;
             bet += value;
+            pot += value;
             credits -=value;
             doAction();
         }

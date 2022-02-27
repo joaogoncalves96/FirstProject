@@ -48,7 +48,7 @@ public class Player {
         }
     }
 
-    public void connectToServer ()  throws IOException {
+    public void connectToServer () throws IOException{
 
         Scanner in = new Scanner(socket.getInputStream());
         BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
@@ -205,6 +205,10 @@ public class Player {
 
                         while(!socket.isClosed()) {
 
+                            existingAccounts.put(clientUsername, credits);
+
+                            updateDatabase();
+
                             int counter = 0;
                             while (!hasRoundStarted) {
                                 if(counter == 0) {
@@ -276,8 +280,7 @@ public class Player {
                                 previousTurn = turnsLeft;
                                 isMyTurn = false;
                             }
-                            existingAccounts.put(clientUsername, credits);
-                            Thread.sleep(500);
+
                             System.out.println(Messages.CONTINUE_PLAYING);
                             String decision = input.nextLine();
 
@@ -287,15 +290,14 @@ public class Player {
                                 bufferedWriter.flush();
                                 closeAll();
                                 System.out.println(Messages.PLAYER_DISCONNECTED + clientUsername);
+                                existingAccounts.put(clientUsername, credits);
+                                updateDatabase();
                                 break;
                             }
 
                             bufferedWriter.write(decision);
                             bufferedWriter.newLine();
                             bufferedWriter.flush();
-
-
-
                             isRoundOver = false;
 
                             isMyTurn = false;

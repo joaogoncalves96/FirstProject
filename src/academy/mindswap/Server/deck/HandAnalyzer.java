@@ -12,6 +12,15 @@ import java.util.*;
 public class HandAnalyzer {
 
 
+    /**This method takes in players cards and the table cards and returns a numerical value associated with how good
+     * the hand is
+     *
+     * @param playerHand A list of cards provided by the player
+     * @param tableCards A set of cards in the table currently
+     * @return Returns the total points the player has with his hand + table's cards.
+     */
+
+
     public static int analyzeHand(ArrayList<Card> playerHand, Collection<Card> tableCards) {
 
         int points = 0;
@@ -109,6 +118,15 @@ public class HandAnalyzer {
         }
         return highestCard;
     }
+
+    /**
+     * This method makes an array list of cards based on the best hand possible that the player has with the table
+     * cards
+     * @param points The points that the player hand has
+     * @param playerHand List of player hand cards
+     * @param tableCards List of table cards
+     * @return Returns the player's best hand
+     */
 
     public static ArrayList<Card> makeFinalHand(int points, ArrayList<Card> playerHand, Set<Card> tableCards) {
 

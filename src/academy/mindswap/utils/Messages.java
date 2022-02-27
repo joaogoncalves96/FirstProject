@@ -69,6 +69,8 @@ public class Messages {
                                       "/allin : You bet all your current credits. No more decisions can be made.\n"+
                                       "/check : Skips turn, can only be made when there's no higher bet.\n";
 
+    public static final String CURRENT_POT = "Current pot: ";
+
 
 
 
