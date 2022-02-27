@@ -25,8 +25,6 @@ import java.util.concurrent.Executors;
 public class Game {
 
     private final List<PlayerHandler> listOfPlayers;
-    private final int PORT = 8081;
-    private ExecutorService service;
     private final int userLimit;
     private Deck deck;
     private Set<Card> tableCards;
@@ -59,11 +57,12 @@ public class Game {
 
     public void startServer() throws IOException {
 
+        int PORT = 8081;
         ServerSocket serverSocket = new ServerSocket(PORT);
 
         System.out.println("Server initiated. Waiting for users.txt to connect.");
 
-        service = Executors.newCachedThreadPool();
+        ExecutorService service = Executors.newCachedThreadPool();
 
         while(listOfPlayers.size() < userLimit) {
             service.submit(new PlayerHandler(serverSocket.accept()));
@@ -289,7 +288,6 @@ public class Game {
                     playerHandCount += 2;
 
                     //Only one player performs the method to deal the cards to the table.
-
                     if(playersHaveCards()) {
                         synchronized (tableCards){
                             if(tableCards.isEmpty()) {
@@ -314,13 +312,11 @@ public class Game {
                         String playerChoice = null;
 
                         // Traps players waiting for their turn.
-
                         while(!canIdoMyTurn()) {
                             if(counter == 0) {
                                 sendMessage(whichPlayerIsDeciding() + Messages.CURRENT_PLAYER_DECIDING);
                                 counter++;
                             }
-
                             Thread.sleep(10);
                         }
 
@@ -334,19 +330,12 @@ public class Game {
 
                         Thread.sleep(100);
 
-
                         //Prevents All in players from making turns
                         if(!hasAllIn) {
                             sendMessage(Messages.PLAYER_TURN);
                             Thread.sleep(100);
                             sendMessage(Messages.PLAYER_CALL);
                         }
-
-                        // Send a message saying that the player is all in
-                        if(hasAllIn) {
-                            sendMessage(Messages.ALL_IN);
-                        }
-
 
                         // Verification to ask the user for input and checking whether he matched the bet.
                         if(!hasPlayerFolded && !hasAllIn) {
@@ -362,6 +351,9 @@ public class Game {
                         // Traps player until he does a valid action that keeps the game going
                         while(!gameDecisionsVerification[index]) {
                             if(playerChoice != null) {
+                                if(credits == 0.0) {
+                                    playerChoice = Command.CHECK.getDescription();
+                                }
                                 dealWithCommand(playerChoice);
 
                                 if(mustDoAction) {
@@ -551,9 +543,7 @@ public class Game {
             } catch (PlayerDisconnectedException e) {
                 System.out.println("ERROR DISCONNECTED!");
                 e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (InterruptedException e) {
+            } catch (IOException | InterruptedException e) {
                 e.printStackTrace();
             } finally {
                 try {
@@ -689,7 +679,10 @@ public class Game {
 
         public void wentAllIn() {
             playerLastBet = credits;
+            bet += playerLastBet;
             setLastBet(playerLastBet);
+            pot += playerLastBet;
+            this.credits = 0.0;
             this.hasAllIn = true;
         }
 
@@ -776,6 +769,7 @@ public class Game {
             this.playerLastBet = bet;
             this.bet += bet;
             pot += bet;
+            this.credits -= bet;
         }
 
         public double getCredits() {

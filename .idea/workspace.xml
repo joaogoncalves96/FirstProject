@@ -7,10 +7,16 @@
     </artifacts-to-build>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5758b74b-1b07-478a-8926-8d348cfc6100" name="Changes" comment="created server offline exception">
+    <list default="true" id="5758b74b-1b07-478a-8926-8d348cfc6100" name="Changes" comment="final working commit">
+      <change afterPath="$PROJECT_DIR$/src/academy/mindswap/commands/WalletHandler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/users.txt" beforeDir="false" afterPath="$PROJECT_DIR$/resources/users.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/academy/mindswap/Client/Client.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/Client/Client.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/academy/mindswap/Client/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/Client/Player.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/academy/mindswap/Server/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/Server/Game.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/academy/mindswap/commands/AllinHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/commands/AllinHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/academy/mindswap/commands/Command.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/commands/Command.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/academy/mindswap/utils/Messages.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/utils/Messages.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -72,7 +78,7 @@
       <recent name="academy.mindswap.Client" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.Player Client">
+  <component name="RunManager" selected="Application.Server">
     <configuration name="HandTester" type="Application" factoryName="Application">
       <option name="MAIN_CLASS_NAME" value="academy.mindswap.Server.deck.HandTester" />
       <module name="FirstProject" />
@@ -461,7 +467,14 @@
       <option name="project" value="LOCAL" />
       <updated>1645976550239</updated>
     </task>
-    <option name="localTasksCounter" value="48" />
+    <task id="LOCAL-00048" summary="final working commit">
+      <created>1645983504924</created>
+      <option name="number" value="00048" />
+      <option name="presentableId" value="LOCAL-00048" />
+      <option name="project" value="LOCAL" />
+      <updated>1645983504924</updated>
+    </task>
+    <option name="localTasksCounter" value="49" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
@@ -514,7 +527,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="made global printer, updating hand analyzer" />
     <MESSAGE value="updating hand analyzer" />
     <MESSAGE value="upgraded hand analyzer" />
     <MESSAGE value="commiting before game changes" />
@@ -539,6 +551,7 @@
     <MESSAGE value="fixed help and added repeated usernames tags" />
     <MESSAGE value="fixed some credit stuff" />
     <MESSAGE value="created server offline exception" />
-    <option name="LAST_COMMIT_MESSAGE" value="created server offline exception" />
+    <MESSAGE value="final working commit" />
+    <option name="LAST_COMMIT_MESSAGE" value="final working commit" />
   </component>
 </project>

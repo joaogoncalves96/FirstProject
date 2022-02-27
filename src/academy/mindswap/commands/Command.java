@@ -8,7 +8,8 @@ public enum Command {
     ALLIN("/allin", new AllinHandler()),
     CHECK("/check", new CheckHandler()),
     HELP("/help", new HelpHandler()),
-    RAISE("/raise", new RaiseHandler());
+    RAISE("/raise", new RaiseHandler()),
+    WALLET("/wallet", new WalletHandler());
 
     private final String description;
     private final CommandHandler commandHandler;

@@ -25,7 +25,7 @@ public class Messages {
     public static final String CURRENT_CREDITS = "You know have %.2f credits. %n";
     public static final String WAITING_FOR_NEXT_ROUND = "Waiting for players to decide...";
     public static final String PLAYER_CALL = "What do you want to do? \nCHECK || BET || CALL || " +
-                                                "ALL-IN || FOLD || RAISE || HELP \n";
+                                                "ALL-IN || FOLD || RAISE || WALLET || HELP \n";
 
     public static final String CHECK_PLAYER = "Reading players decisions...";
     public static final String FOLDED = " has folded.\n";
