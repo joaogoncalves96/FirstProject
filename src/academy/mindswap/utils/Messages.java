@@ -60,6 +60,7 @@ public class Messages {
                                             " ".repeat(5) + "\n" +
                                             " ".repeat(5) + "\n";
     public static final String PLEASE_BET = "Please make a bet.";
+    public static final String DO_ACTION = "Make another action.";
 
     public static final String HELP = "/call : You match the current highest bet.\n" +
                                       "/bet : Bet an amount of money that must match or be higher than the current bet.\n" +

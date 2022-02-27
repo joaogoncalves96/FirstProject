@@ -9,6 +9,7 @@ import java.io.IOException;
 public class HelpHandler implements CommandHandler {
     @Override
     public void execute(Game game, Game.PlayerHandler playerHandler) throws PlayerDisconnectedException, IOException {
+        playerHandler.sendMessage(Messages.DO_ACTION);
         playerHandler.sendMessage(Messages.HELP);
     }
 }

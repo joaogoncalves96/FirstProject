@@ -97,8 +97,14 @@ public class Player {
         while (in.hasNextLine()) {
             String serverMessage = in.nextLine();
 
-            if(serverMessage.contains("can't")) {
+            if(serverMessage.contains("can't")
+                    || serverMessage.contains(Messages.DO_ACTION)) {
+
                 mustDoAction = true;
+
+                if(serverMessage.equals(Messages.DO_ACTION)) {
+                    continue;
+                }
             }
 
             if(serverMessage.contains(Messages.PLEASE_BET)) {
@@ -257,6 +263,7 @@ public class Player {
 
                                 while (turnsLeft == previousTurn) {
                                     Thread.sleep(100);
+//                                    System.out.println("stucj" );
                                     if(playerHasToBet || mustDoAction || isRoundOver) {
                                         break;
                                     }

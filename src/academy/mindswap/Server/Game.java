@@ -70,6 +70,11 @@ public class Game {
         }
     }
 
+    public boolean checkForRepeatedUsers(String username) {
+        return listOfPlayers.stream()
+                .anyMatch(playerHandler -> playerHandler.getUsername().equals(username));
+    }
+
     public double getLastBet() {
         return lastBet;
     }
@@ -216,6 +221,10 @@ public class Game {
                     // Get player username
                     if(message == null && username == null) {
                         message = in.nextLine();
+
+                        if(checkForRepeatedUsers(message)) {
+                            message = message + "(" + System.currentTimeMillis() + ")";
+                        }
                         System.out.printf("User: %s has connected.%n", message);
                         username = message;
                         message = null;
