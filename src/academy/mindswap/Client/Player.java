@@ -1,3 +1,12 @@
+/*
+ * @(#)Player.java        1.0 26/02/2022
+ *
+ * Copyright (c) MindSwap Academy - David Millasseau, Tiago Correia & João Gonçalves
+ * All rights reserved.
+ *
+ * This software was produced to become our first group project.
+ */
+
 package academy.mindswap.Client;
 
 import academy.mindswap.commands.Command;
@@ -32,6 +41,11 @@ public class Player {
     private boolean playerHasToBet;
     private boolean mustDoAction;
 
+    /**
+     * Start player on specified host and port
+     * Ask for username
+     * @throws IOException when unable to connect to server
+     */
 
     public Player() {
         try {
@@ -41,6 +55,10 @@ public class Player {
         }
     }
 
+    /**
+     *Connects the server through the same socket.
+     * While the server does not close, read the messages from the server
+     */
     public void connectToServer (String host, int port) throws IOException{
 
         socket = new Socket(host, port);
@@ -52,11 +70,20 @@ public class Player {
             readServerMessage(in);
         }
     }
-
+    /**
+     * It serves to validate the double
+     * Pattern compile only accepts from 0 to 9
+     * Find returns boolean value that shows whether a substring of the input string matches the pattern of that match
+     */
     public boolean checkIfStringIsValidDouble(String doubleString) {
         Pattern regex = Pattern.compile("[^0-9]");
         return regex.matcher(doubleString).find();
     }
+
+    /**
+     *Reads a txt file from users
+     * Divides the list of user in a String and the credits in another String
+     */
 
     private void readDatabase() {
         try {
@@ -68,6 +95,12 @@ public class Player {
             e.printStackTrace();
         }
     }
+
+    /**
+     *If someone connects to the server and does not have an account in the users txt
+     * the txt creates a new String with the username
+     * @throws IOException
+     */
 
     private void updateDatabase(){
 
@@ -85,6 +118,15 @@ public class Player {
         }
 
     }
+
+    /**
+     * Reads and interprets server messages
+     * If the message contains place a bet the player can bet
+     *If you hold back, it's your turn, it's the player's turn
+     *If the message is next, decrement the remaining turns
+     *If the message is loser, players lose credits and the round ends
+     *If the message is of congrats, it increases the player's credits
+     */
 
     private void readServerMessage(Scanner in) throws IOException {
         while (in.hasNextLine()) {
@@ -167,6 +209,12 @@ public class Player {
         private BufferedWriter bufferedWriter;
         private final Socket socket;
 
+        /**
+         * Constructor method to initialize the properties
+         * @param socket send the client's request to the server
+         * @param out serve for write.
+         * */
+
         private ConnectionHandler(Socket socket, BufferedWriter out) {
             this.socket = socket;
             this.bufferedWriter = out;
@@ -174,6 +222,13 @@ public class Player {
 
         @Override
         public void run () {
+
+            /**
+             *Here we synchronize the object
+             *If the socket is connected, continue, if not, stop.
+             * While the socket is connected the player can write
+             * Save the credits for user.
+             */
             synchronized (this) {
                 while (socket.isConnected()) {
                     try {
@@ -194,6 +249,13 @@ public class Player {
                         int previousTurn = 2;
                         isMyTurn = false;
 
+
+                        /**
+                         *If the player writes a command while a game is in progress,
+                         *they will not be allowed to play that round
+                         */
+
+
                         while(!socket.isClosed()) {
 
                             existingAccounts.put(clientUsername, credits);
@@ -208,7 +270,11 @@ public class Player {
                                 }
                             }
 
-
+                            /**
+                             * This is the game
+                             * How many turns have the game, is always the same. 1,2,3,4
+                             *
+                             */
                             input = new Scanner(System.in);
 
                             while(turnsLeft != -2) {
@@ -221,6 +287,11 @@ public class Player {
 
                                 String call = input.nextLine();
 
+                                /**
+                                 * Only put input when is your turn
+                                 * Check if command is valid
+                                 */
+
                                 if(!checkForValidCommand(call)) {
                                     if(turnsLeft == -2) break;
                                     System.out.println(Messages.VALID_COMMAND);
@@ -232,6 +303,11 @@ public class Player {
                                 bufferedWriter.write(call);
                                 bufferedWriter.newLine();
                                 bufferedWriter.flush();
+
+                                /**
+                                 * if this boolean is true, you have make another command
+                                 * If not, you complete your turn.
+                                 */
 
                                 mustDoAction = false;
 
@@ -255,6 +331,11 @@ public class Player {
                                 if(call.contains(Command.FOLD.getDescription())) {
                                     break;
                                 }
+                                /**
+                                 *If the missing turns and the turns that took place are the same
+                                 put the thread to have a time slot
+                                 *Booleans of server control, but is from player
+                                 */
 
                                 while (turnsLeft == previousTurn) {
                                     Thread.sleep(100);
@@ -275,6 +356,10 @@ public class Player {
 
                             System.out.println(Messages.CONTINUE_PLAYING);
                             String decision = input.nextLine();
+
+                            /**
+                             * After the player insert 'exit', the player socket will close and left the game
+                             */
 
                             if(decision.equalsIgnoreCase("exit")) {
                                 bufferedWriter.write(decision);
@@ -309,6 +394,11 @@ public class Player {
             }
         }
     }
+    /**
+     * Checks for a valid username with more than 3 chars
+     * If username is null returns false
+     * If true, finds the contents of the String object
+     */
 
     private boolean checkForValidUserName(String username){
         String regex = "[a-zA-Z0-9_-]{3,18}";
@@ -324,6 +414,13 @@ public class Player {
         return matcher.matches();
 
     }
+
+
+    /**
+     * to check if the bet is valid
+     * Bearing in mind that it has to be double
+     */
+
 
     private boolean isValidBet(String bet) throws InterruptedException {
         if(bet == null) {
@@ -342,6 +439,12 @@ public class Player {
 
         return !(Double.parseDouble(bet) < betToMatch);
     }
+
+    /**
+     *Ask the player the name, the username can be valid or invalid
+     * If the account exists, we obtain the name and credits of the same
+     * If this account does not exist, it creates a new one and gives the default credits (10000)
+     */
 
     private void askForUserNameAndCredits() throws IOException {
 
@@ -370,7 +473,10 @@ public class Player {
             updateDatabase();
             }
         }
-
+    /**
+     * This method we use to properly shut down socket,
+     * @throws IOException when unable to connect to server
+     */
     public void closeAll() {
 
         try {
@@ -384,6 +490,10 @@ public class Player {
             e.printStackTrace();
         }
     }
+
+    /**
+     *Confirms if the command was the chosen command, ignores CAPS
+     */
 
     private boolean checkForValidCommand(String command) {
 

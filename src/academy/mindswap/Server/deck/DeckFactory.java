@@ -1,8 +1,22 @@
+/*
+ * @(#)DeckFactory.java        1.0 26/02/2022
+ *
+ * Copyright (c) MindSwap Academy - David Millasseau, Tiago Correia & João Gonçalves
+ * All rights reserved.
+ *
+ * This software was produced to become our first group project.
+ */
+
+
 package academy.mindswap.Server.deck;
 
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+
+/**
+ * This is the factory to generate new decks of 52 different playing cards.
+ */
 
 public class DeckFactory {
 

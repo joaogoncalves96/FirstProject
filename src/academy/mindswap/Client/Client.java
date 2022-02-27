@@ -9,6 +9,7 @@ public class Client {
 
         Player player1 = new Player();
 
+
         try {
             player1.connectToServer("localhost",8081);
         } catch (IOException e) {

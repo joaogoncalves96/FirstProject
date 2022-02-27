@@ -1,3 +1,13 @@
+/*
+ * @(#)HandTester.java        1.0 26/02/2022
+ *
+ * Copyright (c) MindSwap Academy - David Millasseau, Tiago Correia & João Gonçalves
+ * All rights reserved.
+ *
+ * This software was produced to become our first group project.
+ */
+
+
 package academy.mindswap.Server.deck;
 
 import academy.mindswap.utils.ColorCodes;
@@ -13,7 +23,12 @@ import java.util.concurrent.ExecutorService;
 
 public class HandTester {
 
-    public static void main(String[] args) throws InterruptedException, IOException {
+
+    /**
+     * This class was made for testing hands manually
+     */
+
+    public static void main(String[] args) throws InterruptedException {
 
 //        ArrayList<Card> playerHand = new ArrayList<>(2);
 //        Set<Card> tableCards = new HashSet<>(2);
