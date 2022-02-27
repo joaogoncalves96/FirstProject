@@ -14,6 +14,10 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * This is the factory to generate new decks of 52 different playing cards.
+ */
+
 public class DeckFactory {
 
     public static Deck createFullDeck() {

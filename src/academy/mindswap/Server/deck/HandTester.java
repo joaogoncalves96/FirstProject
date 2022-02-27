@@ -19,6 +19,10 @@ import java.util.*;
 
 public class HandTester {
 
+    /**
+     * This class was made for testing hands manually
+     */
+
     public static void main(String[] args) throws InterruptedException {
 
 //        ArrayList<Card> playerHand = new ArrayList<>(2);

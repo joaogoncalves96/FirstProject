@@ -12,6 +12,10 @@ package academy.mindswap.Server.deck;
 
 import academy.mindswap.utils.ColorCodes;
 
+/**
+ * This is a property of class card
+ */
+
 public enum CardSuit {
     SPADES( "♠", "Spades"),
     CLUBS( "♣", "Clubs"),
