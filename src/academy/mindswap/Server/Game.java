@@ -18,11 +18,6 @@ import java.util.stream.Collectors;
 /**
  * Poker Game v1.01
  * Creates a server that can run poker games
- * BUGS TO FIX:
- *
- * - There's a line between lines and player commands
- * - PLayers can play with credits < 1
- *
  */
 
 public class Game {
@@ -41,8 +36,6 @@ public class Game {
     private int LAST_ROUND_STARTER;
     private int TURNS_LEFT;
     private final static double TABLE_FEE = 100.00;
-
-
 
     public Game(int tableLimit) {
 
@@ -71,8 +64,6 @@ public class Game {
             service.submit(new PlayerHandler(serverSocket.accept()));
         }
     }
-
-
 
     public boolean checkForRepeatedUsers(String username) {
         return listOfPlayers.stream()
@@ -157,7 +148,6 @@ public class Game {
         for (int i = 0; i < playerHands.size(); i++) {
             playerHands.set(i,0);
         }
-
     }
 
     public void setLastBet(double bet) {
