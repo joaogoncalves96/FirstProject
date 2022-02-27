@@ -7,35 +7,11 @@
     </artifacts-to-build>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5758b74b-1b07-478a-8926-8d348cfc6100" name="Changes" comment="updating hand analyzer">
+    <list default="true" id="5758b74b-1b07-478a-8926-8d348cfc6100" name="Changes" comment="insert the correct comments (player, client and commands)">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/users.txt" beforeDir="false" afterPath="$PROJECT_DIR$/resources/users.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/academy/mindswap/Client/Client.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/Client/Client.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/academy/mindswap/Client/LaunchPlayer2.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/Client/LaunchPlayer2.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/academy/mindswap/Client/LaunchPlayer3.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/Client/LaunchPlayer3.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/academy/mindswap/Client/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/Client/Player.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/academy/mindswap/Server/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/Server/Game.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/academy/mindswap/Server/GameExceptions/GameExceptions.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/Server/GameExceptions/GameExceptions.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/academy/mindswap/Server/GameExceptions/PlayerDisconnectedException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/Server/GameExceptions/PlayerDisconnectedException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/academy/mindswap/Server/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/Server/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/academy/mindswap/Server/deck/Card.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/Server/deck/Card.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/academy/mindswap/Server/deck/CardRank.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/Server/deck/CardRank.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/academy/mindswap/Server/deck/CardSuit.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/Server/deck/CardSuit.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/academy/mindswap/Server/deck/Deck.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/Server/deck/Deck.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/academy/mindswap/Server/deck/DeckFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/Server/deck/DeckFactory.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/academy/mindswap/Server/deck/HandAnalyzer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/Server/deck/HandAnalyzer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/academy/mindswap/Server/deck/HandTester.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/Server/deck/HandTester.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/academy/mindswap/commands/AllinHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/commands/AllinHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/academy/mindswap/commands/BetHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/commands/BetHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/academy/mindswap/commands/CallHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/commands/CallHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/academy/mindswap/commands/CheckHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/commands/CheckHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/academy/mindswap/commands/Command.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/commands/Command.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/academy/mindswap/commands/CommandHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/commands/CommandHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/academy/mindswap/commands/FoldHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/commands/FoldHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/academy/mindswap/commands/HelpHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/commands/HelpHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/academy/mindswap/commands/RaiseHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/commands/RaiseHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/academy/mindswap/utils/ColorCodes.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/utils/ColorCodes.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/academy/mindswap/utils/Messages.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/utils/Messages.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -430,7 +406,14 @@
       <option name="project" value="LOCAL" />
       <updated>1645810891937</updated>
     </task>
-    <option name="localTasksCounter" value="40" />
+    <task id="LOCAL-00040" summary="insert the correct comments (player, client and commands)">
+      <created>1645969403479</created>
+      <option name="number" value="00040" />
+      <option name="presentableId" value="LOCAL-00040" />
+      <option name="project" value="LOCAL" />
+      <updated>1645969403479</updated>
+    </task>
+    <option name="localTasksCounter" value="41" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
@@ -483,7 +466,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="created more booleans" />
     <MESSAGE value="added scanner to playerhandler, fixed decision to keep playing" />
     <MESSAGE value="player can join now mid round and keep playing" />
     <MESSAGE value="fixed some issues" />
@@ -508,6 +490,7 @@
     <MESSAGE value="added help and raise, needs player fixing" />
     <MESSAGE value="fixed some synching problems" />
     <MESSAGE value="fixed a ton of stuff" />
-    <option name="LAST_COMMIT_MESSAGE" value="fixed a ton of stuff" />
+    <MESSAGE value="insert the correct comments (player, client and commands)" />
+    <option name="LAST_COMMIT_MESSAGE" value="insert the correct comments (player, client and commands)" />
   </component>
 </project>

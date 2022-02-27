@@ -31,6 +31,7 @@ helloooo::10000.0
 OmegaDude::10000.0
 Megadude::10000.0
 dudeeeeee::10000.0
+diogo::10000.0
 ze123::10000.0
 guyman::10000.0
 rodri::10000.0

@@ -59,6 +59,7 @@ public class Client {
             }
         }).start();
     }
+
     /**
      * This method we use to properly shut down the buffered and socket,
      * if there is a problem, then send a try catch

@@ -217,6 +217,7 @@ public class Player {
              *Here we synchronize the object
              *If the socket is connected, continue, if not, stop.
              * While the socket is connected the player can write
+             * Save the credits for user.
              */
             synchronized (this) {
                 while (socket.isConnected()) {
@@ -252,7 +253,11 @@ public class Player {
                                 }
                             }
 
-
+                            /**
+                             * This is the game
+                             * How many turns have the game, is always the same. 1,2,3,4
+                             *
+                             */
                             input = new Scanner(System.in);
 
                             while(turnsLeft != -2) {
@@ -264,7 +269,10 @@ public class Player {
                                 if(isRoundOver) break;
 
                                 String call = input.nextLine();
-
+                                /**
+                                 * Only put input when is your turn
+                                 * Check if command is valid
+                                 */
                                 if(!checkForValidCommand(call)) {
                                     if(turnsLeft == -2) break;
                                     System.out.println(Messages.VALID_COMMAND);
@@ -276,7 +284,10 @@ public class Player {
                                 bufferedWriter.write(call);
                                 bufferedWriter.newLine();
                                 bufferedWriter.flush();
-
+                                /**
+                                 * if this boolean is true, you have make another command
+                                 * If not, you complete your turn.
+                                 */
                                 mustDoAction = false;
 
                                 if(call.contains(Command.BET.getDescription())) {
@@ -301,7 +312,7 @@ public class Player {
                                 /**
                                  *If the missing turns and the turns that took place are the same
                                  put the thread to have a time slot
-                                 *
+                                 *Booleans of server control, but is from player
                                  */
                                 while (turnsLeft == previousTurn) {
                                     Thread.sleep(100);
