@@ -66,6 +66,7 @@ tiago::10000.0
 Papa::8900.0
 ZZTop::9900.0
 Joao::10000.0
+DUDE::10000.0
 milla::10000.0
 due::10000.0
 DudeMan::10000.0

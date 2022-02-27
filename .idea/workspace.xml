@@ -7,9 +7,10 @@
     </artifacts-to-build>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5758b74b-1b07-478a-8926-8d348cfc6100" name="Changes" comment="fixed some credit stuff">
+    <list default="true" id="5758b74b-1b07-478a-8926-8d348cfc6100" name="Changes" comment="created server offline exception">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/users.txt" beforeDir="false" afterPath="$PROJECT_DIR$/resources/users.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/academy/mindswap/Client/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/Client/Player.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/academy/mindswap/utils/Messages.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/academy/mindswap/utils/Messages.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -71,7 +72,7 @@
       <recent name="academy.mindswap.Client" />
     </key>
   </component>
-  <component name="RunManager" selected="Compound.Launch All players">
+  <component name="RunManager" selected="Application.Player Client">
     <configuration name="HandTester" type="Application" factoryName="Application">
       <option name="MAIN_CLASS_NAME" value="academy.mindswap.Server.deck.HandTester" />
       <module name="FirstProject" />
@@ -453,7 +454,14 @@
       <option name="project" value="LOCAL" />
       <updated>1645976082453</updated>
     </task>
-    <option name="localTasksCounter" value="47" />
+    <task id="LOCAL-00047" summary="created server offline exception">
+      <created>1645976550239</created>
+      <option name="number" value="00047" />
+      <option name="presentableId" value="LOCAL-00047" />
+      <option name="project" value="LOCAL" />
+      <updated>1645976550239</updated>
+    </task>
+    <option name="localTasksCounter" value="48" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
@@ -506,7 +514,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="upgrading table card printer 2" />
     <MESSAGE value="made global printer, updating hand analyzer" />
     <MESSAGE value="updating hand analyzer" />
     <MESSAGE value="upgraded hand analyzer" />
@@ -531,6 +538,7 @@
     <MESSAGE value="fixed some conflict issues" />
     <MESSAGE value="fixed help and added repeated usernames tags" />
     <MESSAGE value="fixed some credit stuff" />
-    <option name="LAST_COMMIT_MESSAGE" value="fixed some credit stuff" />
+    <MESSAGE value="created server offline exception" />
+    <option name="LAST_COMMIT_MESSAGE" value="created server offline exception" />
   </component>
 </project>

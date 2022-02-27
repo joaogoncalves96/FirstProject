@@ -21,8 +21,6 @@ import java.util.regex.Pattern;
 public class Player {
 
     private Socket socket;
-    private final String hostName = "localhost";
-    private final int portNumber = 8081;
     private String clientUsername;
     private double credits;
     private Scanner input;
@@ -38,26 +36,20 @@ public class Player {
 
 
     public Player() {
+
+
         try {
-            this.socket = new Socket(hostName, portNumber);
             askForUserNameAndCredits();
-
         } catch (IOException e) {
-
+            e.printStackTrace();
         }
+
+
     }
 
-    public void connectToServer () throws IOException{
+    public void connectToServer (String host, int port) throws IOException{
 
-        while (socket == null) {
-            try {
-                Thread.sleep(3000);
-                System.out.print(Messages.CANT_CONNECT);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-
+        socket = new Socket(host, port);
         Scanner in = new Scanner(socket.getInputStream());
         BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
         new Thread(new ConnectionHandler(this.socket, out)).start();
