@@ -1,3 +1,12 @@
+/*
+ * @(#)Game.java        1.0 26/02/2022
+ *
+ * Copyright (c) MindSwap Academy - David Millasseau, Tiago Correia & João Gonçalves
+ * All rights reserved.
+ *
+ * This software was produced to become our first group project.
+ */
+
 package academy.mindswap.Server;
 import academy.mindswap.Server.GameExceptions.PlayerDisconnectedException;
 import academy.mindswap.Server.deck.*;
