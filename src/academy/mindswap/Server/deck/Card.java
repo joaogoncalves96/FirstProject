@@ -1,3 +1,13 @@
+/*
+ * @(#)Card.java        1.0 26/02/2022
+ *
+ * Copyright (c) MindSwap Academy - David Millasseau, Tiago Correia & João Gonçalves
+ * All rights reserved.
+ *
+ * This software was produced to become our first group project.
+ */
+
+
 package academy.mindswap.Server.deck;
 
 import academy.mindswap.utils.ColorCodes;
@@ -11,8 +21,8 @@ import java.util.Objects;
 
 public class Card {
 
-    private CardRank cardRank;
-    private CardSuit cardSuit;
+    private final CardRank cardRank;
+    private final CardSuit cardSuit;
 
 
     public Card(CardRank cardRank,CardSuit cardSuit) {

@@ -1,3 +1,13 @@
+/*
+ * @(#)Deck.java        1.0 26/02/2022
+ *
+ * Copyright (c) MindSwap Academy - David Millasseau, Tiago Correia & João Gonçalves
+ * All rights reserved.
+ *
+ * This software was produced to become our first group project.
+ */
+
+
 package academy.mindswap.Server.deck;
 import java.util.Collections;
 import java.util.Set;
@@ -9,9 +19,9 @@ import java.util.Set;
 public class Deck {
 
     private final int DECK_MAX_SIZE = 52;
-    private Set<Card> deck;
-    private CardRank[] cardRank = CardRank.values();
-    private CardSuit[] cardSuit = CardSuit.values();
+    private final Set<Card> deck;
+    private final CardRank[] cardRank = CardRank.values();
+    private final CardSuit[] cardSuit = CardSuit.values();
 
     public Deck(Set<Card> deck) {
         this.deck = Collections.synchronizedSet(deck);

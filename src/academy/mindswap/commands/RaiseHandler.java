@@ -1,11 +1,12 @@
 /*
- * @(#)CallHandler.java        1.0 26/02/2022
+ * @(#)RaiseHandler.java        1.0 26/02/2022
  *
  * Copyright (c) MindSwap Academy - David Millasseau, Tiago Correia & João Gonçalves
  * All rights reserved.
  *
  * This software was produced to become our first group project.
  */
+
 package academy.mindswap.commands;
 
 import academy.mindswap.Server.Game;
@@ -15,27 +16,33 @@ import academy.mindswap.utils.Messages;
 import java.io.IOException;
 
 /**
- * If the player calls it means he will call the first player's bet
+ * Player bets current highest bet and +50%
  */
 
-public class CallHandler implements CommandHandler{
+public class RaiseHandler implements CommandHandler {
     /**
-     * If a bet has not been placed, the player cannot call
-     * Send a message to all players
+     * If the last bet was void, you cannot bet.
+     * Send a message to all players with all commands
      * @param game represents an instance of a member class game
      * @param playerHandler to access player properties and methods
      @throws PlayerDisconnectedException when player disconnected socket from this side
      */
     @Override
     public void execute(Game game, Game.PlayerHandler playerHandler) throws PlayerDisconnectedException, IOException {
+
         if(game.getLastBet() == 0.0) {
-            playerHandler.sendMessage(Messages.CANT_CALL);
+            playerHandler.sendMessage(Messages.CANT_RAISE);
             return;
         }
+        double bet = game.getLastBet();
 
         playerHandler.doAction();
-        double lastBet = game.getLastBet();
-        playerHandler.bet(lastBet);
-        game.broadCastMessage(playerHandler.getUsername() + Messages.CALL);
+        playerHandler.bet(bet * 1.5);
+        game.setLastBet(bet * 1.5);
+        game.broadCastMessage(playerHandler.getUsername() +
+                Messages.RAISE +
+                (bet * 1.5) +
+                Messages.CREDITS);
+
     }
 }

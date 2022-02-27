@@ -1,3 +1,13 @@
+/*
+ * @(#)CardRank.java        1.0 26/02/2022
+ *
+ * Copyright (c) MindSwap Academy - David Millasseau, Tiago Correia & João Gonçalves
+ * All rights reserved.
+ *
+ * This software was produced to become our first group project.
+ */
+
+
 package academy.mindswap.Server.deck;
 
 public enum CardRank {
@@ -15,9 +25,9 @@ public enum CardRank {
     THREE(3, "Three","3"),
     DEUCE(2, "Deuce","2");
 
-    private int cardRankPoints;
-    private String cardRankDescription;
-    private String cardRankDigit;
+    private final int cardRankPoints;
+    private final String cardRankDescription;
+    private final String cardRankDigit;
 
 
     CardRank(int cardRankPoints, String cardRankDescription, String cardRankDigit) {

@@ -1,3 +1,13 @@
+/*
+ * @(#)CardSuit.java        1.0 26/02/2022
+ *
+ * Copyright (c) MindSwap Academy - David Millasseau, Tiago Correia & João Gonçalves
+ * All rights reserved.
+ *
+ * This software was produced to become our first group project.
+ */
+
+
 package academy.mindswap.Server.deck;
 
 import academy.mindswap.utils.ColorCodes;
@@ -8,8 +18,8 @@ public enum CardSuit {
     HEARTS( "♥", "Hearts"),
     DIAMONDS(  "♦", "Diamonds");
 
-    private String suit;
-    private String suitDescription;
+    private final String suit;
+    private final String suitDescription;
 
     CardSuit(String s, String suitDescription) {
         this.suit = s;

@@ -1,14 +1,34 @@
+/*
+ * @(#)HandAnalyzer.java        1.0 26/02/2022
+ *
+ * Copyright (c) MindSwap Academy - David Millasseau, Tiago Correia & João Gonçalves
+ * All rights reserved.
+ *
+ * This software was produced to become our first group project.
+ */
+
+
 package academy.mindswap.Server.deck;
 import academy.mindswap.utils.ColorCodes;
 import java.util.*;
 
-/**
- *
+/** Hand Analyzer Class
+ * This class takes in lists of Card objects and returns either your best hand or the points of your best hand.
+ * Use either analyzeHand to get the points of your hand, or makeFinalHand to get the list of cards with your best hand
  *
  *
  */
 
 public class HandAnalyzer {
+
+
+    /**This method takes in players cards and the table cards and returns a numerical value associated with how good
+     * the hand is
+     *
+     * @param playerHand A list of cards provided by the player
+     * @param tableCards A set of cards in the table currently
+     * @return Returns the total points the player has with his hand + table's cards.
+     */
 
 
     public static int analyzeHand(ArrayList<Card> playerHand, Collection<Card> tableCards) {
@@ -75,7 +95,7 @@ public class HandAnalyzer {
                     .get()
                     .getCardRankPoints();
 
-            points += 500 + cardValue;
+            points += 500 + cardValue + highestCard;
             return points;
         }
 
@@ -88,7 +108,7 @@ public class HandAnalyzer {
                     .map(CardRank::getCardRankPoints)
                     .reduce(0, Math::max);
 
-            points += 300 + cardValue;
+            points += 300 + cardValue + highestCard;
             return points;
         }
 
@@ -102,12 +122,21 @@ public class HandAnalyzer {
                     .get()
                     .getCardRankPoints();
 
-            points += 150 + cardValue;
+            points += 150 + cardValue + highestCard;
             return points;
 
         }
         return highestCard;
     }
+
+    /**
+     * This method makes an array list of cards based on the best hand possible that the player has with the table
+     * cards
+     * @param points The points that the player hand has
+     * @param playerHand List of player hand cards
+     * @param tableCards List of table cards
+     * @return Returns the player's best hand
+     */
 
     public static ArrayList<Card> makeFinalHand(int points, ArrayList<Card> playerHand, Set<Card> tableCards) {
 
@@ -166,6 +195,8 @@ public class HandAnalyzer {
 
         });
 
+        printCards(finalHand);
+
         for (int i = 0; i < hand.size() - 1; i++) {
 
             int cardValue1 = hand.get(i).getCardRank().getCardRankPoints();
@@ -173,6 +204,10 @@ public class HandAnalyzer {
             if(finalHand.size() >= 5 && cardValue1 != cardValue2 + 1) break;
             if(cardValue1 == cardValue2 - 1) {
                 finalHand.add(hand.get(i));
+                if(finalHand.size() == 4 && i == hand.size() - 2) {
+                    finalHand.add(hand.get(i + 1));
+                    break;
+                }
                 continue;
             }
             finalHand = new ArrayList<>(5);
@@ -244,9 +279,6 @@ public class HandAnalyzer {
         }
 
         ArrayList<Card> finalHand = new ArrayList<>(5);
-//        hand.stream()
-//                .filter(card -> card.getCardRank().equals(cardRank1) || card.getCardRank().equals(cardRank2))
-//                .forEach(finalHand::add);
 
         for(Card card : hand) {
             if(card.getCardRank().equals(cardRank1)) {
@@ -282,14 +314,12 @@ public class HandAnalyzer {
     }
 
     private static boolean hasStraight(ArrayList<Card> hand) {
-
         hand.sort(new Comparator<Card>() {
             @Override
             public int compare(Card o1, Card o2) {
                 return Integer.compare(o1.getCardRank().getCardRankPoints(), o2.getCardRank().getCardRankPoints()) ;
             }
         });
-
 
         int sequentialCounter = 0;
         for (int i = 0; i < hand.size() - 1; i++) {
@@ -303,7 +333,7 @@ public class HandAnalyzer {
                 sequentialCounter = 0;
             }
         }
-        return sequentialCounter >= 5;
+        return sequentialCounter >= 4;
     }
 
     private static HashMap<CardRank, Integer> rankCounter(ArrayList<Card> hand) {
