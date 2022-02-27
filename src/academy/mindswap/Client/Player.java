@@ -51,7 +51,6 @@ public class Player {
         while(!socket.isClosed()) {
             readServerMessage(in);
         }
-
     }
 
     public boolean checkIfStringIsValidDouble(String doubleString) {

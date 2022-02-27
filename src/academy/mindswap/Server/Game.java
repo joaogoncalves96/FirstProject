@@ -8,9 +8,12 @@ import academy.mindswap.utils.Messages;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.stream.Collectors;
 
 /**
  * Poker Game v1.01
@@ -68,6 +71,8 @@ public class Game {
             service.submit(new PlayerHandler(serverSocket.accept()));
         }
     }
+
+
 
     public boolean checkForRepeatedUsers(String username) {
         return listOfPlayers.stream()
@@ -268,6 +273,8 @@ public class Game {
 
                     counter = 0;
 
+//                    printIntro();
+
                     sendMessage(Messages.STARTING_ROUND);
 
                     Thread.sleep((long) (1000 * Math.random()));
@@ -282,8 +289,9 @@ public class Game {
 
                     sendMessage(Messages.TAX_PAY);
 
-
                     givePlayerCards();
+
+                    int playersInRound = listOfPlayers.size();
 
                     playerHandCount += 2;
 
@@ -524,6 +532,9 @@ public class Game {
                             sendMessage(Messages.WAITING_FOR_NEXT_ROUND);
                             counter++;
                         }
+                        if(playersInRound != listOfPlayers.size()) {
+                            break;
+                        }
                     }
 
 
@@ -561,7 +572,29 @@ public class Game {
                 }
             }
         }
-
+//        private void printIntro() {
+//
+//            try {
+//                List<String> divide = Files.readAllLines(Paths.get("./resources/intro"));
+//
+//               String intro = String.join("\n", divide);
+//
+//              String intro1 = ColorCodes.RED_BOLD_BRIGHT + intro + ColorCodes.RESET;
+//              String intro2 = ColorCodes.BLUE_BOLD_BRIGHT + intro + ColorCodes.RESET;
+//
+//               while (true)
+//
+//               sendMessage(intro);
+//
+//
+//
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            } catch (PlayerDisconnectedException e) {
+//                e.printStackTrace();
+//            }
+//
+//        }
         public synchronized void givePlayerCards() {
 
             CardRank[] cardRank = CardRank.values();
@@ -733,7 +766,6 @@ public class Game {
             return trues == playerHands.size();
         }
 
-
         public void sendMessage(String message) throws IOException, PlayerDisconnectedException {
 
 
@@ -776,7 +808,6 @@ public class Game {
             return credits;
         }
 
-
         private String whichPlayerIsDeciding() {
             return listOfPlayers.get(TURN_DECIDER).getUsername();
         }
@@ -817,6 +848,7 @@ public class Game {
             String black = ColorCodes.BLACK_BOLD;
             String red = ColorCodes.RED_BOLD_BRIGHT;
             String reset = ColorCodes.RESET;
+
             while(currentPlayersConnected() <= 1) {
 
                 Thread.sleep(animationSpeed);
@@ -856,6 +888,7 @@ public class Game {
             playerLastBet = 0;
             playerCards = new ArrayList<>(2);
             hasPlayerFolded = false;
+            mustDoAction = true;
 
         }
 
