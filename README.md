@@ -24,6 +24,7 @@ The poker contains:<br />
 /check;<br />
 /raise;<br />
 /help; <br />
+/wallet;  <br />
 
 Instructions of Poker: <br />
 Call -> When a player makes the bet amount made by an equal of the opponents. <br />
@@ -34,6 +35,7 @@ Fold -> When a player resigns from the pot, he cannot bet in the present round.<
 Raise -> Bets the current highest bet + 50%. <br />
 Check -> Skips turn, can only be made when there's no higher bet. <br />
 Help -> Help with commands, all command information. <br />
+Wallet -> Serve for check the credits.  <br />
 
 Hands (From best to worst):
 <div align="left">
