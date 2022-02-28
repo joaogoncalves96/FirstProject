@@ -1,6 +1,6 @@
 # Poker Game
 
-![alt text]resources/intro.png)
+![alt text](resources/intro.png)
 
 PokerOnline is a MindSwap game show created by David Millasseau, Tiago Correia and João Gonçalves. <br />
 This game is an inspired by the online game PokerStars. <br />
