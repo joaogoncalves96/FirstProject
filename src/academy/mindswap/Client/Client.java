@@ -16,6 +16,5 @@ public class Client {
             System.out.println(Messages.CANT_CONNECT);
             System.exit(1);
         }
-
     }
 }

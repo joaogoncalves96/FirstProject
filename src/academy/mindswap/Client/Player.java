@@ -277,13 +277,16 @@ public class Player {
                              */
                             input = new Scanner(System.in);
 
-                            while(turnsLeft != -2) {
+                            while(turnsLeft != -2 && !isRoundOver) {
 
                                 while (!isMyTurn) {
-                                    if(isRoundOver) break;
-                                    Thread.sleep((long) (1000 * Math.random()));
+                                    Thread.sleep((long) (3000 * Math.random()));
+
                                 }
-                                if(isRoundOver) break;
+
+                                if(isRoundOver) {
+                                    break;
+                                }
 
                                 String call = input.nextLine();
 
@@ -350,6 +353,7 @@ public class Player {
 
                                 previousTurn = turnsLeft;
                                 isMyTurn = false;
+                                Thread.sleep(500);
                             }
 
                             Thread.sleep(1000);

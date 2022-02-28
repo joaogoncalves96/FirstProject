@@ -45,6 +45,7 @@ public class Game {
     private int LAST_ROUND_STARTER;
     private int TURNS_LEFT;
     private final static double TABLE_FEE = 100.00;
+    private final String INTRO_ART = readIntroFile();
 
     public Game(int tableLimit) {
 
@@ -81,6 +82,17 @@ public class Game {
 
     public double getLastBet() {
         return lastBet;
+    }
+
+    private String readIntroFile() {
+        List<String> introListLines = null;
+        try {
+             introListLines = Files.readAllLines(Paths.get("resources/intro"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return  String.join("\n", introListLines);
     }
 
     private void addPlayer(PlayerHandler player) {
@@ -251,7 +263,6 @@ public class Game {
                     }
 
                     //Add player to list
-
                     if(index == -1) {
                         synchronized (playerHands) {
                             addPlayer(this);
@@ -259,6 +270,8 @@ public class Game {
                             index = playerHands.size() - 1;
                         }
                     }
+
+                    sendMessage(INTRO_ART);
 
                     // Only starts round if there's enough players connected
                     while (currentPlayersConnected() <= 1) {
