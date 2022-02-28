@@ -462,7 +462,7 @@ public class Player {
         if(!checkForValidUserName(enteredUsername)) {
             System.out.println(Messages.USERNAME_INVALID);
             askForUserNameAndCredits();
-            return;
+         //   return;
         }
 
 

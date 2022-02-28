@@ -6,7 +6,6 @@
  *
  * This software was produced to become our first group project.
  */
-
 package academy.mindswap.commands;
 
 import academy.mindswap.Server.Game;
