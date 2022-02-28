@@ -44,18 +44,15 @@ public class Messages {
     public static final String CONTINUE_PLAYING = "Do you want to play another round? \nType" +
             ColorCodes.RED_BOLD_BRIGHT +" EXIT " + ColorCodes.RESET
             + "to leave the game, press enter to play another round.";
-
     public static final String USERNAME_ALREADY_EXISTS = "Welcome %s. You have %.2f credits. %n";
     public static final String USERNAME_INVALID = "Please enter a valid username:\n" +
             "-Must be between 3 and 18 characters\n" +
             "-No special characters.";
-
     public static final String NEXT = "Next turn!";
     public static final String PLAYER_TURN = "It's your turn.";
     public static final String ALL_PLAYERS_FOLDED = "Everyone else folded!";
     public static final String TAX_PAY = ColorCodes.RESET + "You have payed " + ColorCodes.GREEN_BOLD_BRIGHT
             + Game.getTABLE_FEE() + ColorCodes.RESET + " credits to play this round.";
-
     public static final String RAISE = " has raised!";
     public static final String CALL = " has called the bet!";
     public static final String PLAYER_CHECKED = " has checked.";
@@ -70,7 +67,6 @@ public class Messages {
                                       "/fold : You fold and lose this round.\n" +
                                       "/allin : You bet all your current credits. No more decisions can be made.\n"+
                                       "/check : Skips turn, can only be made when there's no higher bet.\n";
-
     public static final String CURRENT_POT = "Current pot: ";
     public static final String CANT_CONNECT = ColorCodes.RED_BOLD_BRIGHT +
             "Server not online, trying to connect again " + ColorCodes.RESET;
